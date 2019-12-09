@@ -25,12 +25,13 @@ install_requires = [
     "jsonschema>=3.0.0",
     "requests",
     "semver>=2.8.1",
+    "mem",
 ]
 
 NAME = "mint"
 VERSION = "0.0.1"
 
-# This call to setup() does all the work
+# This call to setup_name() does all the work
 setup(
     name=NAME,
     version=VERSION,

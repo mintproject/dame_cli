@@ -1,11 +1,10 @@
 import logging
 import json
-import wings
 import os
 import click
 import yaml
-from wcm import _schema, _utils
-from contextlib import contextmanager
+from mint import _schema, _utils
+#from contextlib import contextmanager
 
 logger = logging.getLogger()
 schemaDefinitions = _schema.get_schema()["definitions"]
@@ -44,6 +43,35 @@ def make_yaml(download_path=None):
 
     yaml.dump(yaml_outline, stream, sort_keys=False)
 
+def make_yaml_from_dict(download_path=None, dict=None):
+
+    # sets path, this determines where the yaml will be made. Default is the current directory
+    if download_path is None:
+        path = os.getcwd()
+    else:
+        path = download_path
+    path = os.path.join(path, "setup_name.yaml")
+
+    if os.path.isfile(path):
+        click.echo("\"" + path + "\" already exists. Do you want to overwrite it? [y/n]")
+        ans = input()
+        if not(ans.lower() == 'y' or ans.lower() == "yes"):
+            logger.info("Aborting YAML Generation")
+            exit(0)
+
+    # Checks if directory exists and finds file
+    try:
+        stream = open(path, 'w+')
+    except FileNotFoundError:
+        click.echo("\"" + os.path.join(os.getcwd(), download_path) + "\" doesnt exists. Do you want to make it? [y/n]")
+        ans = input()
+        if ans.lower() == 'y' or ans.lower() == "yes":
+            os.mkdir(download_path)
+            stream = open(path, 'w+')
+        else:
+            exit(0)
+
+    yaml.dump(dict, stream, sort_keys=False)
 
 def write_properties(prop):
     dict = {}
