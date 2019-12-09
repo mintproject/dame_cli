@@ -57,7 +57,7 @@ def build_command_line(resource, _dir):
     outputs = resource[0]["hasOutput"]
     component_url = resource[0]["hasComponentLocation"][0]
     has_software_image = resource[0]["hasSoftwareImage"][0]['label'][0]
-    line = "singularity exec docker://{} ./run ".format(has_software_image)
+    line = "/usr/bin/singularity exec docker://{} ./run ".format(has_software_image)
 
     component_dir = download_extract_zip(component_url, _dir, setup_name)
     path = Path(component_dir)
@@ -71,7 +71,7 @@ def build_command_line(resource, _dir):
     if parameters is not None:
         l = build_parameter(parameters)
         line += " {}".format(l)
-    return line
+    return line, src_path
 
 def read_setup(setup_paths):
     data = []
@@ -85,28 +85,29 @@ def read_setup(setup_paths):
         execution_dir_path = Path(execution_dir)
         execution_dir_path.mkdir(parents=True, exist_ok=True)
 
-        setup_cmd_line = build_command_line(setup_dict, execution_dir_path)
+        setup_cmd_line, cwd_path = build_command_line(setup_dict, execution_dir_path)
         log_file_path = "{}/output.log".format(execution_dir)
 
         data.append({
             "cmd": setup_cmd_line,
             "log": open(log_file_path,'wb'),
-            "directory": execution_dir_path,
+            "directory": cwd_path,
             "name": setup_name
         })
 
         print("Execution {}, check the logs on {}".format(setup_name, log_file_path))
 
     procs_list = [subprocess.Popen(item["cmd"], stdout=item["log"], stderr=item["log"], cwd=item["directory"]) for item in data]
+    #procs_list = [subprocess.Popen(["ls"], stdout=item["log"], stderr=item["log"], cwd=item["directory"]) for item in data]
 
     for proc in procs_list:
         proc.wait()
 
     status = []
-    for proc, name in zip(procs_list, data):
+    for proc, item in zip(procs_list, data):
         status.append({
             "exitcode": proc.returncode,
-            "name": data["name"]
+            "name": item["name"]
         })
 
     return status
