@@ -17,6 +17,7 @@ import semver
 import mint
 from core.executor import read_setup
 from mint import _utils, _makeyaml
+from mint._utils import log
 
 
 @click.group()
@@ -52,7 +53,11 @@ def run(setup, debug=False, dry_run=False, ignore_data=False, overwrite=False):
     elif os.path.isfile(setup):
         path = Path('.')
         setup_files.append(path/setup)
-    status = read_setup(setup_files)
+    try:
+        status = read_setup(setup_files)
+    except Exception as e:
+        log.error(e)
+        exit(1)
     for setup in status:
         if setup["exitcode"] == 0:
             click.secho("{} ok".format(setup["name"]), fg="green")
