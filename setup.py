@@ -29,7 +29,7 @@ install_requires = [
 ]
 
 NAME = "mint"
-VERSION = "0.0.1"
+VERSION = read('VERSION').strip()
 
 # This call to setup_name() does all the work
 setup(
