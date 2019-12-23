@@ -8,6 +8,7 @@ mint.
 import configparser
 import logging
 import os
+import pathlib
 import sys
 from pathlib import Path
 import yaml
@@ -15,10 +16,15 @@ import click
 
 import semver
 import mint
+from core.api import get_setup
 from core.executor import read_setup
 from mint import _utils, _makeyaml
 from mint._utils import log
 
+try:
+    from yaml import CLoader as Loader
+except ImportError:
+    from yaml import Loader
 
 @click.group()
 @click.option("--verbose", "-v", default=0, count=True)
@@ -34,7 +40,32 @@ You should consider upgrading via the 'pip install --upgrade mint' command.""",
             fg="yellow",
         )
 
-@cli.command(help="Run a setup_name.")
+
+@cli.group()
+def setup():
+    """Manages a setup of a model."""
+
+@setup.command(help="Create setup file.")
+@click.argument(
+    "setup_id",
+    type=str,
+)
+@click.option(
+    "--output",
+    "-o",
+    type=click.Path(file_okay=False, dir_okay=True, writable=True, exists=False),
+    default='.'
+)
+def download(setup_id, output):
+    filename = setup_id + ".yaml"
+    path = pathlib.Path.cwd() / output / filename
+    with open(path, mode='w+') as fid:
+        setup_id = get_setup(id)
+        yaml.dump(setup, fid)
+    click.secho("{} has been exported. Check {}".format(setup["name"], path), fg="green")
+
+
+@setup.command(help="Run a setup_name.")
 @click.option("--debug/--no-debug", "-d/-nd", default=False)
 @click.option("--dry-run", "-n", is_flag=True)
 @click.option("--ignore-data/--no-ignore-data", "-i/-ni", default=False)
@@ -43,6 +74,7 @@ You should consider upgrading via the 'pip install --upgrade mint' command.""",
     "setup",
     type=click.Path(file_okay=True, dir_okay=True, writable=True, exists=True),
 )
+
 def run(setup, debug=False, dry_run=False, ignore_data=False, overwrite=False):
     setup_files = []
     if os.path.isdir(setup):
