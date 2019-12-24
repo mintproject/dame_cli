@@ -15,3 +15,14 @@ def get_setup(_id):
         return api_response
     except ApiException as e:
         raise e
+
+
+def list_setup(label=None):
+    # create an instance of the API class
+    api_instance = modelcatalog.ConfigurationSetupApi()
+    try:
+        # Get a ModelConfigurationSetup
+        api_response = api_instance.configurationsetups_get(username=USERNAME)
+        return api_response
+    except ApiException as e:
+        raise e

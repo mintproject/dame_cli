@@ -1,9 +1,6 @@
 import os
 from setuptools import find_packages, setup
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
 def find_package_data(dirname):
     def find_paths(dirname):
         items = []
@@ -18,6 +15,10 @@ def find_package_data(dirname):
     items = find_paths(dirname)
     return [os.path.relpath(path, dirname) for path in items]
 
+# Utility function to read the README file.
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
 install_requires = [
     "Click>=7.0",
     "PyYAML>=5.1.2",
@@ -25,16 +26,19 @@ install_requires = [
     "jsonschema>=3.0.0",
     "requests",
     "semver>=2.8.1",
-    "mem",
+    "modelcatalog-api>=1.7.0",
 ]
 
-NAME = "mint"
-VERSION = read('VERSION').strip()
+version = {}
+with open("src/mint/__init__.py") as fp:
+    exec(fp.read(), version)
+
+
 
 # This call to setup_name() does all the work
 setup(
-    name=NAME,
-    version=VERSION,
+    name="mint",
+    version=version["__version__"],
     description="A execution manager cli for execution",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",

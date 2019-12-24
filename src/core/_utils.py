@@ -1,12 +1,30 @@
+import pathlib
 import uuid
 
 import requests
 import os
 import tempfile
 from zipfile import ZipFile
+import validators
+import yaml
+from core.api import get_setup
 
 ignore_dirs = ["__MACOSX"]
 
+
+def download_setup(setup_id, output):
+    filename = setup_id + ".yaml"
+    path = pathlib.Path.cwd() / output / filename
+    with open(path, mode='w+') as fid:
+        setup_id = get_setup(setup_id)
+        yaml.dump(setup_id, fid)
+    return path
+
+
+def obtain_id(url):
+    if validators.url(url):
+        return url.split('/')[-1]
+    return url
 
 def download_extract_zip(url, _dir, setup_name):
     temp = tempfile.NamedTemporaryFile(prefix="component_")

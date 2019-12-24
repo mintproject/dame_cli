@@ -5,7 +5,7 @@ from pathlib import Path
 
 from yaml import load, Loader
 
-from core._utils import download_data_file, download_extract_zip
+from core._utils import download_data_file, download_extract_zip, obtain_id
 from mint._utils import log
 
 KEYS_REQUIRED_PARAMETER = {"hasDefaultValue", "position"}
@@ -57,14 +57,16 @@ def build_parameter(parameters):
 
 
 def build_command_line(resource, _dir):
-    setup_name = resource[0]["id"].split('/')[-1]
-    inputs = resource[0]["hasInput"]
-    parameters = resource[0]["hasParameter"] if "hasParameter" in resource[0] else None
-    outputs = resource[0]["hasOutput"]
-    component_url = resource[0]["hasComponentLocation"][0]
-    has_software_image = resource[0]["hasSoftwareImage"][0]['label'][0]
-    line = "{} {}".format(SINGULARITY_CWD_LINE, has_software_image)
-
+    setup_name = obtain_id(resource.id)
+    inputs = resource.has_input
+    parameters = resource.has_parameter
+    outputs = resource.has_output
+    component_url = resource.has_component_location[0]
+    if resource.has_software_image:
+        has_software_image = resource.has_software_image[0]['label'][0]
+        line = "{} {}".format(SINGULARITY_CWD_LINE, has_software_image)
+    else:
+        exit(1)
     component_dir = download_extract_zip(component_url, _dir, setup_name)
     path = Path(component_dir)
     src_path = path / "src"
@@ -80,14 +82,14 @@ def build_command_line(resource, _dir):
     return line, src_path
 
 
-def read_setup(setup_paths):
+def execute_setup(setup_paths):
     data = []
     _dir = Path("%s/" % EXECUTION_DIRECTORY)
     _dir.mkdir(parents=True, exist_ok=True)
 
     for setup in setup_paths:
         setup_dict = load((setup).open(), Loader=Loader)
-        setup_name = setup_dict[0]["id"].split('/')[-1]
+        setup_name = obtain_id(setup_dict.id)
         execution_dir = "{}/{}_{}".format(_dir, setup_name, uuid.uuid1())
         execution_dir_path = Path(execution_dir)
         execution_dir_path.mkdir(parents=True, exist_ok=True)

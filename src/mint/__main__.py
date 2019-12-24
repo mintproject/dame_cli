@@ -5,26 +5,24 @@ mint.
 :license: Apache 2.0
 """
 
-import configparser
-import logging
 import os
-import pathlib
-import sys
 from pathlib import Path
-import yaml
 import click
 
 import semver
 import mint
-from core.api import get_setup
-from core.executor import read_setup
+from core._utils import obtain_id, download_file, download_setup
+from core.api import get_setup, list_setup
+from core.executor import execute_setup
 from mint import _utils, _makeyaml
 from mint._utils import log
+
 
 try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
+
 
 @click.group()
 @click.option("--verbose", "-v", default=0, count=True)
@@ -45,6 +43,7 @@ You should consider upgrading via the 'pip install --upgrade mint' command.""",
 def setup():
     """Manages a setup of a model."""
 
+
 @setup.command(help="Create setup file.")
 @click.argument(
     "setup_id",
@@ -57,41 +56,44 @@ def setup():
     default='.'
 )
 def download(setup_id, output):
-    filename = setup_id + ".yaml"
-    path = pathlib.Path.cwd() / output / filename
-    with open(path, mode='w+') as fid:
-        setup_id = get_setup(id)
-        yaml.dump(setup, fid)
-    click.secho("{} has been exported. Check {}".format(setup["name"], path), fg="green")
+    path = download_setup(setup_id, output)
+    click.secho("{} has been exported. Check {}".format(setup_id, path), fg="green")
 
 
-@setup.command(help="Run a setup_name.")
-@click.option("--debug/--no-debug", "-d/-nd", default=False)
-@click.option("--dry-run", "-n", is_flag=True)
-@click.option("--ignore-data/--no-ignore-data", "-i/-ni", default=False)
-@click.option("--overwrite", "-f", is_flag=True, help="Replace existing components")
+@setup.command(help="List configurations")
+def list():
+    for setup_item in list_setup(label=None):
+        name = obtain_id(setup_item.id)
+        print("{} - {}".format(name, setup_item.label[0]))
+
+@setup.command(help="Run a setup_name by name.")
 @click.argument(
-    "setup",
-    type=click.Path(file_okay=True, dir_okay=True, writable=True, exists=True),
+    "name",
+    type=click.STRING
 )
-
-def run(setup, debug=False, dry_run=False, ignore_data=False, overwrite=False):
-    setup_files = []
-    if os.path.isdir(setup):
-        path = Path(setup)
-        for file in os.listdir(path):
-            if file.endswith(".yaml") or file.endswith(".yml"):
-                setup_files.append(path/file)
-    elif os.path.isfile(setup):
-        path = Path('.')
-        setup_files.append(path/setup)
-    try:
-        status = read_setup(setup_files)
-    except Exception as e:
-        log.error(e)
-        exit(1)
+def run(name=None):
+    setup = name
+    file_path = download_setup(setup_id=setup, output=Path('.'))
+    status = execute_setups(file_path)
     for setup in status:
         if setup["exitcode"] == 0:
             click.secho("{} ok".format(setup["name"]), fg="green")
         else:
             click.secho("{} failed".format(setup["name"]), fg="red")
+
+def execute_setups(path):
+    setup_files = []
+    if os.path.isdir(path):
+        path = Path(path)
+        for file in os.listdir(path):
+            if file.endswith(".yaml") or file.endswith(".yml"):
+                setup_files.append(path / file)
+    elif os.path.isfile(path):
+        default_path = Path('.')
+        setup_files.append(default_path / path)
+    try:
+        status = execute_setup(setup_files)
+    except Exception as e:
+        log.error(e, exc_info=True)
+        exit(1)
+    return status
