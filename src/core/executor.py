@@ -5,7 +5,7 @@ from pathlib import Path
 
 from yaml import load, Loader
 
-from core._utils import download_data_file, download_extract_zip, obtain_id
+from core.utils import download_data_file, download_extract_zip, obtain_id
 from mint._utils import log
 
 KEYS_REQUIRED_PARAMETER = {"hasDefaultValue", "position"}

@@ -11,12 +11,12 @@ import click
 
 import semver
 import mint
-from core._utils import obtain_id, download_file, download_setup
+from core.utils import obtain_id, download_file, download_setup
 from core.api import get_setup, list_setup
 from core.executor import execute_setup
 from mint import _utils, _makeyaml
 from mint._utils import log
-
+import texttable as tt
 
 try:
     from yaml import CLoader as Loader
@@ -62,9 +62,14 @@ def download(setup_id, output):
 
 @setup.command(help="List configurations")
 def list():
+    tab = tt.Texttable()
+    headings = ['name', 'description']
+    tab.header(headings)
     for setup_item in list_setup(label=None):
         name = obtain_id(setup_item.id)
-        print("{} - {}".format(name, setup_item.label[0]))
+        tab.add_row([name, setup_item.label[0]])
+    print(tab.draw())
+
 
 @setup.command(help="Run a setup_name by name.")
 @click.argument(
@@ -72,14 +77,14 @@ def list():
     type=click.STRING
 )
 def run(name=None):
-    setup = name
-    file_path = download_setup(setup_id=setup, output=Path('.'))
+    file_path = download_setup(setup_id=name, output=Path('.'))
     status = execute_setups(file_path)
     for setup in status:
         if setup["exitcode"] == 0:
             click.secho("{} ok".format(setup["name"]), fg="green")
         else:
             click.secho("{} failed".format(setup["name"]), fg="red")
+
 
 def execute_setups(path):
     setup_files = []

@@ -9,6 +9,7 @@ verify_ssl = true
 mint = {path = "."}
 validators = "*"
 modelcatalog-api = ">=1.7.0"
+texttable = "*"
 
 [requires]
 python_version = "3.7"
