@@ -5,6 +5,16 @@ from modelcatalog.rest import ApiException
 configuration = modelcatalog.Configuration()
 USERNAME = "mint@isi.edu"
 
+
+def get_model(_id):
+    api_instance = modelcatalog.ModelApi()
+    try:
+        api_response = api_instance.models_id_get(id=_id)
+        return api_response
+    except ApiException as e:
+        raise e
+
+
 def get_setup(_id):
     # create an instance of the API class
     api_instance = modelcatalog.ConfigurationSetupApi()

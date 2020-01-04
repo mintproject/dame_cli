@@ -10,6 +10,8 @@ mint = {path = "."}
 validators = "*"
 modelcatalog-api = ">=1.7.0"
 texttable = "*"
+tabulate = "*"
+hurry = "*"
 
 [requires]
 python_version = "3.7"

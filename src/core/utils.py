@@ -7,7 +7,7 @@ import tempfile
 from zipfile import ZipFile
 import validators
 import yaml
-from core.api import get_setup
+from core.modelcatalogapi import get_setup
 
 ignore_dirs = ["__MACOSX"]
 

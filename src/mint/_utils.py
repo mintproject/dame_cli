@@ -16,7 +16,7 @@ def load_module(module_name):
 def init_logger():
     LOGLEVEL = logging.DEBUG
     logging.config.dictConfig({
-        'version': 1,
+        'version': 1    ,
         'disable_existing_loggers': False,
         'formatters': {
             'default': {
@@ -34,7 +34,7 @@ def init_logger():
         'loggers': {
             # default for all undefined Python modules
             '': {
-                'level': 'WARNING',
+                'level': 'DEBUG',
                 'handlers': ['console'],
             },
             # Our application code
