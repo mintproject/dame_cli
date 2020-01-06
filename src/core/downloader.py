@@ -1,8 +1,13 @@
 import http
 import urllib3
 from core.utils import check_is_none
+import certifi
 
-http = urllib3.PoolManager()
+
+http = urllib3.PoolManager(
+    cert_reqs='CERT_REQUIRED', # Force certificate check.
+    ca_certs=certifi.where(),  # Path to the Certifi bundle.
+)
 chunk_size = 65536
 
 def check_size(url):

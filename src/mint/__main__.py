@@ -7,7 +7,6 @@ mint.
 
 import os
 from pathlib import Path
-from pprint import pprint
 
 import click
 
