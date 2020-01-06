@@ -1,14 +1,15 @@
 # mint_cli
 
-## Installation
-
-```bash
-pip install mint-cli
-```
 
 ## CLI
 
 `mint` is a cli utility to `explore` executions on MINT.
+
+### Installation
+
+```bash
+pip install mint-cli
+```
 
 ### Executions
 
