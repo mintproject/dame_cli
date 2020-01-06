@@ -1,6 +1,4 @@
 # mint_cli
-[![asciicast](https://asciinema.org/a/VY41zVL6997RTNRwp3OjpxF2p.svg)](https://asciinema.org/a/VY41zVL6997RTNRwp3OjpxF2p)
-
 
 ## Installation
 
@@ -43,3 +41,7 @@ Commands:
   search    List all the execution
   show      Show details of execution
 ```
+
+## Example usage
+
+[![asciicast](https://asciinema.org/a/VY41zVL6997RTNRwp3OjpxF2p.svg)](https://asciinema.org/a/VY41zVL6997RTNRwp3OjpxF2p)
