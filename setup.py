@@ -40,7 +40,7 @@ with open("src/mint/__init__.py") as fp:
 
 # This call to setup_name() does all the work
 setup(
-    name="mint-api",
+    name="mint-cli",
     version=version["__version__"],
     description="A execution manager cli for execution",
     long_description=read("README.md"),

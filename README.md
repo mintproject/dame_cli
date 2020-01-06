@@ -3,10 +3,8 @@
 ## Installation
 
 ```bash
-pip install mint
+pip install mint-cli
 ```
-
-Also, you must install [Singularity](https://sylabs.io/docs/)
 
 ## CLI
 
