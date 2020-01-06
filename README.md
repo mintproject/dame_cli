@@ -14,7 +14,7 @@ pip install mint-cli
 ### Executions
 
 ```bash
-➜  results mint --help
+$ mint --help
 Usage: mint [OPTIONS] COMMAND [ARGS]...
 
 Options:
@@ -29,7 +29,7 @@ Commands:
 The execution sub command is used to manages the executions
 
 ```bash
-➜  results mint execution
+$ mint execution
 Usage: mint execution [OPTIONS] COMMAND [ARGS]...
 
   Manages the executions
