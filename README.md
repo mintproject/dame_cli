@@ -1,12 +1,12 @@
 # mint_cli
+[![asciicast](https://asciinema.org/a/VY41zVL6997RTNRwp3OjpxF2p.svg)](https://asciinema.org/a/VY41zVL6997RTNRwp3OjpxF2p)
+
 
 ## Installation
 
 ```bash
-pip install mint
+pip install mint-ci
 ```
-
-Also, you must install [Singularity](https://sylabs.io/docs/)
 
 ## CLI
 
