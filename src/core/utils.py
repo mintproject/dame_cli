@@ -11,6 +11,8 @@ from core.modelcatalogapi import get_setup
 
 ignore_dirs = ["__MACOSX"]
 
+def check_is_none(item, key):
+    return item[key] if key in item else ''
 
 def download_setup(setup_id, output):
     filename = setup_id + ".yaml"
@@ -71,3 +73,12 @@ def download_data_file(url, _dir):
                     f.write(chunk)
     return filepath, filename
 
+
+suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+def humansize(nbytes):
+    i = 0
+    while nbytes >= 1024 and i < len(suffixes)-1:
+        nbytes /= 1024.
+        i += 1
+    f = ('%.2f' % nbytes).rstrip('0').rstrip('.')
+    return '%s %s' % (f, suffixes[i])

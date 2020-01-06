@@ -13,8 +13,9 @@ import click
 
 import semver
 import mint
+from core.downloader import check_size, parse_inputs
 from core.emulatorapi import list_threads, get_thread
-from core.utils import obtain_id, download_file, download_setup
+from core.utils import obtain_id, download_file, download_setup, download_data_file, humansize
 from core.modelcatalogapi import get_setup, list_setup, get_model
 from core.executor import execute_setup
 from mint import _utils, _makeyaml
@@ -22,9 +23,7 @@ from mint._utils import log
 import texttable as tt
 from tabulate import tabulate
 import pandas as pd
-import urllib3
-http = urllib3.PoolManager()
-chunk_size = 65536
+
 
 try:
     from yaml import CLoader as Loader
@@ -47,67 +46,22 @@ You should consider upgrading via the 'pip install --upgrade mint' command.""",
         )
 
 
-@cli.group()
-def inputs():
-    """Manages the inputs of the executions"""
+def download_files(files, name, thread_id, output_directory):
+    output = Path(output_directory)
+    model_directory = output / name / thread_id
+    Path.mkdir(model_directory, parents=True, exist_ok=True)
 
-
-@inputs.command(name='list',
-                help="List the inputs")
-@click.argument(
-    "thread_id",
-    required=True,
-    type=str
-)
-def _list(thread_id):
-    thread = get_thread(thread_id)
-    for model in thread.models:
-        print(tabulate(parse_inputs(model, thread), tablefmt="pipe", headers="keys"))
-
-
-def download_files(files):
     size = 0
     for file in files:
         size += int(check_size(file['download_url']))
-    click.secho("Files size: {}".format(size), fg="green")
+    click.secho("You are going to download {}".format(humansize(size)), fg="green")
     if not click.confirm('Do you want to continue?'):
         return
+
+    click.secho("The destination directory is: {}".format(model_directory.absolute()), fg="yellow")
     for file in files:
-        file_name = download_file(file['download_url'])
-        click.secho("Ready: {}".format(file_name), fg="green")
-
-
-def check_size(url):
-    r = http.request('GET', url, preload_content=False)
-    content_bytes = r.headers.get("Content-Length")
-    r.release_conn()
-    return content_bytes
-
-
-def download_file(url):
-    file_name = url.split('/')[-1]
-    r = http.request('GET', url, preload_content=False)
-    with open(file_name, 'wb') as out:
-        while True:
-            data = r.read(chunk_size)
-            if not data:
-                break
-            out.write(data)
-    r.release_conn()
-    out.close()
-    return file_name
-
-def parse_inputs(model, thread):
-    inputs = []
-    for input in thread.models[model]['input_files']:
-        id = check_is_none(input, 'id')
-        name = check_is_none(input, 'name')
-        available_resources = check_is_none(check_is_none(input, 'value'), 'resources')
-        for r in available_resources:
-            if check_is_none(r, "selected"):
-                download_url = check_is_none(r, 'url')
-        inputs.append({'id': id, 'name': name, 'download_url': download_url})
-    return inputs
+        _, filename = download_data_file(file['download_url'], model_directory)
+        click.secho("Downloaded: {}".format(filename), fg="green")
 
 @cli.group()
 def execution():
@@ -120,11 +74,18 @@ def execution():
     required=True,
     type=str
 )
-def download(thread_id):
+@click.option(
+    "--output",
+    "-o",
+    type=click.Path(file_okay=False, dir_okay=True, writable=True, exists=False),
+    default='.'
+)
+def download(thread_id, output):
     thread = get_thread(thread_id)
     for model in thread.models:
         inputs = parse_inputs(model, thread)
-        download_files(inputs)
+        download_files(inputs, model.split('/')[-1], thread_id, output)
+
 
 @execution.command(
     name="search",
@@ -154,10 +115,6 @@ def _list(limit, model=""):
     tab.header(headings)
     print(tab.draw())
     print("{} results".format(len(threads)))
-
-
-def check_is_none(item, key):
-    return item[key] if key in item else ''
 
 
 @execution.command(help="Show details of execution")
