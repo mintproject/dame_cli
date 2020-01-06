@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8b0f459078451311cdf1b7c121ac53e597915c48ab38a1453325a07a60865bea"
+            "sha256": "79d7181598301e84f70dca398cafbfa621e5db87d23bb111b400dfbfb42d863f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -37,6 +37,13 @@
             ],
             "index": "pypi",
             "version": "==1.1"
+        },
+        "ingestion-api": {
+            "hashes": [
+                "sha256:2e5987e8d40077806306a83bd7a19769158a059f9be22b7408280320b27c7f53"
+            ],
+            "index": "pypi",
+            "version": "==1.3.0"
         },
         "mint": {
             "path": "."

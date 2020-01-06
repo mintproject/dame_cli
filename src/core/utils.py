@@ -10,6 +10,7 @@ import yaml
 from core.modelcatalogapi import get_setup
 
 ignore_dirs = ["__MACOSX"]
+SERVER = "https://dev.mint.isi.edu"
 
 def check_is_none(item, key):
     return item[key] if key in item else ''

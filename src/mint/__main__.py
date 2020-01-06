@@ -14,8 +14,8 @@ import click
 import semver
 import mint
 from core.downloader import check_size, parse_inputs
-from core.emulatorapi import list_threads, get_thread
-from core.utils import obtain_id, download_file, download_setup, download_data_file, humansize
+from core.emulatorapi import get_summary, list_summaries
+from core.utils import obtain_id, download_file, download_setup, download_data_file, humansize, SERVER
 from core.modelcatalogapi import get_setup, list_setup, get_model
 from core.executor import execute_setup
 from mint import _utils, _makeyaml
@@ -81,9 +81,11 @@ def execution():
     default='.'
 )
 def download(thread_id, output):
-    thread = get_thread(thread_id)
-    for model in thread.models:
-        inputs = parse_inputs(model, thread)
+    summary = get_summary(thread_id)
+    scenario_id = summary.scenario.id
+    problem_id = summary.problem_formulation.id
+    for model in summary.thread.models:
+        inputs = parse_inputs(model, summary.thread)
         download_files(inputs, model.split('/')[-1], thread_id, output)
 
 
@@ -109,17 +111,27 @@ def download(thread_id, output):
 def _list(limit, model=""):
     tab = tt.Texttable()
     headings = ['name', 'models']
-    threads = list_threads(limit=limit, page=1, model=model)
-    for t in threads:
-        tab.add_row([t.id, t.models])
+    summaries = list_summaries(limit=limit, page=1, model=model)
+    for s in summaries:
+        tab.add_row([s.thread.id, s.thread.models])
     tab.header(headings)
     print(tab.draw())
-    print("{} results".format(len(threads)))
+    print("{} results".format(len(summaries)))
 
 
 @execution.command(help="Show details of execution")
-def detail(thread_id):
-    pass
+@click.argument(
+    "thread_id",
+    required=True,
+    type=str
+)
+def show(thread_id):
+    summary = get_summary(thread_id)
+    region = summary.scenario.region.lower()
+    scenario_id = summary.scenario.id
+    problem_id = summary.problem_formulation.id
+    link = "{}/{}/modeling/scenario/{}/{}/{}".format(SERVER, region, scenario_id,  problem_id, thread_id)
+    click.secho("Please visit {}".format(link))
 
 
 @cli.group()
