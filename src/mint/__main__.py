@@ -21,8 +21,6 @@ from core.executor import execute_setup
 from mint import _utils, _makeyaml
 from mint._utils import log
 import texttable as tt
-from tabulate import tabulate
-import pandas as pd
 
 
 try:

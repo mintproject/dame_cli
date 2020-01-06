@@ -1,6 +1,4 @@
 import pathlib
-import uuid
-
 import requests
 import os
 import tempfile

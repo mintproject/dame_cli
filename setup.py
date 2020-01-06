@@ -21,12 +21,15 @@ def read(fname):
 
 install_requires = [
     "Click>=7.0",
-    "PyYAML>=5.1.2",
-    "yamlordereddictloader",
-    "jsonschema>=3.0.0",
-    "requests",
-    "semver>=2.8.1",
     "modelcatalog-api>=1.7.0",
+    "texttable>=1.6.2",
+    "validators>=0.14.1",
+    "ingestion-api>=1.3.0",
+    "PyYAML>=5.1.2",
+    "semver>=2.8.1",
+    "requests",
+    "jsonschema>=3.0.0",
+    "certifi>=2019.11.28"
 ]
 
 version = {}
@@ -37,7 +40,7 @@ with open("src/mint/__init__.py") as fp:
 
 # This call to setup_name() does all the work
 setup(
-    name="mint",
+    name="mint-api",
     version=version["__version__"],
     description="A execution manager cli for execution",
     long_description=read("README.md"),
