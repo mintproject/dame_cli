@@ -67,5 +67,5 @@ setup(
     exclude_package_data={"mint": ["tests/*"]},
     zip_safe=False,
     install_requires=install_requires,
-    python_requires=">=3.5.0",
+    python_requires=">=3.6.0",
 )

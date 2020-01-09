@@ -4,7 +4,7 @@ mint.
 
 :license: Apache 2.0
 """
-
+import json
 import os
 from pathlib import Path
 
@@ -59,7 +59,8 @@ def download_files(inputs, outputs, thread_directory):
 
     click.secho("The destination directory is: {}".format(thread_directory.absolute()), fg="yellow")
     for file in outputs:
-        _, filename = download_data_file(file['download_url'], model_directory_outputs)
+        data_specification_id = file['id']
+        _, filename = download_data_file(file['download_url'], model_directory_outputs, data_specification_id)
         click.secho("Downloaded: {}".format(filename), fg="green")
 
     for file in inputs:
@@ -93,7 +94,8 @@ def download(thread_id, output):
         model_name = model.split('/')[-1]
         thread_directory = model_directory / model_name / thread_id
         download_files(inputs, outputs, thread_directory)
-
+        with open(thread_directory/"summary.json", 'w',  encoding='utf-8') as f:
+            json.dump(summary.to_dict() , f, ensure_ascii=False, indent=4)
 
 @execution.command(
     name="search",
@@ -115,10 +117,10 @@ def download(thread_id, output):
 )
 def _list(limit, free_text=""):
     tab = tt.Texttable()
-    headings = ['id', 'models']
+    headings = ['scenario_id', 'problem_id', 'thread_id', 'model']
     summaries = list_summaries(limit=limit, page=1, model=free_text)
     for s in summaries:
-        tab.add_row([s.thread.id, s.thread.models])
+        tab.add_row([s.scenario.id, s.problem_formulation.id, s.thread.id, s.thread.models])
     tab.header(headings)
     print(tab.draw())
     print("{} results".format(len(summaries)))

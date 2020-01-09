@@ -56,4 +56,4 @@ def init_logger():
     logger = logging.getLogger(__package__)
 
 def get_latest_version():
-    return requests.get("https://pypi.org/pypi/wcm/json").json()["info"]["version"]
+    return requests.get("https://pypi.org/pypi/mint-cli/json").json()["info"]["version"]

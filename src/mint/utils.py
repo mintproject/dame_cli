@@ -5,7 +5,7 @@ import tempfile
 from zipfile import ZipFile
 import validators
 import yaml
-from mint.modelcatalogapi import get_setup
+from mint.modelcatalogapi import get_setup, datasetspecifications_id_get
 
 ignore_dirs = ["__MACOSX"]
 SERVER = "https://dev.mint.isi.edu"
@@ -58,12 +58,18 @@ def download_file(url):
         raise requests.exceptions.RequestException(r)
     return r.content
 
+def validate_suffix(suffix):
+    return suffix if suffix.startswith('.') else ".{}".format(suffix)
 
-def download_data_file(url, _dir):
+def download_data_file(url, _dir, data_specification_id=None):
     headers={'Cache-Control': 'no-cache'}
     r = requests.get(url, allow_redirects=True, headers=headers)
     filename = url.split('/')[-1]
-    filepath = os.path.join(_dir, filename)
+    filepath = pathlib.Path(_dir / filename)
+    if filepath.suffix == "" and data_specification_id:
+        file_extension = datasetspecifications_id_get(obtain_id(data_specification_id)).has_format[0]
+        if file_extension:
+            filepath = filepath.with_suffix(validate_suffix(file_extension))
     with requests.get(url, stream=True, headers=headers) as r:
         r.raise_for_status()
         with open(filepath, 'wb') as f:

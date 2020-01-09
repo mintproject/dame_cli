@@ -30,6 +30,7 @@ def list_summaries(limit=200, page=1, model=""):
     api_instance = ingestion.SummaryApi()
     try:
         api_response = api_instance.summary_get(limit=limit, page=page, model=model)
+        print(api_response)
         return api_response
     except ApiException as e:
         raise e

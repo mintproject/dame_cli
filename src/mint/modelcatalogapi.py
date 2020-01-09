@@ -36,3 +36,12 @@ def list_setup(label=None):
         return api_response
     except ApiException as e:
         raise e
+
+def datasetspecifications_id_get(_id):
+    try:
+        # Get a DatasetSpecification
+        api_instance = modelcatalog.DatasetSpecificationApi()
+        api_response = api_instance.datasetspecifications_id_get(_id, username=USERNAME)
+        return api_response
+    except ApiException as e:
+        print("Exception when calling DatasetSpecificationApi->datasetspecifications_id_get: %s\n" % e)
