@@ -24,7 +24,7 @@ install_requires = [
     "modelcatalog-api>=1.7.0",
     "texttable>=1.6.2",
     "validators>=0.14.1",
-    "ingestion-api>=1.3.1",
+    "ingestion-api>=1.3.3",
     "PyYAML>=5.1.2",
     "semver>=2.8.1",
     "requests",

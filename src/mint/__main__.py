@@ -12,15 +12,15 @@ import click
 
 import semver
 import mint
-from core.downloader import check_size, parse_inputs
-from core.emulatorapi import get_summary, list_summaries
-from core.utils import obtain_id, download_file, download_setup, download_data_file, humansize, SERVER
-from core.modelcatalogapi import get_setup, list_setup, get_model
-from core.executor import execute_setup
+from mint.downloader import check_size, parse_inputs, parse_outputs
+from mint.emulatorapi import get_summary, list_summaries, obtain_results
+from mint.utils import obtain_id, download_file, download_setup, download_data_file, humansize, SERVER
+from mint.modelcatalogapi import get_setup, list_setup, get_model
+from mint.executor import execute_setup
+
 from mint import _utils, _makeyaml
 from mint._utils import log
 import texttable as tt
-
 
 try:
     from yaml import CLoader as Loader
@@ -43,11 +43,13 @@ You should consider upgrading via the 'pip install --upgrade mint' command.""",
         )
 
 
-def download_files(files, name, thread_id, output_directory):
-    output = Path(output_directory)
-    model_directory = output / name / thread_id
-    Path.mkdir(model_directory, parents=True, exist_ok=True)
+def download_files(inputs, outputs, thread_directory):
+    model_directory_inputs = thread_directory / 'inputs'
+    model_directory_outputs = thread_directory / 'outputs'
+    Path.mkdir(model_directory_inputs, parents=True, exist_ok=True)
+    Path.mkdir(model_directory_outputs, parents=True, exist_ok=True)
 
+    files = inputs + outputs
     size = 0
     for file in files:
         size += int(check_size(file['download_url']))
@@ -55,9 +57,13 @@ def download_files(files, name, thread_id, output_directory):
     if not click.confirm('Do you want to continue?'):
         return
 
-    click.secho("The destination directory is: {}".format(model_directory.absolute()), fg="yellow")
-    for file in files:
-        _, filename = download_data_file(file['download_url'], model_directory)
+    click.secho("The destination directory is: {}".format(thread_directory.absolute()), fg="yellow")
+    for file in outputs:
+        _, filename = download_data_file(file['download_url'], model_directory_outputs)
+        click.secho("Downloaded: {}".format(filename), fg="green")
+
+    for file in inputs:
+        _, filename = download_data_file(file['download_url'], model_directory_inputs)
         click.secho("Downloaded: {}".format(filename), fg="green")
 
 @cli.group()
@@ -79,21 +85,23 @@ def execution():
 )
 def download(thread_id, output):
     summary = get_summary(thread_id)
-    scenario_id = summary.scenario.id
-    problem_id = summary.problem_formulation.id
+    results = obtain_results(thread_id)
+    model_directory = Path(output)
     for model in summary.thread.models:
         inputs = parse_inputs(model, summary.thread)
-        download_files(inputs, model.split('/')[-1], thread_id, output)
+        outputs = parse_outputs(model, summary.thread, results)
+        model_name = model.split('/')[-1]
+        thread_directory = model_directory / model_name / thread_id
+        download_files(inputs, outputs, thread_directory)
 
 
 @execution.command(
     name="search",
-    help="List all the execution"
-)
-@click.option(
-    "--model",
-    default="",
     help="Search with regular expression match by name or description.",
+)
+@click.argument(
+    "free_text",
+    default="",
     type=str
 )
 @click.option(
@@ -105,10 +113,10 @@ def download(thread_id, output):
          "limit 'api.max_limit' will be used instead.",
     type=int,
 )
-def _list(limit, model=""):
+def _list(limit, free_text=""):
     tab = tt.Texttable()
-    headings = ['name', 'models']
-    summaries = list_summaries(limit=limit, page=1, model=model)
+    headings = ['id', 'models']
+    summaries = list_summaries(limit=limit, page=1, model=free_text)
     for s in summaries:
         tab.add_row([s.thread.id, s.thread.models])
     tab.header(headings)

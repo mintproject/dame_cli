@@ -5,7 +5,7 @@ import tempfile
 from zipfile import ZipFile
 import validators
 import yaml
-from core.modelcatalogapi import get_setup
+from mint.modelcatalogapi import get_setup
 
 ignore_dirs = ["__MACOSX"]
 SERVER = "https://dev.mint.isi.edu"

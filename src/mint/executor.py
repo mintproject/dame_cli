@@ -1,11 +1,10 @@
-import itertools
 import subprocess
 import uuid
 from pathlib import Path
 
 from yaml import load, Loader
 
-from core.utils import download_data_file, download_extract_zip, obtain_id
+from mint.utils import download_data_file, download_extract_zip, obtain_id
 from mint._utils import log
 
 KEYS_REQUIRED_PARAMETER = {"hasDefaultValue", "position"}
