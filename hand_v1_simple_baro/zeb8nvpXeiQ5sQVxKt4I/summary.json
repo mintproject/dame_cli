@@ -1,0 +1,137 @@
+{
+    "problem_formulation": {
+        "id": "dAkQZmVskdPUcCkk7gAg",
+        "text": "",
+        "region": null,
+        "subregion": null,
+        "time_period": {
+            "end_date": "2018-01-01T00:00:00.000000Z",
+            "start_date": "2018-01-01T00:00:00.000000Z"
+        }
+    },
+    "scenario": {
+        "id": "EnaNTF1qst06U4STDl78",
+        "text": "HAND Executions in different Ethiopia Basins",
+        "region": "Ethiopia",
+        "subregion": null,
+        "time_period": {
+            "end_date": "2019-01-01T00:00:00.000000Z",
+            "start_date": "2018-01-01T00:00:00.000000Z"
+        }
+    },
+    "thread": {
+        "id": "zeb8nvpXeiQ5sQVxKt4I",
+        "text": "Baro",
+        "time_period": {
+            "end_date": "2018-01-01T00:00:00.000000Z",
+            "start_date": "2018-01-01T00:00:00.000000Z"
+        },
+        "indicators": [
+            "flooding_contour"
+        ],
+        "models": {
+            "https://w3id.org/okn/i/mint/hand_v1_simple_baro": {
+                "calibrated_region": "Baro basin (Ethiopia)",
+                "category": "Hydrology",
+                "description": "The Height Above the Nearest Drainage (HAND) is a model that normalizes topography according to the local relative heights found along a given drainage network. Model output shows a high correlation with the depth of the water table in a region and provide an accurate spatial representation of soil water environments. HAND takes as input a Digital Elevation Map of a given region, producing as outputa normalized draining potential (or relative vertical flowpath-distance) to the nearest drainages.",
+                "dimensionality": "",
+                "id": "https://w3id.org/okn/i/mint/hand_v1_simple_baro",
+                "input_files": [
+                    {
+                        "id": "https://w3id.org/okn/i/mint/hand_v1_simple_baro_input_dem",
+                        "name": "input-dem",
+                        "type": "https://w3id.org/wings/export/MINT#rasterDem",
+                        "value": {
+                            "id": "FFF-3s5c113e-c7ae-4cda-ba23-2e4f2286dem1",
+                            "resources": [
+                                {
+                                    "id": "Baro_DEM_buffer.tif",
+                                    "name": "Baro_DEM_buffer.tif",
+                                    "selected": true,
+                                    "url": "https://data.mint.isi.edu/files/hand-dem/GIS-Oromia/Baro/Baro_DEM_buffer.tif"
+                                }
+                            ]
+                        },
+                        "variables": [
+                            "land_surface__elevation"
+                        ],
+                        "download_url": "https://data.mint.isi.edu/files/hand-dem/GIS-Oromia/Baro/Baro_DEM_buffer.tif"
+                    }
+                ],
+                "input_parameters": [
+                    {
+                        "accepted_values": null,
+                        "adjustment_variable": "",
+                        "default": "22.3",
+                        "description": "Threshold determines the order of the river network.  Minimum is zero, Maximum is the number of pixels in the image.  Higher value will simulate only main river channels, lower looks at more tributaries.  Note that a zero value is too extreme. Default is 22.3.",
+                        "id": "https://w3id.org/okn/i/mint/hand_v1_simple_baro_threshold",
+                        "max": "",
+                        "min": "0",
+                        "name": "threshold",
+                        "position": 1,
+                        "type": "float",
+                        "unit": "pixel"
+                    }
+                ],
+                "localname": "hand_v1_simple_baro",
+                "minimum_output_time_interval": "",
+                "model_configuration": "hand_v1_simple",
+                "model_type": "",
+                "model_version": "HANDv1",
+                "modeled_processes": "",
+                "name": "HAND model-simple configuration for the Baro basin in Ethiopia",
+                "original_model": "HAND",
+                "output_files": [
+                    {
+                        "id": "https://w3id.org/okn/i/mint/hand_v1_simple_baro_distance_down_image",
+                        "name": "distance-down-image",
+                        "type": "https://w3id.org/wings/export/MINT#distanceDownImage",
+                        "variables": [
+                            "drawdown",
+                            "recharge_volume_flux",
+                            "storage_volume"
+                        ],
+                        "download_url": "https://data.mint.isi.edu/files/local-execution/distance-down-image-b1acd7edbc4c189b3ca26fc65677e5a1"
+                    },
+                    {
+                        "id": "https://w3id.org/okn/i/mint/hand_v1_simple_baro_distance_down",
+                        "name": "distance-down",
+                        "type": "https://w3id.org/wings/export/MINT#rasterDistancedown",
+                        "variables": [
+                            "recharge_volume_flux",
+                            "drawdown",
+                            "storage_volume"
+                        ],
+                        "download_url": "https://data.mint.isi.edu/files/local-execution/distance-down-b1acd7edbc4c189b3ca26fc65677e5a1"
+                    }
+                ],
+                "parameter_assignment": "Expert-configured",
+                "parameter_assignment_details": "",
+                "spatial_grid_resolution": "",
+                "spatial_grid_type": "",
+                "target_variable_for_parameter_assignment": "",
+                "usage_notes": "",
+                "wcm_uri": "https://github.com/mintproject/MINT-WorkflowDomain/raw/master/WINGSWorkflowComponents/HAND-2.0.0/HAND-2.0.0.zip"
+            }
+        },
+        "datasets": {
+            "dataset_Baro_DEM_buffer.tif": {
+                "id": "dataset_Baro_DEM_buffer.tif",
+                "resources": [
+                    {
+                        "id": "Baro_DEM_buffer.tif",
+                        "name": "Baro_DEM_buffer.tif",
+                        "selected": true,
+                        "url": "https://data.mint.isi.edu/files/hand-dem/GIS-Oromia/Baro/Baro_DEM_buffer.tif"
+                    }
+                ]
+            }
+        },
+        "results": [
+            {
+                "inputs_outputs_csv": "/usr/src/app/public/data/zeb8nvpXeiQ5sQVxKt4I/hand_v1_simple.csv",
+                "modelid": "https://w3id.org/okn/i/mint/hand_v1_simple_baro"
+            }
+        ]
+    }
+}
