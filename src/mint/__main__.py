@@ -43,36 +43,88 @@ You should consider upgrading via the 'pip install --upgrade mint' command.""",
         )
 
 
-def download_files(inputs, outputs, thread_directory):
-    model_directory_inputs = thread_directory / 'inputs'
-    model_directory_outputs = thread_directory / 'outputs'
-    Path.mkdir(model_directory_inputs, parents=True, exist_ok=True)
-    Path.mkdir(model_directory_outputs, parents=True, exist_ok=True)
+@click.group(name="test")
+def test():
+    """Manages a setup of a model."""
 
-    files = inputs + outputs
-    size = 0
-    for file in files:
-        size += int(check_size(file['download_url']))
-    click.secho("You are going to download {}".format(humansize(size)), fg="green")
-    if not click.confirm('Do you want to continue?'):
-        return
 
-    click.secho("The destination directory is: {}".format(thread_directory.absolute()), fg="yellow")
-    for file in outputs:
-        data_specification_id = file['id']
-        _, filename = download_data_file(file['download_url'], model_directory_outputs, data_specification_id)
-        click.secho("Downloaded: {}".format(filename), fg="green")
+@test.command(help="Run a setup_name by name.")
+@click.argument(
+    "name",
+    type=click.STRING
+)
+def run(name=None):
+    file_path = download_setup(setup_id=name, output=Path('.'))
+    status = execute_setups(file_path)
+    for setup in status:
+        if setup["exitcode"] == 0:
+            click.secho("{} ok".format(setup["name"]), fg="green")
+        else:
+            click.secho("{} failed".format(setup["name"]), fg="red")
 
-    for file in inputs:
-        _, filename = download_data_file(file['download_url'], model_directory_inputs)
-        click.secho("Downloaded: {}".format(filename), fg="green")
+
+def execute_setups(path):
+    setup_files = []
+    if os.path.isdir(path):
+        path = Path(path)
+        for file in os.listdir(path):
+            if file.endswith(".yaml") or file.endswith(".yml"):
+                setup_files.append(path / file)
+    elif os.path.isfile(path):
+        default_path = Path('.')
+        setup_files.append(default_path / path)
+    try:
+        status = execute_setup(setup_files)
+    except Exception as e:
+        log.error(e, exc_info=True)
+        exit(1)
+    return status
+
+@cli.group()
+def modelconfiguration():
+    """Manages model"""
+
+@modelconfiguration.command(name="list",
+                            help="Manages model configurations")
+
+
+
+
+@cli.group()
+def setup():
+@setup.command(help="Create setup file.")
+@click.argument(
+    "setup_id",
+    type=str,
+)
+@click.option(
+    "--output",
+    "-o",
+    type=click.Path(file_okay=False, dir_okay=True, writable=True, exists=False),
+    default='.'
+)
+def download(setup_id, output):
+    path = download_setup(setup_id, output)
+    click.secho("{} has been exported. Check {}".format(setup_id, path), fg="green")
+
+
+@setup.command(name="list", help="List configurations")
+def _list():
+    tab = tt.Texttable()
+    headings = ['name', 'description']
+    tab.header(headings)
+    for setup_item in list_setup(label=None):
+        name = obtain_id(setup_item.id)
+        tab.add_row([name, setup_item.label[0]])
+    print(tab.draw())
 
 @cli.group()
 def execution():
     """Manages the executions"""
 
+
 @execution.command(name='download',
-                help="Download the inputs")
+                   help="Download the inputs")
 @click.argument(
     "thread_id",
     required=True,
@@ -94,8 +146,9 @@ def download(thread_id, output):
         model_name = model.split('/')[-1]
         thread_directory = model_directory / model_name / thread_id
         download_files(inputs, outputs, thread_directory)
-        with open(thread_directory/"summary.json", 'w',  encoding='utf-8') as f:
-            json.dump(summary.to_dict() , f, ensure_ascii=False, indent=4)
+        with open(thread_directory / "summary.json", 'w', encoding='utf-8') as f:
+            json.dump(summary.to_dict(), f, ensure_ascii=False, indent=4)
+
 
 @execution.command(
     name="search",
@@ -137,70 +190,31 @@ def show(thread_id):
     region = summary.scenario.region.lower()
     scenario_id = summary.scenario.id
     problem_id = summary.problem_formulation.id
-    link = "{}/{}/modeling/scenario/{}/{}/{}".format(SERVER, region, scenario_id,  problem_id, thread_id)
+    link = "{}/{}/modeling/scenario/{}/{}/{}".format(SERVER, region, scenario_id, problem_id, thread_id)
     click.secho("Please visit {}".format(link))
 
 
-@cli.group()
-def setup():
-    """Manages a setup of a model."""
 
+def download_files(inputs, outputs, thread_directory):
+    model_directory_inputs = thread_directory / 'inputs'
+    model_directory_outputs = thread_directory / 'outputs'
+    Path.mkdir(model_directory_inputs, parents=True, exist_ok=True)
+    Path.mkdir(model_directory_outputs, parents=True, exist_ok=True)
 
-@setup.command(help="Create setup file.")
-@click.argument(
-    "setup_id",
-    type=str,
-)
-@click.option(
-    "--output",
-    "-o",
-    type=click.Path(file_okay=False, dir_okay=True, writable=True, exists=False),
-    default='.'
-)
-def download(setup_id, output):
-    path = download_setup(setup_id, output)
-    click.secho("{} has been exported. Check {}".format(setup_id, path), fg="green")
+    files = inputs + outputs
+    size = 0
+    for file in files:
+        size += int(check_size(file['download_url']))
+    click.secho("You are going to download {}".format(humansize(size)), fg="green")
+    if not click.confirm('Do you want to continue?'):
+        return
 
+    click.secho("The destination directory is: {}".format(thread_directory.absolute()), fg="yellow")
+    for file in outputs:
+        data_specification_id = file['id']
+        _, filename = download_data_file(file['download_url'], model_directory_outputs, data_specification_id)
+        click.secho("Downloaded: {}".format(filename), fg="green")
 
-@setup.command(help="List configurations")
-def lista():
-    tab = tt.Texttable()
-    headings = ['name', 'description']
-    tab.header(headings)
-    for setup_item in list_setup(label=None):
-        name = obtain_id(setup_item.id)
-        tab.add_row([name, setup_item.label[0]])
-    print(tab.draw())
-
-
-@setup.command(help="Run a setup_name by name.")
-@click.argument(
-    "name",
-    type=click.STRING
-)
-def run(name=None):
-    file_path = download_setup(setup_id=name, output=Path('.'))
-    status = execute_setups(file_path)
-    for setup in status:
-        if setup["exitcode"] == 0:
-            click.secho("{} ok".format(setup["name"]), fg="green")
-        else:
-            click.secho("{} failed".format(setup["name"]), fg="red")
-
-
-def execute_setups(path):
-    setup_files = []
-    if os.path.isdir(path):
-        path = Path(path)
-        for file in os.listdir(path):
-            if file.endswith(".yaml") or file.endswith(".yml"):
-                setup_files.append(path / file)
-    elif os.path.isfile(path):
-        default_path = Path('.')
-        setup_files.append(default_path / path)
-    try:
-        status = execute_setup(setup_files)
-    except Exception as e:
-        log.error(e, exc_info=True)
-        exit(1)
-    return status
+    for file in inputs:
+        _, filename = download_data_file(file['download_url'], model_directory_inputs)
+        click.secho("Downloaded: {}".format(filename), fg="green")
