@@ -64,9 +64,11 @@ def build_command_line(resource, _dir):
         parameters = None
     outputs = resource.has_output
     component_url = resource.has_component_location[0]
-    if resource.has_software_image:
-        has_software_image = resource.has_software_image[0]['label'][0]
-        line = "{} {}".format(SINGULARITY_CWD_LINE, has_software_image)
+    software_image = resource.has_software_image
+    if software_image:
+        has_software_image = software_image[0]['label'][0]
+        print("Using docker image {}".format(has_software_image))
+        line = SINGULARITY_CWD_LINE.format(has_software_image)
     else:
         exit(1)
     component_dir = download_extract_zip(component_url, _dir, setup_name)
@@ -81,6 +83,7 @@ def build_command_line(resource, _dir):
     if parameters is not None:
         l = build_parameter(parameters)
         line += " {}".format(l)
+    print(line)
     return line, src_path
 
 
