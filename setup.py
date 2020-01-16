@@ -21,7 +21,7 @@ def read(fname):
 
 install_requires = [
     "Click>=7.0",
-    "modelcatalog-api>=1.7.0",
+    "modelcatalog-api>=1.7.1",
     "texttable>=1.6.2",
     "validators>=0.14.1",
     "ingestion-api>=1.3.3",

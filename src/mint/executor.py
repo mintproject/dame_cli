@@ -58,7 +58,10 @@ def build_parameter(parameters):
 def build_command_line(resource, _dir):
     setup_name = obtain_id(resource.id)
     inputs = resource.has_input
-    parameters = resource.has_parameter
+    try:
+        parameters = resource.has_parameter
+    except:
+        parameters = None
     outputs = resource.has_output
     component_url = resource.has_component_location[0]
     if resource.has_software_image:

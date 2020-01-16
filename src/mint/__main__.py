@@ -6,6 +6,7 @@ mint.
 """
 import json
 import os
+import re
 from pathlib import Path
 
 import click
@@ -14,13 +15,14 @@ import semver
 import mint
 from mint.downloader import check_size, parse_inputs, parse_outputs
 from mint.emulatorapi import get_summary, list_summaries, obtain_results
-from mint.utils import obtain_id, download_file, download_setup, download_data_file, humansize, SERVER
-from mint.modelcatalogapi import get_setup, list_setup, get_model
+from mint.utils import obtain_id, download_file, download_setup, download_data_file, humansize, SERVER, check_is_none
+from mint.modelcatalogapi import get_setup, list_setup, get_model, list_model_configuration, get_model_configuration
 from mint.executor import execute_setup
 
 from mint import _utils, _makeyaml
 from mint._utils import log
 import texttable as tt
+from modelcatalog import DatasetSpecification, SampleResource
 
 try:
     from yaml import CLoader as Loader
@@ -48,13 +50,10 @@ def test():
     """Manages a setup of a model."""
 
 
-@test.command(help="Run a setup_name by name.")
-@click.argument(
-    "name",
-    type=click.STRING
-)
-def run(name=None):
+def run_method(name):
+    click.secho("Downloading the inputs and parameters", fg="green")
     file_path = download_setup(setup_id=name, output=Path('.'))
+    click.secho("Executing the setup", fg="green")
     status = execute_setups(file_path)
     for setup in status:
         if setup["exitcode"] == 0:
@@ -84,14 +83,99 @@ def execute_setups(path):
 def modelconfiguration():
     """Manages model"""
 
-@modelconfiguration.command(name="list",
+@modelconfiguration.command(name="test",
                             help="Manages model configurations")
+@click.argument(
+    "free_term",
+    type=str,
+    default=None,
+    required=False
+)
+@click.option(
+    "--name",
+    "-n",
+    help="The name of model configuration to test",
+    type=str,
+    required=False
+)
+@click.option(
+    "--auto",
+    help="Use the default value",
+    is_flag=True
+)
+def _test(free_term, name, auto):
+    tab = tt.Texttable()
+    headings = ['number', 'name', 'description']
+    tab.header(headings)
+    rows = []
+    number = 1
+    if name is None:
+        for config_item in list_model_configuration():
+            name = obtain_id(config_item.id)
+            print(name)
+            label = config_item.label[0]
+            if free_term is not None and (not re.search(free_term, label, re.IGNORECASE) and not re.search(free_term, name, re.IGNORECASE)):
+                continue
+            rows.append([number, name, config_item.label[0]])
+            number += 1
+        tab.add_rows(rows)
+        print(tab.draw())
+        value = 0
+        while not (value < number and value > 0):
+            value = click.prompt('Select the model configuration to test', type=int)
+        configuration_name_selected = rows[value-1][1]
+    else:
+        configuration_name_selected = name
+    print("Testing {}".format(configuration_name_selected))
+    model_configuration = get_model_configuration(configuration_name_selected)
+    if "ModelConfigurationSetup" in model_configuration.type:
+        name = obtain_id(model_configuration.id)
+        setup_convert = get_setup(name)
+        run_method(name)
+    else:
+        for _input in model_configuration.has_input:
+            print("=======================================================")
+            _id = check_is_none(_input, 'id')
+            description = check_is_none(_input, 'description')
+            label = check_is_none(_input, 'label')
+            _format = check_is_none(_input, 'format')
+            variables = check_is_none(_input, 'variables')
+            print(_id)
+            print(description)
+            print(variables)
+            print(_format)
+            url = click.prompt('Please enter the url', type=click.STRING)
+            s = SampleResource(data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
+                           value=url,
+                           description=description,
+                           label=label)
 
-
-
+        for _input in model_configuration.has_parameter:
+            print("=======================================================")
+            print(check_is_none(_input, 'id'))
+            print(check_is_none(_input, 'description'))
+            print(check_is_none(_input, 'hasDataType'))
+            default_value = check_is_none(_input, 'hasDefaultValue')
+            if default_value and not auto:
+                default_value = default_value[0]
+                value = click.prompt('Enter the value for the parameter. Default value', default=default_value)
+            elif not default_value:
+                value = click.prompt('Enter the value for the parameter.')
+            elif default_value:
+                click.echo("Using the default valuer {}".format(default_value))
 
 @cli.group()
 def setup():
+    """Manages setups"""
+
+@setup.command(help="Run a setup_name by name.")
+@click.argument(
+    "name",
+    type=click.STRING
+)
+def run(name=None):
+    run_method(name)
+
 @setup.command(help="Create setup file.")
 @click.argument(
     "setup_id",
@@ -170,10 +254,12 @@ def download(thread_id, output):
 )
 def _list(limit, free_text=""):
     tab = tt.Texttable()
-    headings = ['scenario_id', 'problem_id', 'thread_id', 'model']
+    #headings = ['scenario_id', 'problem_id', 'thread_id', 'model']
+    headings = ['thread_id', 'model']
     summaries = list_summaries(limit=limit, page=1, model=free_text)
     for s in summaries:
-        tab.add_row([s.scenario.id, s.problem_formulation.id, s.thread.id, s.thread.models])
+        tab.add_row([s.thread.id, s.thread.models])
+        #tab.add_row([s.scenario.id, s.problem_formulation.id, s.thread.id, s.thread.models])
     tab.header(headings)
     print(tab.draw())
     print("{} results".format(len(summaries)))
