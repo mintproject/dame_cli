@@ -15,7 +15,6 @@ SINGULARITY_CWD_LINE = "/usr/bin/singularity exec docker://{} ./run"
 
 EXECUTION_DIRECTORY = "executions"
 
-
 def build_input(inputs, _dir):
     line = ""
     files_inputs = []
