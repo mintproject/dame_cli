@@ -4,23 +4,25 @@ import uuid
 from pathlib import Path
 
 import click
-import texttable
+import texttable as tt
 from mint.utils import check_is_none, create_yaml_from_resource, obtain_id
 from mint.executor import execute_setup
 from mint._utils import log
 from mint.modelcatalogapi import get_setup
 from modelcatalog import ApiException, SampleResource
 
-
 def edit_inputs_setup(model_configuration):
+    click.secho("The information of the setup is incomplete", fg="yellow")
     for _input in model_configuration.has_input:
         if not "hasFixedResource" in _input:
-            url = click.prompt('Please enter the url', type=click.STRING)
+            print_data_property_table(_input)
+            url = click.prompt('Please, enter the url of the previous input', type=click.STRING)
             s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
-                                data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
+                               data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
                                value=[url])
             _input["hasFixedResource"] = [s.to_dict()]
     return model_configuration
+
 
 def edit_parameter_config_or_setup(resource, auto=False):
     for _input in resource.has_parameter:
@@ -43,20 +45,21 @@ def edit_parameter_config_or_setup(resource, auto=False):
             else:
                 value = click.prompt('Enter the value for the parameter:', default=default_value)
 
-def print_table(resource):
-    print(resource)
-    for attr in resource.keys():
-        print(attr)
-        try:
-            value = resource[attr]
-        except:
-            value = ""
-        if not isinstance(value, list) and not isinstance(value, dict):
-            print(attr)
-            print(value)
+
+def print_data_property_table(resource):
+    tab = tt.Texttable()
+    headings = ['Property', 'Value']
+    tab.header(headings)
+    for key, value in resource.items():
+        if isinstance(value, dict) or key == "type":
+            continue
+        tab.add_row([key,value])
+    print(tab.draw())
+
 
 def edit_parameter_config_setup(resource):
     print_table(resource.to_dict())
+
 
 def edit_inputs_model_configuration(model_configuration):
     for _input in model_configuration.has_input:
@@ -75,6 +78,7 @@ def edit_inputs_model_configuration(model_configuration):
                            value=url,
                            description=description,
                            label=label)
+
 
 def edit_setup(setup):
     """
@@ -101,6 +105,7 @@ def run_method(editable, name):
         click.secho("Unable to download the setup {}".format(e), fg="red")
         exit(1)
 
+
 def run_method_setup(setup):
     """
     Call download_setup(): Download the setup(s) as yaml file
@@ -113,8 +118,6 @@ def run_method_setup(setup):
     except ApiException as e:
         click.secho("Unable to download the setup {}".format(e), fg="red")
         exit(1)
-
-
 
 
 def read_and_execute(file_path):
@@ -151,4 +154,3 @@ def find_setup_files(path):
         default_path = Path('.')
         setup_files.append(default_path / path)
     return setup_files
-
