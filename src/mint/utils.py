@@ -11,14 +11,14 @@ ignore_dirs = ["__MACOSX"]
 SERVER = "https://dev.mint.isi.edu"
 
 def check_is_none(item, key):
-    return item[key] if key in item else ''
+     item[key] if key in item else ''
 
-def download_setup(setup_id, output):
-    filename = setup_id + ".yaml"
+
+def create_yaml_from_resource(resource, name, output):
+    filename = name + ".yaml"
     path = pathlib.Path.cwd() / output / filename
     with open(path, mode='w+') as fid:
-        setup_id = get_setup(setup_id)
-        yaml.dump(setup_id, fid)
+        yaml.dump(resource, fid)
     return path
 
 

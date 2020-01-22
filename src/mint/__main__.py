@@ -13,10 +13,11 @@ import click
 
 import semver
 import mint
-from cli_methods import run_method, edit_inputs_model_configuration, edit_parameter_config_or_setup
+from mint.cli_methods import run_method, edit_inputs_model_configuration, edit_parameter_config_or_setup, \
+    edit_inputs_setup, run_method_setup
 from mint.downloader import check_size, parse_inputs, parse_outputs
 from mint.emulatorapi import get_summary, list_summaries, obtain_results
-from mint.utils import obtain_id, download_file, download_setup, download_data_file, humansize, SERVER, check_is_none
+from mint.utils import obtain_id, download_file, download_data_file, humansize, SERVER, check_is_none
 from mint.modelcatalogapi import get_setup, list_setup, get_model, list_model_configuration, get_model_configuration
 from mint import _utils, _makeyaml
 from mint._utils import log
@@ -88,14 +89,14 @@ def _test(free_term, name, auto):
     if name is None:
         for config_item in list_model_configuration():
             name = obtain_id(config_item.id)
-            print(name)
             label = config_item.label[0]
             if free_term is not None and (
                     not re.search(free_term, label, re.IGNORECASE) and not re.search(free_term, name, re.IGNORECASE)):
                 continue
             rows.append([number, name, config_item.label[0]])
             number += 1
-        tab.add_rows(rows)
+        tab.add_rows(rows, header=False)
+        tab.header(headings)
         print(tab.draw())
         value = 0
         while not (value < number and value > 0):
@@ -107,6 +108,7 @@ def _test(free_term, name, auto):
     model_configuration = get_model_configuration(configuration_name_selected)
     if "ModelConfigurationSetup" in model_configuration.type:
         name = obtain_id(model_configuration.id)
+        print(name)
         setup_convert = get_setup(name)
         run_method(name)
     else:
@@ -129,9 +131,15 @@ def setup():
     "name",
     type=click.STRING
 )
-def run(name=None):
-    run_method(name)
+@click.option(
+    '--edit',
+    is_flag=True
+)
 
+def run(edit, name):
+    setup = get_setup(name)
+    edit_inputs_setup(setup)
+    run_method_setup(setup)
 
 @setup.command(help="Create setup file.")
 @click.argument(

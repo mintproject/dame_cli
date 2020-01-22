@@ -1,35 +1,62 @@
+import itertools
 import os
+import uuid
 from pathlib import Path
 
 import click
-from utils import download_setup, check_is_none
+import texttable
+from mint.utils import check_is_none, create_yaml_from_resource, obtain_id
 from mint.executor import execute_setup
 from mint._utils import log
+from mint.modelcatalogapi import get_setup
+from modelcatalog import ApiException, SampleResource
+
 
 def edit_inputs_setup(model_configuration):
     for _input in model_configuration.has_input:
+        if not "hasFixedResource" in _input:
+            url = click.prompt('Please enter the url', type=click.STRING)
+            s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
+                                data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
+                               value=[url])
+            _input["hasFixedResource"] = [s.to_dict()]
+    return model_configuration
+
+def edit_parameter_config_or_setup(resource, auto=False):
+    for _input in resource.has_parameter:
         print("=======================================================")
-        _id = check_is_none(_input, 'id')
+        _id = obtain_id(check_is_none(_input, 'id'))
         description = check_is_none(_input, 'description')
-        label = check_is_none(_input, 'label')
-        _format = check_is_none(_input, 'format')
-        variables = check_is_none(_input, 'variables')
-
-def edit_parameter_config_or_setup(auto, model_configuration):
-    for _input in model_configuration.has_parameter:
-        print("=======================================================")
-        print(check_is_none(_input, 'id'))
-        print(check_is_none(_input, 'description'))
-        print(check_is_none(_input, 'hasDataType'))
+        datatype = check_is_none(_input, 'hasDataType')
+        click.secho("Name: {}".format(_id), fg="yellow")
+        click.secho("Description: {}".format(description), fg="yellow")
+        click.secho("Format: {}".format(datatype), fg="yellow")
         default_value = check_is_none(_input, 'hasDefaultValue')
-        if default_value and not auto:
-            default_value = default_value[0]
-            value = click.prompt('Enter the value for the parameter. Default value', default=default_value)
-        elif not default_value:
-            value = click.prompt('Enter the value for the parameter.')
-        elif default_value:
-            click.echo("Using the default valuer {}".format(default_value))
 
+        if not default_value:
+            value = click.prompt('Enter the value for the parameter.')
+        else:
+            default_value = default_value[0]
+            if auto:
+                value = default_value
+                click.echo("Using the default valuer {}".format(default_value))
+            else:
+                value = click.prompt('Enter the value for the parameter:', default=default_value)
+
+def print_table(resource):
+    print(resource)
+    for attr in resource.keys():
+        print(attr)
+        try:
+            value = resource[attr]
+        except:
+            value = ""
+        if not isinstance(value, list) and not isinstance(value, dict):
+            print(attr)
+            print(value)
+
+def edit_parameter_config_setup(resource):
+    print_table(resource.to_dict())
 
 def edit_inputs_model_configuration(model_configuration):
     for _input in model_configuration.has_input:
@@ -49,14 +76,48 @@ def edit_inputs_model_configuration(model_configuration):
                            description=description,
                            label=label)
 
+def edit_setup(setup):
+    """
+    Edit the inputs and parameters of a setup
+    """
+    edit_parameter_config_setup(resource=setup)
 
-def run_method(name):
+
+def run_method(editable, name):
     """
     Call download_setup(): Download the setup(s) as yaml file
     Call execute_setup(): Read the yaml file and execute
     """
     click.secho("Downloading the inputs and parameters", fg="green")
-    file_path = download_setup(setup_id=name, output=Path('.'))
+    setup = get_setup(name)
+    name = obtain_id(setup.id)
+    if editable:
+        edit_setup(setup)
+
+    try:
+        file_path = create_yaml_from_resource(resource=setup, name=name, output=Path('.'))
+        read_and_execute(file_path)
+    except ApiException as e:
+        click.secho("Unable to download the setup {}".format(e), fg="red")
+        exit(1)
+
+def run_method_setup(setup):
+    """
+    Call download_setup(): Download the setup(s) as yaml file
+    Call execute_setup(): Read the yaml file and execute
+    """
+    name = obtain_id(setup.id)
+    try:
+        file_path = create_yaml_from_resource(resource=setup, name=name, output=Path('.'))
+        read_and_execute(file_path)
+    except ApiException as e:
+        click.secho("Unable to download the setup {}".format(e), fg="red")
+        exit(1)
+
+
+
+
+def read_and_execute(file_path):
     click.secho("Executing the setup", fg="green")
     status = execute_setups(file_path)
     for setup in status:
