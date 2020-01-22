@@ -1,0 +1,190 @@
+!!python/object:modelcatalog.models.model_configuration_setup.ModelConfigurationSetup
+_author:
+- id: https://w3id.org/okn/i/mint/osorio_maximiliano
+  label:
+  - Maximiliano Osorio
+  name:
+  - Maximiliano Osorio
+  type: sd:Person
+_description:
+- A configuration of the TopoFlow model calibrated for the Baro region in Ethiopia
+  with configurable precipitation rates file and parameters for start/end of the simulation
+_has_component_location:
+- https://github.com/mintproject/MINT-WorkflowDomain/raw/master/WINGSWorkflowComponents/topoflow36_2.1.0/topoflow36_2.1.0.zip
+_has_implementation_script_location:
+- https://github.com/mintproject/MINT-WorkflowDomain/raw/master/WINGSWorkflowComponents/topoflow36_2.1.0/src/run
+_has_input:
+- description:
+  - Topoflow aggregated inputs for the Baro region
+  hasDimensionality:
+  - 0
+  hasFixedResource:
+  - dataCatalogIdentifier:
+    - FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o
+    description:
+    - Topoflow inputs for the Baro region
+    id: https://w3id.org/okn/i/mint/topoflow_inputs_baro
+    label:
+    - Topoflow inputs for the Baro region
+    type:
+    - SampleResource
+    value:
+    - https://data.mint.isi.edu/files/topoflow-regions/regions/Baro_Gam_1min.zip
+  hasFormat:
+  - zip
+  hasPresentation:
+  - {}
+  - {}
+  - {}
+  - {}
+  - {}
+  - {}
+  - {}
+  - {}
+  - {}
+  - {}
+  id: https://w3id.org/okn/i/mint/topoflow36_2.1.0_Baro_aggregatedInput
+  label:
+  - aggregated-inputs
+  position:
+  - 1
+  type:
+  - https://w3id.org/wings/export/MINT#TopoflowAggregatedInput
+  - DatasetSpecification
+- description:
+  - Precipitation rates
+  hasDimensionality:
+  - 0
+  hasFixedResource:
+  - data_catalog_identifier: FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o
+    id: https://w3id.org/okn/i/mint/
+    value:
+    - https://data.mint.isi.edu/files/topoflow-regions/regions/climate/ganale_gldas_2018_60.tar.gz
+  hasFormat:
+  - tar.gz
+  hasPresentation:
+  - {}
+  id: https://w3id.org/okn/i/mint/topoflow36_2.1.0_Baro_rainRates
+  label:
+  - precipitation-rates
+  position:
+  - 2
+  type:
+  - https://w3id.org/wings/export/MINT#TopoflowPrecipitationRate
+  - DatasetSpecification
+_has_output:
+- description:
+  - Topoflow aggregated outputs
+  hasDimensionality:
+  - 0
+  hasFormat:
+  - zip
+  hasPresentation:
+  - {}
+  - {}
+  - {}
+  id: https://w3id.org/okn/i/mint/topoflow36_2.1.0_Baro_aggregatedOutput
+  label:
+  - aggregated-outputs
+  position:
+  - 1
+  type:
+  - DatasetSpecification
+  - https://w3id.org/wings/export/MINT#TopoflowAggregatedOutputs
+_has_parameter:
+- description:
+  - Start dateof the simulation
+  hasDataType:
+  - string
+  hasDefaultValue:
+  - 8/1/2014
+  id: https://w3id.org/okn/i/mint/topoflow36_2.1.0_Baro_start_date
+  label:
+  - start_date
+  position:
+  - 1
+  type:
+  - https://w3id.org/wings/export/MINT#StartDate
+  - Parameter
+- description:
+  - End dat of the simulation
+  hasDataType:
+  - string
+  hasDefaultValue:
+  - 9/1/2014
+  id: https://w3id.org/okn/i/mint/topoflow36_2.1.0_Baro_end_date
+  label:
+  - end_date
+  position:
+  - 2
+  type:
+  - https://w3id.org/wings/export/MINT#EndDate
+  - Parameter
+- description:
+  - Number of minutes to run the model
+  hasDataType:
+  - int
+  hasDefaultValue:
+  - '1000'
+  hasFixedValue:
+  - '1000'
+  hasMinimumAcceptedValue:
+  - '0'
+  id: https://w3id.org/okn/i/mint/topoflow36_2.1.0_Baro_T_stop_model
+  label:
+  - T_stop_model
+  position:
+  - 3
+  type:
+  - Parameter
+  - https://w3id.org/wings/export/MINT#Adjustment
+  usesUnit:
+  - https://w3id.org/okn/i/mint/minute
+- description:
+  - Number of steps to run
+  hasDataType:
+  - int
+  hasDefaultValue:
+  - '5000'
+  hasFixedValue:
+  - '5000'
+  hasMinimumAcceptedValue:
+  - '0'
+  id: https://w3id.org/okn/i/mint/topoflow36_2.1.0_Baro_n_steps
+  label:
+  - n_steps
+  position:
+  - 4
+  type:
+  - Parameter
+  - https://w3id.org/wings/export/MINT#Adjustment
+_has_software_image:
+- id: https://w3id.org/okn/i/mint/MINTPROJECT-TOPOFLOW:2.1.0
+  label:
+  - mintproject/topoflow:2.1.0
+  type:
+  - SoftwareImage
+_has_source_code:
+- codeRepository:
+  - https://github.com/mintproject/MINT-WorkflowDomain/raw/master/WINGSWorkflowComponents/topoflow-3.6.0-precipitation/
+  description:
+  - Topoflow component
+  id: https://w3id.org/okn/i/mint/source_topoflow36
+  label:
+  - Topoflow component
+  programmingLanguage:
+  - shell
+  type:
+  - SourceCode
+_id: https://w3id.org/okn/i/mint/topoflow36_2.1.0_Baro
+_keywords:
+- snowmelt;precipitation;evapotranspiration;infiltration;channel/overland flow;shallow
+  subsurface flow;flow diversions
+_label:
+- TopoFlow calibrated model for the Baro region in Ethiopia
+_type:
+- ModelConfiguration
+- ConfigurationSetup
+- ModelConfigurationSetup
+- Theory-GuidedModel
+discriminator: null
