@@ -13,9 +13,9 @@ from mint.modelcatalogapi import get_setup
 from modelcatalog import ApiException, SampleResource
 
 def edit_inputs_setup(model_configuration):
-    click.secho("The information of the setup is incomplete", fg="yellow")
     for _input in model_configuration.has_input:
         if not "hasFixedResource" in _input:
+            click.secho("The information of the setup is incomplete", fg="yellow")
             print_data_property_table(_input)
             url = click.prompt('Please, enter the url of the previous input', type=click.STRING)
             s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
