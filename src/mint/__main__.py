@@ -70,6 +70,15 @@ def run(name, auto):
     edit_inputs_setup(setup)
     run_method_setup(setup)
 
+@modelconfiguration.command(name="list", help="List configurations")
+def _list():
+    tab = tt.Texttable()
+    headings = ['name', 'description']
+    tab.header(headings)
+    for setup_item in list_model_configuration(label=None):
+        name = obtain_id(setup_item.id)
+        tab.add_row([name, setup_item.label[0]])
+    print(tab.draw())
 
 """
 Click group: Setup
@@ -95,21 +104,6 @@ def run(edit, name):
     setup = get_setup(name)
     edit_inputs_setup(setup)
     run_method_setup(setup)
-
-@setup.command(help="Create setup file.")
-@click.argument(
-    "setup_id",
-    type=str,
-)
-@click.option(
-    "--output",
-    "-o",
-    type=click.Path(file_okay=False, dir_okay=True, writable=True, exists=False),
-    default='.'
-)
-def download(setup_id, output):
-    path = download_setup(setup_id, output)
-    click.secho("{} has been exported. Check {}".format(setup_id, path), fg="green")
 
 
 @setup.command(name="list", help="List configurations")

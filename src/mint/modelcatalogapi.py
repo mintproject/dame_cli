@@ -15,7 +15,7 @@ def get_model(_id):
     except ApiException as e:
         raise e
 
-def list_model_configuration():
+def list_model_configuration(label=None):
    api_instance = modelcatalog.ModelConfigurationApi()
    try:
        api_response = api_instance.modelconfigurations_get(username=USERNAME)

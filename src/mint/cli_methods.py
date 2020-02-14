@@ -14,7 +14,6 @@ from modelcatalog import ApiException, SampleResource
 
 def edit_inputs_setup(model_configuration):
     click.secho("The information of the setup is incomplete", fg="yellow")
-    print(model_configuration)
     for _input in model_configuration.has_input:
         if not "hasFixedResource" in _input:
             print_data_property_table(_input)
