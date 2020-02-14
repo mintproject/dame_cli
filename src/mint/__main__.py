@@ -44,12 +44,6 @@ You should consider upgrading via the 'pip install --upgrade mint' command.""",
             fg="yellow",
         )
 
-
-@click.group(name="test")
-def test():
-    """Manages a setup of a model."""
-
-
 """
 Click group: Model Configuration
 """
@@ -60,60 +54,21 @@ def modelconfiguration():
     """Manages model"""
 
 
-@modelconfiguration.command(name="test",
+@modelconfiguration.command(name="run",
                             help="Manages model configurations")
 @click.argument(
-    "free_term",
-    type=str,
-    default=None,
-    required=False
-)
-@click.option(
-    "--name",
-    "-n",
-    help="The name of model configuration to test",
-    type=str,
-    required=False
+    "name",
+    type=click.STRING
 )
 @click.option(
     "--auto",
     help="Use the default value",
     is_flag=True
 )
-def _test(free_term, name, auto):
-    tab = tt.Texttable()
-    headings = ['number', 'name', 'description']
-    tab.header(headings)
-    rows = []
-    number = 1
-    if name is None:
-        for config_item in list_model_configuration():
-            name = obtain_id(config_item.id)
-            label = config_item.label[0]
-            if free_term is not None and (
-                    not re.search(free_term, label, re.IGNORECASE) and not re.search(free_term, name, re.IGNORECASE)):
-                continue
-            rows.append([number, name, config_item.label[0]])
-            number += 1
-        tab.add_rows(rows, header=False)
-        tab.header(headings)
-        print(tab.draw())
-        value = 0
-        while not (value < number and value > 0):
-            value = click.prompt('Select the model configuration to test', type=int)
-        configuration_name_selected = rows[value - 1][1]
-    else:
-        configuration_name_selected = name
-    print("Testing {}".format(configuration_name_selected))
-    model_configuration = get_model_configuration(configuration_name_selected)
-    if "ModelConfigurationSetup" in model_configuration.type:
-        name = obtain_id(model_configuration.id)
-        print(name)
-        setup_convert = get_setup(name)
-        run_method(name)
-    else:
-        edit_inputs_model_configuration(model_configuration)
-        edit_parameter_config_or_setup(auto, model_configuration)
+def run(name, auto):
+    setup = get_model_configuration(name)
+    edit_inputs_setup(setup)
+    run_method_setup(setup)
 
 
 """
