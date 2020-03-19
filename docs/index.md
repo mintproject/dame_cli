@@ -2,6 +2,10 @@
 
 ## Requeriments
 
+The requeriments are:
+1. Singularity
+2. Python >= 3.6
+
 ### Singularity 
 
 The application needs Singularity to run the containers. Please, follow the next documentation.
