@@ -12,29 +12,27 @@ from mint._utils import log
 from mint.modelcatalogapi import get_setup
 from modelcatalog import ApiException, SampleResource
 
-def edit_inputs_setup(model_configuration):
+def verify_input_parameters(model_configuration):
     for _input in model_configuration.has_input:
-        if not "hasFixedResource" in _input:
+        if not hasattr(_input, "has_fixed_resource"):
             click.secho("The information of the setup is incomplete", fg="yellow")
             print_data_property_table(_input)
             url = click.prompt('Please, enter the url of the previous input', type=click.STRING)
             s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
                                data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
                                value=[url])
-            _input["hasFixedResource"] = [s.to_dict()]
+            _input.has_fixed_resource = [s.to_dict()]
+    click.secho("The information of the setup is complete", fg="green")
     return model_configuration
 
 
 def edit_parameter_config_or_setup(resource, auto=False):
-
+    """not used"""
     for parameter in resource.has_parameter:
-        print("=======================================================")
-
         logging.info("Checking {}".format(parameter))
         logging.info("Checking {}".format(check_is_none(parameter, 'id')))
         _id = obtain_id(check_is_none(parameter, 'id'))
-        default_value = check_is_none(parameter, 'hasDefaultValue')
-
+        default_value = check_is_none(parameter, 'has_default_value')
         print_data_property_table(parameter)
         if not default_value:
             value = click.prompt('Enter the value for the parameter.')
@@ -48,11 +46,12 @@ def edit_parameter_config_or_setup(resource, auto=False):
         parameter["hasFixedValue"] = [value]
 
 def print_data_property_table(resource):
-    tab = tt.Texttable()
+    resource_dict = resource.to_dict()
+    tab = tt.Texttable(max_width=100)
     headings = ['Property', 'Value']
     tab.header(headings)
-    for key, value in resource.items():
-        if isinstance(value, dict) or key == "type":
+    for key, value in resource_dict.items():
+        if isinstance(value, dict) or key == "type" or key == "has_presentation":
             continue
         tab.add_row([key,value])
     print(tab.draw())
@@ -75,7 +74,7 @@ def edit_inputs_model_configuration(model_configuration):
                            value=url,
                            description=description,
                            label=label)
-        _input["hasFixedResource"] = [s]
+        _input.has_fixed_resource = [s]
 
 def edit_setup(setup):
     """
@@ -119,12 +118,13 @@ def run_method_setup(setup):
 
 def read_and_execute(file_path):
     click.secho("Executing the setup", fg="green")
-    status = execute_setups(file_path)
+    status, file_dir = execute_setups(file_path)
     for setup in status:
         if setup["exitcode"] == 0:
-            click.secho("{} ok".format(setup["name"]), fg="green")
+            click.secho("[{}] The execution has been successful".format(setup["name"]), fg="green")
+            click.secho("[{}] Results available at: {} ".format(setup["name"], file_dir), fg="green")
         else:
-            click.secho("{} failed".format(setup["name"]), fg="red")
+            click.secho("[{}] The execution has failed".format(setup["name"]), fg="red")
 
 
 def execute_setups(path):
@@ -133,11 +133,11 @@ def execute_setups(path):
     """
     setup_files = find_setup_files(path)
     try:
-        status = execute_setup(setup_files)
+        status, file_dir = execute_setup(setup_files)
     except Exception as e:
         log.error(e, exc_info=True)
         exit(1)
-    return status
+    return status, file_dir
 
 
 def find_setup_files(path):

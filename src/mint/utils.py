@@ -10,6 +10,11 @@ from mint.modelcatalogapi import get_setup, datasetspecifications_id_get
 ignore_dirs = ["__MACOSX"]
 SERVER = "https://dev.mint.isi.edu"
 
+def convert_object_to_dict(o):
+    if isinstance(o, object):
+        return o.to_dict()
+    return o
+
 def check_is_none(item, key):
      item[key] if key in item else ''
 

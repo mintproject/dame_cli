@@ -23,11 +23,11 @@ def list_model_configuration(label=None):
    except ApiException as e:
        raise e
 
+
 def get_model_configuration(_id):
     api_instance = modelcatalog.ModelConfigurationApi()
-    custom_query_name = 'custom_modelconfigurations'  # str | Name of the custom query (optional) (default to 'custom_modelconfigurations')
     try:
-        api_response = api_instance.custom_modelconfigurations_id_get(_id, username=USERNAME, custom_query_name=custom_query_name)
+        api_response = api_instance.custom_modelconfigurations_id_get(_id, username=USERNAME)
         return api_response
     except ApiException as e:
         raise e
@@ -41,7 +41,7 @@ def get_setup(_id):
         api_response = api_instance.custom_modelconfigurationsetups_id_get(_id, username=USERNAME)
         return api_response
     except ApiException as e:
-        print("Exception when calling ModelConfigurationApi->custom_modelconfigurations_id_get: %s\n" % e)
+        raise e
 
 
 def list_setup(label=None):
