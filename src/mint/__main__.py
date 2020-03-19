@@ -53,16 +53,42 @@ Run a modelconfiguration or modelconfiguration
     "name",
     type=click.STRING
 )
-@click.option(
-    '--edit',
-    is_flag=True
-)
 
-def run(edit, name):
+
+def run(name):
     setup = get_setup(name)
     edit_inputs_setup(setup)
     run_method_setup(setup)
 
+def _list(limit, free_text=""):
+    tab = tt.Texttable()
+    # headings = ['scenario_id', 'problem_id', 'thread_id', 'model']
+    headings = ['thread_id', 'model']
+    summaries = list_summaries(limit=limit, page=1, model=free_text)
+    for s in summaries:
+        tab.add_row([s.thread.id, s.thread.models])
+        # tab.add_row([s.scenario.id, s.problem_formulation.id, s.thread.id, s.thread.models])
+    tab.header(headings)
+    print(tab.draw())
+    print("{} results".format(len(summaries)))
+
+
+@execution.command(help="Show details of execution")
+@click.argument(
+    "thread_id",
+    required=True,
+    type=str
+)
+def show(thread_id):
+    summary = get_summary(thread_id)
+    region = summary.scenario.region.lower()
+    scenario_id = summary.scenario.id
+    problem_id = summary.problem_formulation.id
+    link = "{}/{}/modeling/scenario/{}/{}/{}".format(SERVER, region, scenario_id, problem_id, thread_id)
+    click.secho("Please visit {}".format(link))
+
+
+>>>>>>> d5c5ea8179ecd231ecda01b18f2ec9535f839bc8
 def download_files(inputs, outputs, thread_directory):
     model_directory_inputs = thread_directory / 'inputs'
     model_directory_outputs = thread_directory / 'outputs'

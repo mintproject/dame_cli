@@ -1,4 +1,5 @@
 import itertools
+import logging
 import os
 import uuid
 from pathlib import Path
@@ -12,9 +13,9 @@ from mint.modelcatalogapi import get_setup
 from modelcatalog import ApiException, SampleResource
 
 def edit_inputs_setup(model_configuration):
-    click.secho("The information of the setup is incomplete", fg="yellow")
     for _input in model_configuration.has_input:
         if not "hasFixedResource" in _input:
+            click.secho("The information of the setup is incomplete", fg="yellow")
             print_data_property_table(_input)
             url = click.prompt('Please, enter the url of the previous input', type=click.STRING)
             s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
@@ -25,16 +26,16 @@ def edit_inputs_setup(model_configuration):
 
 
 def edit_parameter_config_or_setup(resource, auto=False):
-    for _input in resource.has_parameter:
-        print("=======================================================")
-        _id = obtain_id(check_is_none(_input, 'id'))
-        description = check_is_none(_input, 'description')
-        datatype = check_is_none(_input, 'hasDataType')
-        click.secho("Name: {}".format(_id), fg="yellow")
-        click.secho("Description: {}".format(description), fg="yellow")
-        click.secho("Format: {}".format(datatype), fg="yellow")
-        default_value = check_is_none(_input, 'hasDefaultValue')
 
+    for parameter in resource.has_parameter:
+        print("=======================================================")
+
+        logging.info("Checking {}".format(parameter))
+        logging.info("Checking {}".format(check_is_none(parameter, 'id')))
+        _id = obtain_id(check_is_none(parameter, 'id'))
+        default_value = check_is_none(parameter, 'hasDefaultValue')
+
+        print_data_property_table(parameter)
         if not default_value:
             value = click.prompt('Enter the value for the parameter.')
         else:
@@ -44,7 +45,7 @@ def edit_parameter_config_or_setup(resource, auto=False):
                 click.echo("Using the default valuer {}".format(default_value))
             else:
                 value = click.prompt('Enter the value for the parameter:', default=default_value)
-
+        parameter["hasFixedValue"] = [value]
 
 def print_data_property_table(resource):
     tab = tt.Texttable()
@@ -68,17 +69,13 @@ def edit_inputs_model_configuration(model_configuration):
         description = check_is_none(_input, 'description')
         label = check_is_none(_input, 'label')
         _format = check_is_none(_input, 'format')
-        variables = check_is_none(_input, 'variables')
-        print(_id)
-        print(description)
-        print(variables)
-        print(_format)
-        url = click.prompt('Please enter the url', type=click.STRING)
+        print_data_property_table(_input)
+        url = click.prompt('Please enter the url of the input shown above', type=click.STRING)
         s = SampleResource(data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
                            value=url,
                            description=description,
                            label=label)
-
+        _input["hasFixedResource"] = [s]
 
 def edit_setup(setup):
     """

@@ -4,7 +4,7 @@
 
 ### Singularity 
 
-The application needs Singularity to run the containers. 
+The application needs Singularity to run the containers. Please, follow the next documentation.
 
 - [Installation on Linux](https://sylabs.io/guides/3.5/admin-guide/installation.html#)
 - [Installation on Windows](https://sylabs.io/guides/3.5/admin-guide/installation.html#windows)
@@ -12,11 +12,11 @@ The application needs Singularity to run the containers.
 
 
 !!! info
-    If you like support for Docker. Let's know it. [Supoort Docker](https://github.com/mintproject/mint_cli/issues/15)
+    If you like support for Docker. Let's know it. [Add support to Docker](https://github.com/mintproject/mint_cli/issues/15)
 
 ### Python 3
 
-The applications needs Python. 
+The applications needs Python. Please, follow the next documentation.
 
 - [Installation on Linux](https://realpython.com/installing-python/#linux)
 - [Installation on Windows](https://realpython.com/installing-python/#windows)
@@ -29,3 +29,5 @@ To install the execution application, open a terminal and run:
 ```bash
 pip install mint-cli
 ```
+
+You did it!
