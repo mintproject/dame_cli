@@ -1,10 +1,10 @@
 site_name: MINT Model Desktop Execution Application 
 nav:
   - Home: index.md
+  - Usage: usage.md
 theme: 
   name: material
   logo: 'logo.png'
-
 markdown_extensions:
   - admonition
   - codehilite:
