@@ -8,7 +8,7 @@ To explore the models in MINT Model Catalog. You can go to the website [https://
 $ mint browse
 ```
 
-![Model catalog overview](./figures/example2.gif "Model catalog overview"))
+![Model catalog overview](./figures/example2.gif "Model catalog overview")
 
 
 
