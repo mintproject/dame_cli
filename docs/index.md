@@ -1,8 +1,8 @@
 # MINT Model Desktop Execution Application
 
-## Requeriments
+## Requirements
 
-The requeriments are:
+The requirements are:
 
 1. Singularity
 2. Python >= 3.6
