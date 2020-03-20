@@ -21,7 +21,7 @@ The application needs Singularity to run the containers. Please, follow the next
 
 ### Python 3
 
-The applications needs Python. Please, follow the next documentation.
+The application needs Python. Please, follow the next documentation.
 
 - [Installation on Linux](https://realpython.com/installing-python/#linux)
 - [Installation on Windows](https://realpython.com/installing-python/#windows)
