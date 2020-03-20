@@ -8,12 +8,10 @@ To explore the models in MINT Model Catalog. You can go to the website [https://
 $ mint browse
 ```
 
-![Model catalog overview](./figures/example2.gif "Model catalog overview")
-
-
 
 Select the [ModelConfiguration](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration) or the [ModelConfigurationSetup](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup) to run
 
+![Model catalog overview](./figures/example2.gif "Model catalog overview")
 
 
 ## Run a Model Configuration Setup
