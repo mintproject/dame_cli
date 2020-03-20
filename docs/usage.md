@@ -8,7 +8,7 @@ To explore the models in MINT Model Catalog. You can go to the website [https://
 $ mint browse
 ```
 
-![Model catalog overview](./figures/example.gif)
+![Model catalog overview](./figures/example2.gif "Model catalog overview"))
 
 
 
@@ -21,7 +21,7 @@ Select the [ModelConfiguration](https://mintproject.readthedocs.io/en/latest/mod
 Open a terminal and run it.
 
 ```bash
-$ mint run cycles-0.10.2-alpha-collection-oromia-single-point
+$ mint run name
 ```
 
 ### Fully configured ModelConfigurationSetup
@@ -31,11 +31,3 @@ Since some [ModelConfigurationSetup](https://mintproject.readthedocs.io/en/lates
 For example, the ModelConfigurationSetup [cycles-0.10.2-alpha-collection-oromia-single-point](https://models.mint.isi.edu/models/explore/CYCLES/cycles_v0.10.2_alpha/cycles-0.10.2-alpha-collection/cycles-0.10.2-alpha-collection-oromia-single-point).
 
 [![asciicast](https://asciinema.org/a/ZhVn1dI5NBIzaaWGaIlD563Cj.svg)](https://asciinema.org/a/ZhVn1dI5NBIzaaWGaIlD563Cj)
-
-### Not fully configured ModelConfigurationSetup
-
-A [ModelConfiguration](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration) and some [ModelConfigurationSetup](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup) allow to the user to provide the location of the inputs. Then, you must provide the location of the inputs.
-
-For example, [cycles-0.10.2-alpha-collection-oromia](https://models.mint.isi.edu/models/explore/CYCLES/cycles_v0.10.2_alpha/cycles-0.10.2-alpha-collection/cycles-0.10.2-alpha-collection-oromia).
-
-
