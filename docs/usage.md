@@ -5,7 +5,7 @@
 To explore the models in MINT Model Catalog. You can go to the website [https://models.mint.isi.edu/](https://models.mint.isi.edu) or type:
 
 ```bash
-$ mint browse
+$ dame browse
 ```
 
 
