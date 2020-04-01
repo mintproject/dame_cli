@@ -12,4 +12,3 @@ deploy:
   on:
     tags: true
     distributions: sdist bdist_wheel
-    repo: mintproject/mint_cli

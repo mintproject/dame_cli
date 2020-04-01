@@ -1,5 +1,3 @@
-# MINT Model Desktop Execution Application
-
 ## Requirements
 
 The requirements are:
@@ -17,7 +15,7 @@ The application needs Singularity to run the containers. Please, follow the next
 
 
 !!! question
-    If you like support for Docker. Let's know it. [Add support to Docker](https://github.com/mintproject/mint_cli/issues/15)
+    If you like support for Docker. Let's know it. [Add support to Docker](https://github.com/mintproject/dame_cli/issues/15)
 
 ### Python 3
 
@@ -32,7 +30,7 @@ The application needs Python. Please, follow the next documentation.
 To install the execution application, open a terminal and run:
 
 ```bash
-pip install mint-cli
+pip install dame-cli
 ```
 
 You did it!

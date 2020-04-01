@@ -6,8 +6,8 @@ from pathlib import Path
 
 from yaml import load, Loader
 
-from mint.utils import download_data_file, download_extract_zip, obtain_id, convert_object_to_dict
-from mint._utils import log
+from dame.utils import download_data_file, download_extract_zip, obtain_id, convert_object_to_dict
+from dame._utils import log
 
 KEYS_REQUIRED_PARAMETER = {"has_default_value", "position"}
 KEYS_REQUIRED_OUTPUT = {"label", "has_format", "position"}

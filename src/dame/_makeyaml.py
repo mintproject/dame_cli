@@ -2,7 +2,7 @@ import logging
 import os
 import click
 import yaml
-from mint import _schema, _utils
+from dame import _schema, _utils
 #from contextlib import contextmanager
 
 logger = logging.getLogger()

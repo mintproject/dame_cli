@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-mint.
+dame.
 
 :license: Apache 2.0
 """
@@ -13,15 +13,15 @@ from pathlib import Path
 import click
 
 import semver
-import mint
-from mint.cli_methods import run_method, edit_inputs_model_configuration, edit_parameter_config_or_setup, \
+import dame
+from dame.cli_methods import run_method, edit_inputs_model_configuration, edit_parameter_config_or_setup, \
     verify_input_parameters, run_method_setup
-from mint.downloader import check_size, parse_inputs, parse_outputs
-from mint.emulatorapi import get_summary, list_summaries, obtain_results
-from mint.utils import obtain_id, download_file, download_data_file, humansize, SERVER, check_is_none
-from mint.modelcatalogapi import get_setup, list_setup, get_model, list_model_configuration, get_model_configuration
-from mint import _utils, _makeyaml
-from mint._utils import log
+from dame.downloader import check_size, parse_inputs, parse_outputs
+from dame.emulatorapi import get_summary, list_summaries, obtain_results
+from dame.utils import obtain_id, download_file, download_data_file, humansize, SERVER, check_is_none
+from dame.modelcatalogapi import get_setup, list_setup, get_model, list_model_configuration, get_model_configuration
+from dame import _utils, _makeyaml
+from dame._utils import log
 import texttable as tt
 from modelcatalog import DatasetSpecification, SampleResource, ApiValueError, OpenApiException
 
@@ -36,12 +36,12 @@ except ImportError:
 def cli(verbose):
     _utils.init_logger()
     lv = ".".join(_utils.get_latest_version().split(".")[:3])
-    cv = ".".join(mint.__version__.split(".")[:3])
+    cv = ".".join(dame.__version__.split(".")[:3])
 
     if semver.compare(lv, cv) > 0:
         click.secho(
-            f"""WARNING: You are using mint version {mint.__version__}, however version {lv} is available.
-You should consider upgrading via the 'pip install --upgrade mint' command.""",
+            f"""WARNING: You are using dame version {dame.__version__}, however version {lv} is available.
+You should consider upgrading via the 'pip install --upgrade dame' command.""",
             fg="yellow",
         )
 

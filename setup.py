@@ -33,19 +33,19 @@ install_requires = [
 ]
 
 version = {}
-with open("src/mint/__init__.py") as fp:
+with open("src/dame/__init__.py") as fp:
     exec(fp.read(), version)
 
 
 
 # This call to setup_name() does all the work
 setup(
-    name="mint-cli",
+    name="dame-cli",
     version=version["__version__"],
     description="A execution manager cli for execution",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
-    url="https://github.com/mintproject/mint-execution-manager",
+    url="https://github.com/mintproject/dame_cli",
     author="Maximiliano Osorio",
     author_email="mosorio@isi.edu",
     license="Apache-2",
@@ -60,11 +60,11 @@ setup(
         "Intended Audience :: Science/Research",
         "Operating System :: Unix",
     ],
-    entry_points={"console_scripts": ["mint = mint.__main__:cli"]},
+    entry_points={"console_scripts": ["dame = dame.__main__:cli"]},
     package_dir={"": "src"},
-    packages=find_packages(where="src", exclude=["mint.tests*"]),
-    package_data={"mint": find_package_data("src/mint")},
-    exclude_package_data={"mint": ["tests/*"]},
+    packages=find_packages(where="src", exclude=["dame.tests*"]),
+    package_data={"dame": find_package_data("src/dame")},
+    exclude_package_data={"dame": ["tests/*"]},
     zip_safe=False,
     install_requires=install_requires,
     python_requires=">=3.6.0",

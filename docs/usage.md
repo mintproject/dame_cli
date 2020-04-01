@@ -19,7 +19,7 @@ Select the [ModelConfiguration](https://mintproject.readthedocs.io/en/latest/mod
 Open a terminal and run it.
 
 ```bash
-$ mint run name
+$ dame run name
 ```
 
 ### Fully configured ModelConfigurationSetup

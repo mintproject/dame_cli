@@ -1,4 +1,4 @@
-site_name: MINT Model Desktop Execution Application 
+site_name: Desktop Application for Model Execution (DAME)
 nav:
   - Home: index.md
   - Usage: usage.md

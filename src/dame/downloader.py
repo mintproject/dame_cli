@@ -2,7 +2,7 @@ import http
 import json
 
 import urllib3
-from mint.utils import check_is_none
+from dame.utils import check_is_none
 import certifi
 
 http = urllib3.PoolManager(

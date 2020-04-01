@@ -1,6 +1,6 @@
 from __future__ import print_function
 import modelcatalog
-from mint._utils import log
+from dame._utils import log
 from modelcatalog.rest import ApiException
 
 configuration = modelcatalog.Configuration()

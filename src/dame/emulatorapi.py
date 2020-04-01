@@ -1,7 +1,7 @@
 from __future__ import print_function
 import ingestion
 from ingestion import Thread
-from mint.downloader import get_json
+from dame.downloader import get_json
 from ingestion.rest import ApiException
 
 def get_summary_from_dict(dict):

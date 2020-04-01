@@ -6,10 +6,10 @@ from pathlib import Path
 
 import click
 import texttable as tt
-from mint.utils import check_is_none, create_yaml_from_resource, obtain_id
-from mint.executor import execute_setup
-from mint._utils import log
-from mint.modelcatalogapi import get_setup
+from dame.utils import check_is_none, create_yaml_from_resource, obtain_id
+from dame.executor import execute_setup
+from dame._utils import log
+from dame.modelcatalogapi import get_setup
 from modelcatalog import ApiException, SampleResource
 
 def verify_input_parameters(model_configuration):
