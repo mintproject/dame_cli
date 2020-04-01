@@ -29,3 +29,5 @@ To install the execution application, open a terminal and run:
 ```bash
 pip install dame-cli
 ```
+```
+Full documentation of the CLI, including usage examples, can be found at: https://dame-cli.readthedocs.io/en/latest/
