@@ -1,13 +1,13 @@
 ## Requirements
 
-The requirements are:
+DAME has the following requirements:
 
 1. Singularity
 2. Python >= 3.6
 
 ### Singularity 
 
-The application needs Singularity to run the containers. Please, follow the next documentation.
+DAME uses Singularity to run the containers of the executed components. Follow the next steps to install Singularity:
 
 - [Installation on Linux](https://sylabs.io/guides/3.5/admin-guide/installation.html#)
 - [Installation on Windows](https://sylabs.io/guides/3.5/admin-guide/installation.html#windows)
@@ -15,11 +15,11 @@ The application needs Singularity to run the containers. Please, follow the next
 
 
 !!! question
-    If you like support for Docker. Let's know it. [Add support to Docker](https://github.com/mintproject/dame_cli/issues/15)
+    If you would like independent support for Docker, please let us know. [Add support to Docker](https://github.com/mintproject/dame_cli/issues/15)
 
 ### Python 3
 
-The application needs Python. Please, follow the next documentation.
+DAME uses Python. Please, follow the steps bellow to install it:
 
 - [Installation on Linux](https://realpython.com/installing-python/#linux)
 - [Installation on Windows](https://realpython.com/installing-python/#windows)
@@ -27,7 +27,7 @@ The application needs Python. Please, follow the next documentation.
 
 ## Installation
 
-To install the execution application, open a terminal and run:
+To install DAME, open a terminal and run:
 
 ```bash
 pip install dame-cli

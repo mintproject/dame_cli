@@ -9,23 +9,24 @@ $ dame browse
 ```
 
 
-Select the [ModelConfiguration](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration) or the [ModelConfigurationSetup](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup) to run
+Select the [Model Configuration](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration) or the [Model Configuration Setup](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup) to run
 
 ![Model catalog overview](./figures/example2.gif "Model catalog overview")
 
 
-## Run a Model Configuration Setup
+## Run a Model Configuration 
 
-Open a terminal and run it.
+Open a terminal and type:
 
 ```bash
-$ dame run name
+$ dame run <model id>
 ```
+Where `<model id>` correspods to the id of the model configuration you want to run. For example, the id `modflow_2005_cfg` will prepare the execution of the MODFLOW 2005 ground water model by asking for the required input files.
 
-### Fully configured ModelConfigurationSetup
+### Run a fully configured Model Configuration Setup
 
-Since some [ModelConfigurationSetup](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup) has all input files initialized by expert users, you must not provide the location of the inputs.
+Since some [Model Configuration Setups](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup) have all input files assigned by expert users, you don't have to provide the location of the inputs.
 
-For example, the ModelConfigurationSetup [cycles-0.10.2-alpha-collection-oromia-single-point](https://models.mint.isi.edu/models/explore/CYCLES/cycles_v0.10.2_alpha/cycles-0.10.2-alpha-collection/cycles-0.10.2-alpha-collection-oromia-single-point).
+For example, the Model Configuration Setup [cycles-0.10.2-alpha-collection-oromia-single-point](https://models.mint.isi.edu/models/explore/CYCLES/cycles_v0.10.2_alpha/cycles-0.10.2-alpha-collection/cycles-0.10.2-alpha-collection-oromia-single-point) is already prepared to execute an agriculture model in a specific region of Ethiopia. The following video shows how DAME would excute the model.
 
 [![asciicast](https://asciinema.org/a/ZhVn1dI5NBIzaaWGaIlD563Cj.svg)](https://asciinema.org/a/ZhVn1dI5NBIzaaWGaIlD563Cj)
