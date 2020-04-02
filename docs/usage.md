@@ -11,8 +11,6 @@ $ dame browse
 
 Select the [ModelConfiguration](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration) or the [ModelConfigurationSetup](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup) to run
 
-![Model catalog overview](./figures/example2.gif "Model catalog overview")
-
 
 ## Run a Model Configuration Setup
 

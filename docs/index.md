@@ -1,3 +1,5 @@
+Desktop Application for Model Execution (DAME) is a command line interface for executing environmental models
+
 ## Requirements
 
 The requirements are:
