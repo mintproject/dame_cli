@@ -1,4 +1,12 @@
-Desktop Application for Model Execution (DAME) is a command line interface for executing environmental models
+Desktop Application for Model Execution (DAME) is a command-line interface for executing environmental models on your Desktop or Server.
+DAME works as follow:
+
+1. Read the metadata of the model from a ModelService.
+2. Set up the parameters of the model.
+3. Download the data associated with the model.
+4. Download the computational environment (containers).
+5. Run the model.
+
 
 ## Requirements
 
