@@ -4,7 +4,7 @@ DAME contains a registry of model containers and input data files, as well as me
 
 Given a model identifier (e.g., TopoFlow for the Awash region: `topoflow36_2.1.0_Awash`), DAME downloads the model container and its execution environment, and fetches the datasets needed (e.g., soil data, elevation data, etc). Then users can run the model with different input scenarios.
 
-DAME works in Linux and OSX.  It is installed through a simple pip command.
+DAME works in Linux and OSX (currently being tested on Windows).  It is installed through a simple pip command.
 
 
 ## Requirements
