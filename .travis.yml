@@ -2,8 +2,12 @@ language: python
 
 jobs:
   include:
-    - name: 'Linux - py3.7' 
-      python: 3.7
+    - name: 'Linux - py3.5, 3.6, 3.7, 3.8' 
+      python: 
+        - "3.5"
+        - "3.6"      # current default Python on Travis CI
+        - "3.7"
+        - "3.8"
       dist: xenial
     - name: "macOS 10.13 - py3.6.5"
       os: osx
