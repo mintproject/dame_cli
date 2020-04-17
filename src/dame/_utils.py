@@ -7,13 +7,6 @@ import requests
 import importlib
 log = logging.getLogger()
 
-def load_module(module_name):
-    try:
-        return importlib.import_module(module_name)
-    except ModuleNotFoundError:
-        log.error("Model <%s> not found" % module_name)
-        raise
-
 def init_logger():
     LOGLEVEL = logging.DEBUG
     logging.config.dictConfig({
