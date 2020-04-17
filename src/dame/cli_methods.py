@@ -12,6 +12,33 @@ from dame._utils import log
 from dame.modelcatalogapi import get_setup
 from modelcatalog import ApiException, SampleResource
 
+data_set_property = ["id", "label"]
+parameter_set_property = ["id", "label", "has_default_value"]
+
+
+def show_model_configuration_details(model_configuration):
+    click.echo(click.style("Information about the model configuration", bold=True))
+    if model_configuration and hasattr(model_configuration, "has_input"):
+        click.echo(click.style("Inputs", bold=True))
+        for _input in model_configuration.has_input:
+            if hasattr(_input, "has_fixed_resource") and hasattr(_input.has_fixed_resource[0], "value"):
+                click.echo("{}: {}".format(_input.label[0], _input.has_fixed_resource[0].value[0]))
+            else:
+                label = getattr(_input, "label") if hasattr(_input, "label") else getattr(_input, "id")
+                click.echo("{}: {}".format(label[0], "No information"))
+    if model_configuration and hasattr(model_configuration, "has_parameter"):
+        click.echo(click.style("Parameters", bold=True))
+        for _parameter in model_configuration.has_parameter:
+            short_value(_parameter, "has_default_value")
+
+
+
+def short_value(resource, prop):
+    if hasattr(resource, prop):
+        value = getattr(resource, prop)
+        click.echo("{}: {}".format(getattr(resource, "label")[0], value[0]))
+
+
 def verify_input_parameters(model_configuration):
     for _input in model_configuration.has_input:
         if not hasattr(_input, "has_fixed_resource"):
@@ -45,7 +72,10 @@ def edit_parameter_config_or_setup(resource, auto=False):
                 value = click.prompt('Enter the value for the parameter:', default=default_value)
         parameter["hasFixedValue"] = [value]
 
-def print_data_property_table(resource):
+
+
+
+def print_data_property_table(resource, property_selected={}):
     resource_dict = resource.to_dict()
     tab = tt.Texttable(max_width=100)
     headings = ['Property', 'Value']
@@ -53,6 +83,9 @@ def print_data_property_table(resource):
     for key, value in resource_dict.items():
         if isinstance(value, dict) or key == "type" or key == "has_presentation":
             continue
+        if property_selected:
+            if key not in property_selected:
+                continue
         tab.add_row([key,value])
     print(tab.draw())
 
