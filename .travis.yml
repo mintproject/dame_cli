@@ -1,8 +1,32 @@
 language: python
 matrix:
   include:
-  - python: 3.7
-    dist: xenial
+    - name: 'Linux - py3.7' 
+      python: 3.7
+      dist: xenial
+    - name: "macOS 10.13 - py3.6.5"
+      os: osx
+      osx_image: xcode9.4
+      language: shell
+      before_install:
+        - python3 --version
+        - pip3 install -U pip
+        - pip3 install -U pytest
+        - pip3 install codecov
+      script: python3 -m pytest
+      after_success: python 3 -m codecov
+    - name: "xcode10.2 - py3.7.3"
+      os: osx
+      osx_image: xcode10.2
+      language: shell
+      before_install:
+        - python3 --version
+        - pip3 install -U pip
+        - pip3 install -U pytest
+        - pip3 install codecov
+      script: python3 -m pytest
+      after_success: python 3 -m codecov
+
 install: pip install tox-travis
 script: tox
 deploy:
