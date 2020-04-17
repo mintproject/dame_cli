@@ -4,32 +4,22 @@ dame.
 
 :license: Apache 2.0
 """
-import json
 import logging
-import os
-import re
-from pathlib import Path
 
 import click
-
 import semver
+from modelcatalog import OpenApiException
+
 import dame
-from dame.cli_methods import run_method, edit_inputs_model_configuration, edit_parameter_config_or_setup, \
-    verify_input_parameters, run_method_setup
-from dame.downloader import check_size, parse_inputs, parse_outputs
-from dame.emulatorapi import get_summary, list_summaries, obtain_results
-from dame.utils import obtain_id, download_file, download_data_file, humansize, SERVER, check_is_none
-from dame.modelcatalogapi import get_setup, list_setup, get_model, list_model_configuration, get_model_configuration
-from dame import _utils, _makeyaml
-from dame._utils import log
-import texttable as tt
-from modelcatalog import DatasetSpecification, SampleResource, ApiValueError, OpenApiException
+from dame import _utils
+from dame.cli_methods import verify_input_parameters, run_method_setup
+from dame.modelcatalogapi import get_setup, get_model_configuration
 
 try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-
+from pathlib import Path
 
 @click.group()
 @click.option("--verbose", "-v", default=0, count=True)
@@ -40,19 +30,27 @@ def cli(verbose):
 
     if semver.compare(lv, cv) > 0:
         click.secho(
-            f"""WARNING: You are using dame version {dame.__version__}, however version {lv} is available.
-You should consider upgrading via the 'pip install --upgrade dame' command.""",
+            f"""WARNING: You are using wcm version {dame.__version__}, however version {lv} is available.
+You should consider upgrading via the 'pip install --upgrade wcm' command.""",
             fg="yellow",
         )
+
+
+@cli.command(help="Show wcm version.")
+def version(debug=False):
+    click.echo(f"DAME: v{dame.__version__}")
 
 
 @cli.command(help="Open the Model Catalog in your browser")
 def browse():
     click.launch('https://models.mint.isi.edu')
 
+
 """
 Run a modelconfiguration or modelconfiguration
 """
+
+
 @cli.command(help="Run a model configuration or model configuration setup")
 @click.argument(
     "name",
