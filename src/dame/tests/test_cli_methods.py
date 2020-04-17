@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from dame.cli_methods import verify_input_parameters, print_data_property_table, show_model_configuration_details
-from dame.modelcatalogapi import get_setup, list_setup
+from dame.modelcatalogapi import get_setup, list_setup, list_model_configuration
 
 from click.testing import CliRunner
 
@@ -31,3 +31,5 @@ class Test(TestCase):
     def test_show_model_configuration_details(self):
         for setup in list_setup():
             show_model_configuration_details(setup)
+        for model_configuration in list_model_configuration():
+            show_model_configuration_details(model_configuration)
