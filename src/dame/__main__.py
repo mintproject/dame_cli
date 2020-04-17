@@ -12,7 +12,7 @@ from modelcatalog import OpenApiException
 
 import dame
 from dame import _utils
-from dame.cli_methods import verify_input_parameters, run_method_setup
+from dame.cli_methods import verify_input_parameters, run_method_setup, show_model_configuration_details
 from dame.modelcatalogapi import get_setup, get_model_configuration
 
 try:
@@ -65,10 +65,10 @@ def run(name):
 
     if "ModelConfigurationSetup" in config.type:
         resource = get_setup(name)
-        verify_input_parameters(resource)
     elif "ModelConfiguration" in config.type:
         resource = get_model_configuration(name)
-        verify_input_parameters(resource)
+    show_model_configuration_details(resource)
+    verify_input_parameters(resource)
     # setup = get_setup(name)
     # edit_inputs_setup(setup)
     run_method_setup(resource)
