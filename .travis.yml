@@ -1,5 +1,7 @@
 language: python
 matrix:
+  - allow_failures:
+      - os: windows
   include:
     - name: 'Linux - py3.7' 
       python: 3.7
