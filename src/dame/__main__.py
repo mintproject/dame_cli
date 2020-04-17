@@ -67,7 +67,10 @@ def run(name):
         resource = get_setup(name)
     elif "ModelConfiguration" in config.type:
         resource = get_model_configuration(name)
-    show_model_configuration_details(resource)
+    try:
+        show_model_configuration_details(resource)
+    except ValueError:
+        click.secho("Unable to run without image")
     verify_input_parameters(resource)
     # setup = get_setup(name)
     # edit_inputs_setup(setup)
