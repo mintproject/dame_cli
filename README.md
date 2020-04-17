@@ -13,9 +13,9 @@ The application needs Singularity to run the containers.
 
 If you would like support for Docker, let us know: [Supoort Docker](https://github.com/mintproject/dame_cli/issues/15)
 
-### Python 3
+### Python
 
-The applications needs Python. 
+The applications needs Python >=3.6
 
 - [Installation on Linux](https://realpython.com/installing-python/#linux)
 - [Installation on Windows](https://realpython.com/installing-python/#windows)
