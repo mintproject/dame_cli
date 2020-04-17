@@ -5,7 +5,7 @@ from pathlib import Path
 import click
 import texttable as tt
 from dame.utils import create_yaml_from_resource, obtain_id
-from dame.executor import execute_setup
+from dame.executor import prepare_execution, run_execution
 from dame._utils import log
 from dame.modelcatalogapi import get_setup
 from modelcatalog import ApiException, SampleResource
@@ -61,37 +61,40 @@ def run_method_setup(setup):
     Call download_setup(): Download the setup(s) as yaml file
     Call execute_setup(): Read the yaml file and execute
     """
-    name = obtain_id(setup.id)
     try:
-        file_path = create_yaml_from_resource(resource=setup, name=name, output=Path('.'))
-        read_and_execute(file_path)
+        cwd_path, execution_dir, setup_cmd_line, setup_name = convert_setup_file(setup)
+        status = execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name)
+        if status["exitcode"] == 0:
+            click.secho("[{}] The execution has been successful".format(status["name"]), fg="green")
+            click.secho("[{}] Results available at: {} ".format(status["name"], cwd_path), fg="green")
+        else:
+            click.secho("[{}] The execution has failed".format(status["name"]), fg="red")
     except ApiException as e:
         click.secho("Unable to download the setup {}".format(e), fg="red")
         exit(1)
 
 
-def read_and_execute(file_path):
-    click.secho("Executing the setup", fg="green")
-    status, file_dir = execute_setups(file_path)
-    for setup in status:
-        if setup["exitcode"] == 0:
-            click.secho("[{}] The execution has been successful".format(setup["name"]), fg="green")
-            click.secho("[{}] Results available at: {} ".format(setup["name"], file_dir), fg="green")
-        else:
-            click.secho("[{}] The execution has failed".format(setup["name"]), fg="red")
-
-
-def execute_setups(path):
+def convert_setup_file(setup):
     """
     Find the setup files if the path is a directory and execute it
     """
-    setup_files = find_setup_files(path)
+    name = obtain_id(setup.id)
+    file_path = create_yaml_from_resource(resource=setup, name=name, output=Path('.'))
+    return prepare_execution(file_path)
+
+
+def execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name):
+    """
+    Find the setup files if the path is a directory and execute it
+    """
     try:
-        status, file_dir = execute_setup(setup_files)
+        click.echo("Execution line \ncd {}\n{}".format(cwd_path, setup_cmd_line))
+        click.confirm("Do you want to run the setup?", default=True)
+        status = run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name)
     except Exception as e:
         log.error(e, exc_info=True)
         exit(1)
-    return status, file_dir
+    return status
 
 
 def find_setup_files(path):
