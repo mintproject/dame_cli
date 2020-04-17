@@ -48,7 +48,7 @@ jobs:
         - pip3 install codecov
       env: PATH=/c/Python37:/c/Python35/Scripts:$PATH
   allow_failures:
-    - os: osx
+    - os: windows
 install: pip install tox-travis
 script: tox
 deploy:
