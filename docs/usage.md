@@ -2,6 +2,9 @@
 
 DAME was designed to test and run the different models available for execution in the [MINT model catalog](https://models.mint.isi.edu). We distinguish [model configurations](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration), which allow for users to select the files needed in the execution; and  [model configuration setups](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup), which are already prepared with default files and parameters to run.
 
+!!! warning
+    DAME will download the Docker images and files required for each execution. This may take a while if the files or Docker image selected have a considerable size.
+
 ## Browse and search a Model Configuration
 
 To explore the models in MINT Model Catalog. You can go to the website [https://models.mint.isi.edu/](https://models.mint.isi.edu) or type:
