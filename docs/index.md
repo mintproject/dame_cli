@@ -1,10 +1,10 @@
-Desktop Application for Model Execution (DAME) is a command-line interface for executing environmental models on your Desktop or Server.
+The Desktop Application for Model Execution (DAME) is an application for executing environmental models in any local environment or server through a command line interface.
 
-DAME is an application that can run models in any local environment or server through a command line interface.  It contains a registry of model containers and input data files, as well as metadata about what input data needs to be loaded to run regional configurations and setups of any given model.
+DAME contains a registry of model containers and input data files, as well as metadata about what input data needs to be loaded to run regional configurations and setups of any given model.
 
-Given a model identifier (eg TopoFlow for Gambella), DAME downloads the model container and its execution environment, and fetches the datasets needed (eg soil data, elevation data, etc). Then users can run the model with different input scenarios.
+Given a model identifier (e.g., TopoFlow for the Awash region: `topoflow36_2.1.0_Awash`), DAME downloads the model container and its execution environment, and fetches the datasets needed (e.g., soil data, elevation data, etc). Then users can run the model with different input scenarios.
 
-DAME works in Linux, OSX, and Windows.  It is installed through a simple pip command.
+DAME works in Linux and OSX (currently being tested on Windows).  It is installed through a simple pip command.
 
 
 ## Requirements
@@ -43,3 +43,7 @@ pip install dame-cli
 ```
 
 You did it!
+
+## Issues and Troubleshooting
+
+If you experience any issues when using DAME, please open an issue on our  [GitHub repository](https://github.com/mintproject/dame_cli/issues).
