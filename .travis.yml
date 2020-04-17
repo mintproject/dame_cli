@@ -1,6 +1,6 @@
 language: python
 
-matrix:
+jobs:
   include:
     - name: 'Linux - py3.7' 
       python: 3.7
@@ -47,6 +47,8 @@ matrix:
         - pip3 install --upgrade tox
         - pip3 install codecov
       env: PATH=/c/Python37:/c/Python35/Scripts:$PATH
+  allow_failures:
+    - os: osx
 install: pip install tox-travis
 script: tox
 deploy:
