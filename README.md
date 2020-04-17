@@ -11,7 +11,7 @@ The application needs Singularity to run the containers.
 - [Installation on Mac](https://sylabs.io/singularity-desktop-macos/)
 
 
-If you would like support for Docker, let us know: [Supoort Docker](https://github.com/mintproject/dame_cli/issues/15)
+If you would like support for Docker, let us know: [Support Docker](https://github.com/mintproject/dame_cli/issues/15)
 
 ### Python 3
 
