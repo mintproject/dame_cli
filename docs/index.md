@@ -43,3 +43,7 @@ pip install dame-cli
 ```
 
 You did it!
+
+## Issues and Troubleshooting
+
+If you experience any issues when using DAME, please open an issue on our  [GitHub repository](https://github.com/mintproject/dame_cli/issues).
