@@ -1,0 +1,362 @@
+!!python/object:modelcatalog.models.model_configuration.ModelConfiguration
+_author:
+- id: https://w3id.org/okn/i/mint/khider_deborah
+  label:
+  - Deborah Khider
+  name:
+  - Deborah Khider
+  type: Person
+_description:
+- WGEN basic configuration adapted from GWGEN (globally applicable weather generator)
+_has_component_location:
+- https://github.com/KnowledgeCaptureAndDiscovery/MINT-WorkflowDomain/raw/master/WINGSWorkflowComponents/weather_generator/weather_generator.zip
+_has_implementation_script_location:
+- https://raw.githubusercontent.com/KnowledgeCaptureAndDiscovery/MINT-WorkflowDomain/master/WINGSWorkflowComponents/weather_generator/run
+_has_input:
+- !!python/object:modelcatalog.models.dataset_specification.DatasetSpecification
+  _description:
+  - Input to the weather generator (daily)
+  _has_dimensionality:
+  - 0
+  _has_fixed_resource:
+  - data_catalog_identifier: FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o
+    id: https://w3id.org/okn/i/mint/
+    value:
+    - afd
+  _has_format:
+  - tar.gz
+  _has_presentation:
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  _id: https://w3id.org/okn/i/mint/wgen_daily
+  _label:
+  - daily-weather
+  _position:
+  - 2
+  _type:
+  - https://w3id.org/wings/export/MINT#FLDAS
+  - DatasetSpecification
+  discriminator: null
+- !!python/object:modelcatalog.models.dataset_specification.DatasetSpecification
+  _description:
+  - Input to the weather generator (monthly)
+  _has_dimensionality:
+  - 0
+  _has_fixed_resource:
+  - data_catalog_identifier: FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o
+    id: https://w3id.org/okn/i/mint/
+    value:
+    - adfasd
+  _has_format:
+  - tar.gz
+  _has_presentation:
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  _id: https://w3id.org/okn/i/mint/wgen_monthly
+  _label:
+  - monthly-weather
+  _position:
+  - 1
+  _type:
+  - DatasetSpecification
+  - https://w3id.org/wings/export/MINT#FLDAS
+  discriminator: null
+_has_model_category:
+- Weather
+_has_output:
+- !!python/object:modelcatalog.models.dataset_specification.DatasetSpecification
+  _description:
+  - Output from the weather generator
+  _has_dimensionality:
+  - 0
+  _has_format:
+  - tar.gz
+  _has_presentation:
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  - !!python/object:modelcatalog.models.variable_presentation.VariablePresentation
+    _id: null
+    discriminator: null
+  _id: https://w3id.org/okn/i/mint/wgen_output
+  _label:
+  - fldas-wgen
+  _position:
+  - 1
+  _type:
+  - https://w3id.org/wings/export/MINT#WGenWeather
+  - DatasetSpecification
+  discriminator: null
+_has_output_time_interval:
+- !!python/object:modelcatalog.models.time_interval.TimeInterval
+  _description:
+  - Time interval used in WGEN basic configuration
+  _id: https://w3id.org/okn/i/mint/wgen_1.0.1_cfg_timeinterval
+  _interval_unit:
+  - !!python/object:modelcatalog.models.unit.Unit
+    _id: null
+    discriminator: null
+  _interval_value:
+  - '1'
+  _label:
+  - WGEN time interval
+  _type:
+  - TimeInterval
+  discriminator: null
+_has_parameter:
+- !!python/object:modelcatalog.models.parameter.Parameter
+  _description:
+  - minimum month
+  _has_data_type:
+  - float
+  _has_default_value:
+  - '6'
+  _id: https://w3id.org/okn/i/mint/wgen_min_month
+  _label:
+  - min_month
+  _position:
+  - 6
+  _type:
+  - https://w3id.org/wings/export/MINT#MinMonth
+  - Parameter
+  _uses_unit:
+  - !!python/object:modelcatalog.models.unit.Unit
+    _id: null
+    discriminator: null
+  discriminator: null
+- !!python/object:modelcatalog.models.parameter.Parameter
+  _description:
+  - maximum month
+  _has_data_type:
+  - float
+  _has_default_value:
+  - '8'
+  _id: https://w3id.org/okn/i/mint/wgen_max_month
+  _label:
+  - max_month
+  _position:
+  - 7
+  _type:
+  - https://w3id.org/wings/export/MINT#MaxMonth
+  - Parameter
+  _uses_unit:
+  - !!python/object:modelcatalog.models.unit.Unit
+    _id: null
+    discriminator: null
+  discriminator: null
+- !!python/object:modelcatalog.models.parameter.Parameter
+  _description:
+  - flag P
+  _has_data_type:
+  - string
+  _has_default_value:
+  - Rainf_f_tavg
+  _has_fixed_value:
+  - Rainf_f_tavg
+  _id: https://w3id.org/okn/i/mint/wgen_flagP
+  _label:
+  - flagP
+  _position:
+  - 1
+  _type:
+  - https://w3id.org/wings/export/MINT#FlagP
+  - Parameter
+  discriminator: null
+- !!python/object:modelcatalog.models.parameter.Parameter
+  _description:
+  - minimum latitude
+  _has_data_type:
+  - float
+  _has_default_value:
+  - '6.700375'
+  _id: https://w3id.org/okn/i/mint/wgen_min_lat
+  _label:
+  - min_lat
+  _position:
+  - 4
+  _type:
+  - https://w3id.org/wings/export/MINT#MinLatitude
+  - Parameter
+  _uses_unit:
+  - !!python/object:modelcatalog.models.unit.Unit
+    _id: null
+    discriminator: null
+  discriminator: null
+- !!python/object:modelcatalog.models.parameter.Parameter
+  _description:
+  - maximum latitude
+  _has_data_type:
+  - float
+  _has_default_value:
+  - '9.335303'
+  _id: https://w3id.org/okn/i/mint/wgen_max_lat
+  _label:
+  - max_lat
+  _position:
+  - 5
+  _type:
+  - https://w3id.org/wings/export/MINT#MaxLatitude
+  - Parameter
+  _uses_unit:
+  - !!python/object:modelcatalog.models.unit.Unit
+    _id: null
+    discriminator: null
+  discriminator: null
+- !!python/object:modelcatalog.models.parameter.Parameter
+  _description:
+  - maximum longitude
+  _has_data_type:
+  - float
+  _has_default_value:
+  - '27.74012'
+  _id: https://w3id.org/okn/i/mint/wgen_max_lon
+  _label:
+  - max_lon
+  _position:
+  - 3
+  _type:
+  - https://w3id.org/wings/export/MINT#MaxLongitude
+  - Parameter
+  _uses_unit:
+  - !!python/object:modelcatalog.models.unit.Unit
+    _id: null
+    discriminator: null
+  discriminator: null
+- !!python/object:modelcatalog.models.parameter.Parameter
+  _description:
+  - minimum longitude
+  _has_data_type:
+  - float
+  _has_default_value:
+  - '24.15235'
+  _id: https://w3id.org/okn/i/mint/wgen_min_lon
+  _label:
+  - min_lon
+  _position:
+  - 2
+  _type:
+  - https://w3id.org/wings/export/MINT#MinLongitude
+  - Parameter
+  _uses_unit:
+  - !!python/object:modelcatalog.models.unit.Unit
+    _id: null
+    discriminator: null
+  discriminator: null
+- !!python/object:modelcatalog.models.parameter.Parameter
+  _description:
+  - level
+  _has_data_type:
+  - float
+  _has_default_value:
+  - '0.6'
+  _id: https://w3id.org/okn/i/mint/wgen_level
+  _label:
+  - level
+  _position:
+  - 8
+  _type:
+  - https://w3id.org/wings/export/MINT#Level
+  - Parameter
+  discriminator: null
+_has_software_image:
+- !!python/object:modelcatalog.models.software_image.SoftwareImage
+  _id: https://w3id.org/okn/i/mint/MINTPROJECT-WEATHER-GENERATOR:LATEST
+  _label:
+  - mintproject/weather-generator:latest
+  _type:
+  - SoftwareImage
+  discriminator: null
+_id: https://w3id.org/okn/i/mint/weather_generator
+_label:
+- WGEN Basic configuration
+_type:
+- EmpiricalModel
+- ModelConfiguration
+- SoftwareConfiguration
+discriminator: null
