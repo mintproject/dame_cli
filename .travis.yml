@@ -10,10 +10,9 @@ jobs:
         - python3 --version
         - pip3 install -U pip
         - pip3 install -U pytest
-        - pip3 install -U tox
         - pip3 install codecov
-      script: tox
-      after_success: python 3 -m codecov
+      script: python3 -m pytest
+      after_success: python3 -m codecov
 install: pip install tox-travis
 script: tox
 deploy:
