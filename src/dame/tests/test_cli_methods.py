@@ -19,10 +19,10 @@ class Test(TestCase):
         assert verify_input_parameters(partial_setup) == partial_setup
 
     def test_print_data_property_table(self):
-        full = get_setup(SETUP_FULL_INFO)
-        partial = get_setup(SETUP_PARTIAL_INFO)
-        print_data_property_table(full)
-        print_data_property_table(partial)
+        for setup in list_setup():
+            print_data_property_table(get_setup(obtain_id(setup.id)))
+        for model_configuration in list_model_configuration():
+            print_data_property_table(get_model_configuration(obtain_id(model_configuration.id)))
 
     def test_show_model_configuration_details(self):
         full = get_setup(SETUP_FULL_INFO)
