@@ -1,4 +1,4 @@
-# Desktop Application for Model Execution (DAME)
+# Desktop Application for Model Execution (DAME) [![Build Status](https://travis-ci.com/mintproject/dame_cli.svg?branch=master)](https://travis-ci.com/mintproject/dame_cli)
 
 ## Requeriments
 

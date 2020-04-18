@@ -33,8 +33,16 @@ def show_model_configuration_details(model_configuration):
             short_value(_parameter, "has_default_value")
     if hasattr(model_configuration, "has_software_image"):
         try:
+            click.echo(click.style("Docker Image", bold=True))
             image = getattr(model_configuration, "has_software_image")[0].label[0]
-            click.echo("{}: {}".format("image", image))
+            click.echo("{}: {}".format("Name", image))
+        except AttributeError as e:
+            raise AttributeError(model_configuration)
+    if hasattr(model_configuration, "has_component_location"):
+        try:
+            click.echo(click.style("Component Location", bold=True))
+            image = getattr(model_configuration, "has_component_location")[0]
+            click.echo("{}: {}".format("Link", image))
         except AttributeError as e:
             raise AttributeError(model_configuration)
 
