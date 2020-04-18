@@ -38,6 +38,8 @@ def show_model_configuration_details(model_configuration):
             click.echo("- {}: {} - https://hub.docker.com/r/{} ".format("Name", image, image.split(':')[0]))
         except AttributeError as e:
             raise AttributeError(model_configuration)
+    else:
+        raise AttributeError("No information available about the Docker Image.")
     if hasattr(model_configuration, "has_component_location"):
         try:
             click.echo(click.style("Component Location", bold=True))
@@ -45,6 +47,8 @@ def show_model_configuration_details(model_configuration):
             click.echo("- {}: {}".format("Link", image))
         except AttributeError as e:
             raise AttributeError(model_configuration)
+    else:
+        raise AttributeError("No information available about the executable component Location")
 
 
 def short_value(resource, prop):

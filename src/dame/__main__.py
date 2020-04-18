@@ -69,9 +69,8 @@ def run(name):
         resource = get_model_configuration(name)
     try:
         show_model_configuration_details(resource)
-    except ValueError:
-        click.secho("Unable to run without image")
+    except AttributeError as e:
+        click.secho("Unable to run it: {}".format(str(e)), fg="red")
+        exit(1)
     verify_input_parameters(resource)
-    # setup = get_setup(name)
-    # edit_inputs_setup(setup)
     run_method_setup(resource)
