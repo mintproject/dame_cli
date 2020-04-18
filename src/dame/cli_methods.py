@@ -56,9 +56,12 @@ def short_value(resource, prop):
 def verify_input_parameters(model_configuration):
     for _input in model_configuration.has_input:
         if not hasattr(_input, "has_fixed_resource"):
-            click.secho("The information of the setup is incomplete", fg="yellow")
-            print_data_property_table(_input)
-            url = click.prompt('Please, enter the url of the previous input', type=click.STRING)
+            if hasattr(_input, "label") and hasattr(_input, "has_format"):
+                click.secho("To run this model configuration, a {} file (.{} file) is required.".format(_input.label[0], _input.has_format[0]), fg="yellow")
+            else:
+                click.secho("To run this model configuration, a {} file is required.".format(_input.label[0]), fg="yellow")
+
+            url = click.prompt('Please enter a url for it', type=click.STRING)
             s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
                                data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
                                value=[url])

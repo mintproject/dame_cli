@@ -62,7 +62,7 @@ def run(name):
     except OpenApiException as e:
         logging.error(e.reason)
         exit(0)
-
+    click.clear()
     if "ModelConfigurationSetup" in config.type:
         resource = get_setup(name)
     elif "ModelConfiguration" in config.type:
