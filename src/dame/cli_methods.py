@@ -23,10 +23,10 @@ def show_model_configuration_details(model_configuration):
         click.echo(click.style("Inputs", bold=True))
         for _input in model_configuration.has_input:
             if hasattr(_input, "has_fixed_resource") and hasattr(_input.has_fixed_resource[0], "value"):
-                click.echo("{}: {}".format(_input.label[0], _input.has_fixed_resource[0].value[0]))
+                click.echo("- {}: {}".format(_input.label[0], _input.has_fixed_resource[0].value[0]))
             else:
                 label = getattr(_input, "label") if hasattr(_input, "label") else getattr(_input, "id")
-                click.echo("{}: {}".format(label[0], "No information"))
+                click.echo("- {}: {}".format(label[0], "No information"))
     if model_configuration and hasattr(model_configuration, "has_parameter"):
         click.echo(click.style("Parameters", bold=True))
         for _parameter in model_configuration.has_parameter:
@@ -35,14 +35,14 @@ def show_model_configuration_details(model_configuration):
         try:
             click.echo(click.style("Docker Image", bold=True))
             image = getattr(model_configuration, "has_software_image")[0].label[0]
-            click.echo("{}: {}".format("Name", image))
+            click.echo("- {}: {} - https://hub.docker.com/r/{} ".format("Name", image, image.split(':')[0]))
         except AttributeError as e:
             raise AttributeError(model_configuration)
     if hasattr(model_configuration, "has_component_location"):
         try:
             click.echo(click.style("Component Location", bold=True))
             image = getattr(model_configuration, "has_component_location")[0]
-            click.echo("{}: {}".format("Link", image))
+            click.echo("- {}: {}".format("Link", image))
         except AttributeError as e:
             raise AttributeError(model_configuration)
 
@@ -50,7 +50,7 @@ def show_model_configuration_details(model_configuration):
 def short_value(resource, prop):
     if hasattr(resource, prop):
         value = getattr(resource, prop)
-        click.echo("{}: {}".format(getattr(resource, "label")[0], value[0]))
+        click.echo("- {}: {}".format(getattr(resource, "label")[0], value[0]))
 
 
 def verify_input_parameters(model_configuration):
