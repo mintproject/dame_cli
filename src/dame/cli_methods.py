@@ -182,7 +182,8 @@ def execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name):
     """
     try:
         click.echo("Execution line \ncd {}\n{}".format(cwd_path, setup_cmd_line))
-        click.confirm("Do you want to run the setup?", default=True)
+        if not click.confirm("Do you want to run the setup?", default=True):
+            exit(0)
         status = run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name)
     except Exception as e:
         log.error(e, exc_info=True)
