@@ -91,43 +91,36 @@ def build_command_line(resource, _dir):
     return line, src_path
 
 
-def execute_setup(setup_paths):
-    data = []
+def prepare_execution(setup_path):
     _dir = Path("%s/" % EXECUTION_DIRECTORY)
     _dir.mkdir(parents=True, exist_ok=True)
+    setup_dict = load(setup_path.open(), Loader=Loader)
+    setup_name = obtain_id(setup_dict.id)
+    execution_dir = "{}/{}_{}".format(_dir, setup_name, uuid.uuid1())
+    execution_dir_path = Path(execution_dir)
+    execution_dir_path.mkdir(parents=True, exist_ok=True)
+    try:
+        setup_cmd_line, cwd_path = build_command_line(setup_dict, execution_dir_path)
+    except Exception as e:
+        raise e
+    return cwd_path, execution_dir, setup_cmd_line, setup_name
 
-    for setup in setup_paths:
-        setup_dict = load((setup).open(), Loader=Loader)
-        setup_name = obtain_id(setup_dict.id)
-        execution_dir = "{}/{}_{}".format(_dir, setup_name, uuid.uuid1())
-        execution_dir_path = Path(execution_dir)
-        execution_dir_path.mkdir(parents=True, exist_ok=True)
-        try:
-            setup_cmd_line, cwd_path = build_command_line(setup_dict, execution_dir_path)
-        except Exception as e:
-            raise e
-        log_file_path = "{}/output.log".format(execution_dir)
-        data.append({
-            "cmd": setup_cmd_line.split(' '),
-            "log": open(log_file_path, 'wb'),
-            "directory": cwd_path,
-            "name": setup_name
-        })
-        log.info(f'Execution {setup_name} running,  check the logs on {log_file_path}')
 
-    _ = [subprocess.Popen(["chmod", "+x", "run"], stdout=item["log"], stderr=item["log"], cwd=item["directory"]) for item
-        in data]
-    procs_list = [subprocess.Popen(item["cmd"], stdout=item["log"], stderr=item["log"], cwd=item["directory"]) for item
-                  in data]
+def run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name):
 
-    for proc in procs_list:
-        proc.wait()
-
-    status = []
-    for proc, item in zip(procs_list, data):
-        status.append({
-            "exitcode": proc.returncode,
-            "name": item["name"]
-        })
-
-    return status, cwd_path
+    log_file_path = "{}/output.log".format(execution_dir)
+    item = {
+        "cmd": setup_cmd_line.split(' '),
+        "log": open(log_file_path, 'wb'),
+        "directory": cwd_path,
+        "name": setup_name
+    }
+    log.info(f'Execution {setup_name} running,  check the logs on {log_file_path}')
+    _ = subprocess.Popen(["chmod", "+x", "run"], stdout=item["log"], stderr=item["log"], cwd=item["directory"])
+    proc = subprocess.Popen(item["cmd"], stdout=item["log"], stderr=item["log"], cwd=item["directory"])
+    proc.wait()
+    status = {
+        "exitcode": proc.returncode,
+        "name": item["name"]
+    }
+    return status
