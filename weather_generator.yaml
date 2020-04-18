@@ -22,7 +22,7 @@ _has_input:
   - data_catalog_identifier: FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o
     id: https://w3id.org/okn/i/mint/
     value:
-    - afd
+    - sad
   _has_format:
   - tar.gz
   _has_presentation:
@@ -77,7 +77,7 @@ _has_input:
   - data_catalog_identifier: FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o
     id: https://w3id.org/okn/i/mint/
     value:
-    - adfasd
+    - afdasf
   _has_format:
   - tar.gz
   _has_presentation:

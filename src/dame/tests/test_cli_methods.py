@@ -27,12 +27,18 @@ class Test(TestCase):
     def test_show_model_configuration_details(self):
         full = get_setup(SETUP_FULL_INFO)
         partial = get_setup(SETUP_PARTIAL_INFO)
-        show_model_configuration_details(full)
-        show_model_configuration_details(partial)
         for setup in list_setup():
-            show_model_configuration_details(get_setup(obtain_id(setup.id)))
+            try:
+                show_model_configuration_details(get_setup(obtain_id(setup.id)))
+            except AttributeError:
+                pass
+
         for model_configuration in list_model_configuration():
-            show_model_configuration_details(get_model_configuration(obtain_id(model_configuration.id)))
+            try:
+                show_model_configuration_details(get_model_configuration(obtain_id(model_configuration.id)))
+            except AttributeError:
+                pass
+
     #
     # def test_convert_setup_file(self):
     #     for setup in list_setup():
