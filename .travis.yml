@@ -12,7 +12,8 @@ jobs:
         - pip3 install -U pytest
         - pip3 install codecov
         - pip3 install pytest-cov
-      script: python3 -m pytest
+        - pip3 install tox
+      script: python3 -m tox
       after_success: python3 -m codecov
 install: pip install tox-travis
 script: tox
