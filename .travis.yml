@@ -12,11 +12,9 @@ jobs:
         - pip3 install -U pytest
         - pip3 install codecov
         - pip3 install pytest-cov
-        - pip3 install tox
+        - pip3 install tox-travis
       script: tox
       after_success: python3 -m codecov
-install: pip install tox-travis
-script: tox
 deploy:
   provider: pypi
   user: "__token__"
