@@ -30,13 +30,13 @@ def cli(verbose):
 
     if semver.compare(lv, cv) > 0:
         click.secho(
-            f"""WARNING: You are using wcm version {dame.__version__}, however version {lv} is available.
-You should consider upgrading via the 'pip install --upgrade wcm' command.""",
+            f"""WARNING: You are using dame-cli version {dame.__version__}, however version {lv} is available.
+You should consider upgrading via the 'pip install --upgrade dame-cli' command.""",
             fg="yellow",
         )
 
 
-@cli.command(help="Show wcm version.")
+@cli.command(help="Show dame-cli version.")
 def version(debug=False):
     click.echo(f"DAME: v{dame.__version__}")
 
