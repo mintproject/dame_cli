@@ -4,17 +4,24 @@ jobs:
   include:
     - name: "macOS 10.13 - py3.6.5"
       os: osx
-      osx_image: xcode9.4
-      language: shell
-      before_install:
-        - python3 --version
-        - pip3 install -U pip
-        - pip3 install -U pytest
-        - pip3 install codecov
-        - pip3 install pytest-cov
-        - pip3 install tox-travis
-      script: tox
-      after_success: python3 -m codecov
+      language: generic
+      env: PYTHON=3.5.1
+before_install: |
+  if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    brew update
+    brew install openssl readline
+    brew outdated pyenv || brew upgrade pyenv
+    brew install pyenv-virtualenv
+    pyenv install $PYTHON
+    export PYENV_VERSION=$PYTHON
+    export PATH="/Users/travis/.pyenv/shims:${PATH}"
+    pyenv-virtualenv venv
+    source venv/bin/activate
+    python --version
+  fi
+install:
+  - python -m pip install -U pip
+  - pythom -m tox .
 deploy:
   provider: pypi
   user: "__token__"
