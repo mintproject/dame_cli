@@ -6,9 +6,22 @@ from zipfile import ZipFile
 import validators
 import yaml
 from dame.modelcatalogapi import get_setup, datasetspecifications_id_get
+import platform
+
+DOC_LINK = "https://dame-cli.readthedocs.io/en/latest/"
 
 ignore_dirs = ["__MACOSX"]
 SERVER = "https://dev.mint.isi.edu"
+
+def find_singularity():
+    if platform.system() == "Linux":
+        SINGULARITY_CWD_LINE = "/usr/bin/singularity"
+    elif platform.system() == "Darwin":
+        SINGULARITY_CWD_LINE = "/usr/local/bin/singularity"
+
+    if pathlib.Path(SINGULARITY_CWD_LINE).exists():
+        return True
+    return False
 
 def convert_object_to_dict(o):
     if isinstance(o, object):

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import click
 import texttable as tt
-from dame.utils import check_is_none, create_yaml_from_resource, obtain_id
+from dame.utils import check_is_none, create_yaml_from_resource, obtain_id, find_singularity, DOC_LINK
 from dame.utils import create_yaml_from_resource, obtain_id
 from dame.executor import prepare_execution, run_execution
 from dame._utils import log
@@ -142,6 +142,13 @@ def run_method_setup(setup):
     Call download_setup(): Download the setup(s) as yaml file
     Call execute_setup(): Read the yaml file and execute
     """
+    if not find_singularity():
+        click.secho("Singurality is not installed.", fg="red")
+        if click.confirm("Do you want to visit the documentation {}".format(DOC_LINK), default=True):
+            click.launch(DOC_LINK)
+        exit(1)
+
+
     try:
         cwd_path, execution_dir, setup_cmd_line, setup_name = convert_setup_file(setup)
         status = execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name)
