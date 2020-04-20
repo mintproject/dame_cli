@@ -57,9 +57,9 @@ def short_value(resource, prop):
         click.echo("- {}: {}".format(getattr(resource, "label")[0], value[0]))
 
 
-def verify_input_parameters(model_configuration):
+def verify_input_parameters(model_configuration, interactive):
     for _input in model_configuration.has_input:
-        if not hasattr(_input, "has_fixed_resource"):
+        if not hasattr(_input, "has_fixed_resource") and interactive:
             if hasattr(_input, "label") and hasattr(_input, "has_format"):
                 click.secho("To run this model configuration, a {} file (.{} file) is required.".format(_input.label[0], _input.has_format[0]), fg="yellow")
             else:
@@ -70,6 +70,8 @@ def verify_input_parameters(model_configuration):
                                data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
                                value=[url])
             _input.has_fixed_resource = [s.to_dict()]
+        elif not hasattr(_input, "has_fixed_resource") and not interactive:
+            raise ValueError("Missing information")
     click.secho("The information of the setup is complete", fg="green")
     return model_configuration
 

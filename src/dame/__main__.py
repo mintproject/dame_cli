@@ -56,7 +56,8 @@ Run a modelconfiguration or modelconfiguration
     "name",
     type=click.STRING
 )
-def run(name):
+@click.option('--interactive/--non-interactive', default=True)
+def run(name, interactive):
     try:
         config = get_model_configuration(name)
     except OpenApiException as e:
@@ -72,5 +73,9 @@ def run(name):
     except AttributeError as e:
         click.secho("Unable to run it: {}".format(str(e)), fg="red")
         exit(1)
-    verify_input_parameters(resource)
+    try:
+        verify_input_parameters(resource, interactive)
+    except ValueError as e:
+        click.secho("Unable to run. Please use interactive mode", fg="yellow")
+        exit(1)
     run_method_setup(resource)
