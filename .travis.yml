@@ -11,6 +11,8 @@ matrix:
     before_install:
     - brew upgrade pyenv
     - brew install pyenv-virtualenv
+    - export CFLAGS="-I$(brew --prefix openssl)/include"
+    - export LDFLAGS="-L$(brew --prefix openssl)/lib"
     - pyenv install 3.6.7
     - eval "$(pyenv init -)"
     - pyenv virtualenv 3.6.7 venv
@@ -21,6 +23,8 @@ matrix:
     before_install:
     - brew upgrade pyenv
     - brew install pyenv-virtualenv
+    - export CFLAGS="-I$(brew --prefix openssl)/include"
+    - export LDFLAGS="-L$(brew --prefix openssl)/lib"
     - pyenv install 3.7.2
     - eval "$(pyenv init -)"
     - pyenv virtualenv 3.7.2 venv
