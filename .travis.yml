@@ -6,10 +6,10 @@ jobs:
       os: osx
       language: generic
       env: PYTHON=3.5.1
-before_install: |
-    - bash .travis/before_install.sh
+before_install:
+    - ./.travis/before_install.sh
 install:
-    - bash .travis/install.sh
+    - ./.travis/install.sh
 deploy:
   provider: pypi
   user: "__token__"
