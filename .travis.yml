@@ -7,21 +7,9 @@ jobs:
       language: generic
       env: PYTHON=3.5.1
 before_install: |
-  if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    brew update
-    brew install openssl readline
-    brew outdated pyenv || brew upgrade pyenv
-    brew install pyenv-virtualenv
-    pyenv install $PYTHON
-    export PYENV_VERSION=$PYTHON
-    export PATH="/Users/travis/.pyenv/shims:${PATH}"
-    pyenv-virtualenv venv
-    source venv/bin/activate
-    python --version
-  fi
+    - ./.travis/before_install.sh
 install:
-  - python -m pip install -U pip
-  - pythom -m tox .
+    - ./.travis/install.sh
 deploy:
   provider: pypi
   user: "__token__"
