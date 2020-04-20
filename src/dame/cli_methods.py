@@ -139,21 +139,21 @@ def print_data_property_table(resource, property_selected={}):
 #     edit_parameter_config_setup(resource=setup)
 
 
-def run_method_setup(setup):
+def run_method_setup(setup, interactive):
     """
     Call download_setup(): Download the setup(s) as yaml file
     Call execute_setup(): Read the yaml file and execute
     """
     if not find_singularity():
         click.secho("Singurality is not installed.", fg="red")
-        if click.confirm("Do you want to visit the documentation {}".format(DOC_LINK), default=True):
+        if interactive and click.confirm("Do you want to visit the documentation {}".format(DOC_LINK), default=True):
             click.launch(DOC_LINK)
         exit(1)
 
 
     try:
         cwd_path, execution_dir, setup_cmd_line, setup_name = convert_setup_file(setup)
-        status = execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name)
+        status = execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name, interactive)
         if status["exitcode"] == 0:
             click.secho("[{}] The execution has been successful".format(status["name"]), fg="green")
             click.secho("[{}] Results available at: {} ".format(status["name"], cwd_path), fg="green")
@@ -174,24 +174,13 @@ def convert_setup_file(setup):
     return prepare_execution(file_path)
 
 
-def read_and_execute(file_path):
-    click.secho("Executing the setup", fg="green")
-    status, file_dir = execute_setups(file_path)
-    for setup in status:
-        if setup["exitcode"] == 0:
-            click.secho("[{}] The execution has been successful".format(setup["name"]), fg="green")
-            click.secho("[{}] Results available at: {} ".format(setup["name"], file_dir), fg="green")
-        else:
-            click.secho("[{}] The execution has failed".format(setup["name"]), fg="red")
-
-
-def execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name):
+def execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name, interactive):
     """
     Find the setup files if the path is a directory and execute it
     """
     try:
         click.echo("Execution line \ncd {}\n{}".format(cwd_path, setup_cmd_line))
-        if not click.confirm("Do you want to run the setup?", default=True):
+        if interactive and not click.confirm("Do you want to run the setup?", default=True):
             exit(0)
         status = run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name)
     except Exception as e:

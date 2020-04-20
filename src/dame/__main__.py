@@ -78,4 +78,4 @@ def run(name, interactive):
     except ValueError as e:
         click.secho("Unable to run. Please use interactive mode", fg="yellow")
         exit(1)
-    run_method_setup(resource)
+    run_method_setup(resource, interactive)
