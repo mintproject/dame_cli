@@ -62,7 +62,8 @@ install:
 - pip install -U pytest-cov
 - pip install --upgrade setuptools wheel
 script:
-- pytest
+  - python setup.py install
+  - pytest
 after_success:
 - codecov
 
