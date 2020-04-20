@@ -10,6 +10,8 @@ before_install:
     - ./.travis/before_install.sh
 install:
     - ./.travis/install.sh
+script:
+    - ./.travis/script.sh
 deploy:
   provider: pypi
   user: "__token__"
