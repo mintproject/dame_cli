@@ -6,6 +6,7 @@ if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     pyenv install $PYTHON
     export PYENV_VERSION=$PYTHON
     export PATH="/Users/travis/.pyenv/shims:${PATH}"
+    export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"'
     pyenv-virtualenv venv
     source ~/venv/bin/activate
     python --version
