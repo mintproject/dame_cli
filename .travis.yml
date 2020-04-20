@@ -55,5 +55,6 @@ deploy:
   password:
     secure: mNgjwPGnDoo8zd9R6PEJezH4cooqQSL+IIL3tsaDNBGqQZJsmEcNPDF3JJVlVDC+gG5DHD25zW5p14CdcZYvdxhHX+1ks2JVsJFCrG3oa4bRFw28ifroqkE1crQRr2Xw2tQN1SwANnBpCkGj1dZ24xuFPFRTvqOVnU2R7V+JuYR256wdIOPvmePYM3FMutafP8S0/C3QiG+D0JwGcvEhvBdNIpHezmbGsmJivCiMu2crGre3Z2USP41Z7y1/BPSr32KiBHxU4kA+LalF4OI82CfAIxCAVpZQ8VOg96RbAE4DDwIij63rDdCwj68LJ5TIOid281TpM3N6N+ETvPkrzzkamkGY0Ss5D40zan/3MmOxWRfJPxQT8C3Vb69tZN0Pk8heDkyi/tbtvidBF0wyBZMsg8p3aTpoW19UUwZn8WfBv2zHqUibUzF212xO2m6XJK2jPwd1rTYitKSWZc3DDMljR7qCIXppJ2bcXYrWD/urwT7sUzI7cRaze6W1IwEr+Ob9TlftBY+8ezBlfjxtq+eNqiwsP0AtgwgzVVC3E3ecDLtMoxdJCOjjq3xG6m/Bg5DqMqt97OB6Q/TREmZNPIWTYGyUA0q0woBeAK8N/e8s5ShqqphqLxP/mrfcndd2Surt8IaVnog6KL2A8mcVMCQr5T+EZvByB6GA2BLMniQ=
   on:
+    condition: $TRAVIS_OS_NAME != "windows"
+    branch: master
     tags: true
-    distributions: sdist bdist_wheel
