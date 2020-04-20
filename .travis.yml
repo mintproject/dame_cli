@@ -64,3 +64,4 @@ deploy:
     condition: $TRAVIS_OS_NAME != "windows"
     branch: master
     tags: true
+  skip_existing: true
