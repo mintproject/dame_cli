@@ -6,6 +6,9 @@ Given a model identifier (e.g., TopoFlow for the Awash region: `topoflow36_2.1.0
 
 DAME works in Linux and OSX (currently being tested on Windows).  It is installed through a simple pip command.
 
+!!! info
+    DAME users should be experienced with container environments (in particular Singularity) and basic Python.
+
 
 ## Requirements
 
