@@ -72,7 +72,7 @@ def verify_input_parameters(model_configuration, interactive):
             _input.has_fixed_resource = [s.to_dict()]
         elif not hasattr(_input, "has_fixed_resource") and not interactive:
             raise ValueError("Missing information")
-    click.secho("The information of the setup is complete", fg="green")
+    click.secho("The information needed to run the model is complete, and I can execute the model as follows:", fg="green")
     return model_configuration
 
 
@@ -179,8 +179,8 @@ def execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name, interact
     Find the setup files if the path is a directory and execute it
     """
     try:
-        click.echo("Execution line \ncd {}\n{}".format(cwd_path, setup_cmd_line))
-        if interactive and not click.confirm("Do you want to run the setup?", default=True):
+        click.echo("Invocation command \ncd {}\n{}".format(cwd_path, setup_cmd_line))
+        if interactive and not click.confirm("Do you want to proceed and submit it for execution?", default=True):
             exit(0)
         status = run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name)
     except Exception as e:
