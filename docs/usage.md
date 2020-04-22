@@ -18,7 +18,7 @@ Options:
 Commands:
   browse   Open the Model Catalog in your browser
   run      Run a model configuration or model configuration setup
-  version  Show wcm version.
+  version  Show DAME version.
 ```
 
 ## Browse and search a Model Configuration
