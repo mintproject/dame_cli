@@ -37,7 +37,7 @@ def show_model_configuration_details(model_configuration):
             image = getattr(model_configuration, "has_software_image")[0].label[0]
             click.echo("- {}: {} - https://hub.docker.com/r/{} ".format("Name", image, image.split(':')[0]))
         except AttributeError as e:
-            raise AttributeError(model_configuration)
+            raise AttributeError("No information available about the Docker Image.")
     else:
         raise AttributeError("No information available about the Docker Image.")
     if hasattr(model_configuration, "has_component_location"):
@@ -46,7 +46,7 @@ def show_model_configuration_details(model_configuration):
             image = getattr(model_configuration, "has_component_location")[0]
             click.echo("- {}: {}".format("Link", image))
         except AttributeError as e:
-            raise AttributeError(model_configuration)
+            raise AttributeError("No information available about the executable component Location")
     else:
         raise AttributeError("No information available about the executable component Location")
 
@@ -200,3 +200,14 @@ def find_setup_files(path):
         default_path = Path('.')
         setup_files.append(default_path / path)
     return setup_files
+
+
+def print_table_list(items):
+    headings = ['Id', 'Description']
+    tab = tt.Texttable()
+    tab.header(headings)
+    for item in items:
+        _id = obtain_id(item.id)
+        _description = "".join(item.description) if hasattr(item, "description") else "No information"
+        tab.add_row([_id, _description])
+    print(tab.draw())

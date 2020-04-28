@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from dame.cli_methods import verify_input_parameters, print_data_property_table, show_model_configuration_details, \
-    convert_setup_file
+    convert_setup_file, print_table_list
 from dame.modelcatalogapi import get_setup, list_setup, list_model_configuration, get_model_configuration
 
 from click.testing import CliRunner
@@ -13,6 +13,7 @@ SETUP_FULL_INFO = "cycles-0.10.2-alpha-collection-oromia-single-point"
 
 setups = [get_setup(obtain_id(setup.id)) for setup in list_setup()]
 model_configurations = [get_model_configuration(obtain_id(setup.id)) for setup in list_model_configuration()]
+
 
 class Test(TestCase):
     def test_verify_input_parameters(self):
@@ -40,4 +41,8 @@ class Test(TestCase):
                 show_model_configuration_details(model_configuration)
             except AttributeError:
                 pass
+
+    def test_print_table_list(self):
+        print_table_list(setups)
+        print_table_list(model_configurations)
 
