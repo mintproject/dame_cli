@@ -200,3 +200,14 @@ def find_setup_files(path):
         default_path = Path('.')
         setup_files.append(default_path / path)
     return setup_files
+
+
+def print_table_list(items):
+    headings = ['Id', 'Description']
+    tab = tt.Texttable()
+    tab.header(headings)
+    for item in items:
+        _id = obtain_id(item.id)
+        _description = "".join(item.description) if hasattr(item, "description") else "No information"
+        tab.add_row([_id, _description])
+    print(tab.draw())

@@ -46,10 +46,10 @@ def get_setup(_id):
 
 def list_setup(label=None):
     # create an instance of the API class
-    api_instance = modelcatalog.ConfigurationSetupApi()
+    api_instance = modelcatalog.ModelConfigurationSetupApi()
     try:
         # Get a ModelConfigurationSetup
-        api_response = api_instance.configurationsetups_get(username=USERNAME)
+        api_response = api_instance.modelconfigurationsetups_get(username=USERNAME)
         return api_response
     except ApiException as e:
         raise e
