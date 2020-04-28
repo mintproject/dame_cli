@@ -7,7 +7,7 @@ dame.
 import logging
 import click
 import semver
-from modelcatalog import OpenApiException
+from modelcatalog import OpenApiException, ApiException
 
 import dame
 from dame import _utils
@@ -61,8 +61,8 @@ Run a modelconfiguration or modelconfiguration
 def run(name, interactive):
     try:
         config = get_model_configuration(name)
-    except OpenApiException as e:
-        logging.error(e.reason)
+    except ApiException as e:
+        click.secho("{}".format(e.reason))
         exit(0)
     click.clear()
     if "ModelConfigurationSetup" in config.type:
@@ -88,7 +88,21 @@ def model_configuration():
 def _list():
     items = list_model_configuration(label=None)
     print_table_list(items)
-
+@click.argument(
+    "name",
+    type=click.STRING
+)
+@model_configuration.command(name="show", help="Show model configuration")
+def _show(name):
+    try:
+        _setup = get_model_configuration(name)
+    except ApiException as e:
+        click.secho("{}".format(e.reason))
+        exit(0)
+    try:
+        show_model_configuration_details(_setup)
+    except AttributeError as e:
+        click.secho("This setup is not executable.\n".format(e), fg="red")
 
 @cli.group()
 def setup():
@@ -97,3 +111,20 @@ def setup():
 def _list():
     items = list_setup(label=None)
     print_table_list(items)
+
+
+@click.argument(
+    "name",
+    type=click.STRING
+)
+@setup.command(name="show", help="Show model configuration setups")
+def _show(name):
+    try:
+        _setup = get_setup(name)
+    except ApiException as e:
+        click.secho("{}".format(e.reason))
+        exit(0)
+    try:
+        show_model_configuration_details(_setup)
+    except AttributeError as e:
+        click.secho("This setup is not executable.\n".format(e), fg="red")
