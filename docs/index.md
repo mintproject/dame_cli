@@ -4,7 +4,10 @@ DAME contains a registry of model containers and input data files, as well as me
 
 Given a model identifier (e.g., TopoFlow for the Awash region: `topoflow36_2.1.0_Awash`), DAME downloads the model container and its execution environment, and fetches the datasets needed (e.g., soil data, elevation data, etc). Then users can run the model with different input scenarios.
 
-DAME works in Linux and OSX (currently being tested on Windows).  It is installed through a simple pip command.
+DAME works in Linux, with partial support in MacOS (currently being tested on Windows).  It is installed through a simple pip command.
+
+!!! warning
+    [April, 2020] Singularity is in BETA in MacOS, and we have recently detected [issues](https://github.com/mintproject/dame_cli/issues/50) when executed certain model setups. **We recommend using DAME in Linux**.
 
 !!! info
     DAME users should be experienced with container environments (in particular Singularity) and basic Python.
@@ -21,9 +24,10 @@ DAME has the following requirements:
 
 DAME uses Singularity to manage and run the containers of software components. To install Singularity, please follow the steps below:
 
-- [Installation on Linux](https://sylabs.io/guides/3.5/admin-guide/installation.html#)
+- [Installation on Linux (Recommended)](https://sylabs.io/guides/3.5/admin-guide/installation.html#)
+- [Installation on MacOS](https://sylabs.io/singularity-desktop-macos/)
 - [Installation on Windows](https://sylabs.io/guides/3.5/admin-guide/installation.html#windows)
-- [Installation on Mac](https://sylabs.io/singularity-desktop-macos/)
+
 
 
 !!! question
@@ -33,9 +37,10 @@ DAME uses Singularity to manage and run the containers of software components. T
 
 DAME uses Python. To install Python, just follow the steps below:
 
-- [Installation on Linux](https://realpython.com/installing-python/#linux)
+- [Installation on Linux (Recommended)](https://realpython.com/installing-python/#linux)
+- [Installation on MacOS](https://realpython.com/installing-python/#macos-mac-os-x)
 - [Installation on Windows](https://realpython.com/installing-python/#windows)
-- [Installation on Mac](https://realpython.com/installing-python/#macos-mac-os-x)
+
 
 ## Installation
 
