@@ -18,7 +18,7 @@ def find_singularity():
     elif platform.system() == "Darwin":
         SINGULARITY_CWD_LINE = "/usr/local/bin/singularity"
 
-    if pathlib.Path(SINGULARITY_CWD_LINE).exists():
+    if Path(SINGULARITY_CWD_LINE).exists():
         return True
     return False
 
@@ -94,7 +94,7 @@ def download_data_file(url, _dir, format):
     headers = {'Cache-Control': 'no-cache'}
     r = requests.get(url, allow_redirects=True, headers=headers)
     filename = url.split('/')[-1]
-    filepath = pathlib.Path(_dir / filename)
+    filepath = Path(_dir / filename)
     if filepath.suffix == "" and format:
         filepath = filepath.with_suffix(validate_suffix(format))
     with requests.get(url, stream=True, headers=headers) as r:
