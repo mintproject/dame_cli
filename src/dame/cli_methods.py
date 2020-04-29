@@ -63,8 +63,8 @@ def verify_input_parameters(model_configuration, interactive):
                 click.secho("To run this model configuration, a {} file is required.".format(_input.label[0]), fg="yellow")
             else:
                 click.secho("To run this model configuration, a {} file is required.".format(_input.id), fg="yellow")
-
             url = click.prompt('Please enter a url or local path for it')
+            url = url.replace(" ", '')
             while not url_validation(url):
                 url = click.prompt('Please enter a url or local path for it')
             s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
