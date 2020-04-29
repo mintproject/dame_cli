@@ -3,7 +3,7 @@ import modelcatalog
 from modelcatalog import ApiClient
 from modelcatalog.rest import ApiException
 
-from dame.configuration import get_credentials
+from dame.configuration import get_credentials, DEFAULT_PROFILE
 
 USERNAME = "mint@isi.edu"
 
@@ -11,13 +11,13 @@ USERNAME = "mint@isi.edu"
 def api_configuration(profile):
     credentials = get_credentials(profile)
     if credentials is None:
-        return modelcatalog.configuration(), USERNAME
+        return ApiClient(), USERNAME
     configuration = modelcatalog.Configuration()
     configuration.host = credentials["server"]
     return ApiClient(configuration=configuration), credentials["username"]
 
 
-def list_model_configuration(label=None, profile="default"):
+def list_model_configuration(label=None, profile=DEFAULT_PROFILE):
     api, username = api_configuration(profile)
     api_instance = modelcatalog.ModelConfigurationApi(api)
     try:
@@ -27,7 +27,7 @@ def list_model_configuration(label=None, profile="default"):
         raise e
 
 
-def get_model_configuration(_id, profile="default"):
+def get_model_configuration(_id, profile=DEFAULT_PROFILE):
     api, username = api_configuration(profile)
     api_instance = modelcatalog.ModelConfigurationApi(api)
     try:
@@ -37,7 +37,7 @@ def get_model_configuration(_id, profile="default"):
         raise e
 
 
-def get_setup(_id, profile="default"):
+def get_setup(_id, profile=DEFAULT_PROFILE):
     api, username = api_configuration(profile)
     api_instance = modelcatalog.ModelConfigurationSetupApi(api)
     try:
@@ -48,7 +48,7 @@ def get_setup(_id, profile="default"):
         raise e
 
 
-def list_setup(label=None, profile="default"):
+def list_setup(label=None, profile=DEFAULT_PROFILE):
     api, username = api_configuration(profile)
     api_instance = modelcatalog.ModelConfigurationSetupApi(api)
     try:

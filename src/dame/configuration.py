@@ -3,6 +3,9 @@ import os
 import pathlib
 
 __DEFAULT_MINT_API_CREDENTIALS_FILE__ = "~/.mint/credentials"
+import click
+
+DEFAULT_PROFILE = "default"
 
 
 def get_credentials(profile):
@@ -13,6 +16,8 @@ def get_credentials(profile):
     if credentials_file.exists():
         credentials.read(credentials_file)
         return credentials[profile]
+    elif credentials is not None and profile not in credentials and profile != ("%s" % DEFAULT_PROFILE):
+        click.secho("WARNING: The profile doesn't exists. To configure it, run:\ndame configure -p {}".format(profile), fg="yellow")
     return None
 
 

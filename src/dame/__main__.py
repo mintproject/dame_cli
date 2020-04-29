@@ -12,7 +12,7 @@ import dame
 from dame import _utils
 from dame.cli_methods import verify_input_parameters, run_method_setup, show_model_configuration_details, \
     print_table_list
-from dame.configuration import configure_credentials
+from dame.configuration import configure_credentials, DEFAULT_PROFILE
 from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup
 
 try:
@@ -121,7 +121,7 @@ def model_configuration():
     "-p",
     envvar="MINT_PROFILE",
     type=str,
-    default="default",
+    default=DEFAULT_PROFILE,
     metavar="<profile-name>",
 )
 def _list(profile):
@@ -139,7 +139,7 @@ def _list(profile):
     "-p",
     envvar="MINT_PROFILE",
     type=str,
-    default="default",
+    default=DEFAULT_PROFILE,
     metavar="<profile-name>",
 )
 def _show(name, profile):
@@ -165,7 +165,7 @@ def setup():
     "-p",
     envvar="MINT_PROFILE",
     type=str,
-    default="default",
+    default=DEFAULT_PROFILE,
     metavar="<profile-name>",
 )
 def _list(profile):
@@ -183,7 +183,7 @@ def _list(profile):
     "-p",
     envvar="MINT_PROFILE",
     type=str,
-    default="default",
+    default=DEFAULT_PROFILE,
     metavar="<profile-name>",
 )
 def _show(name, profile):
