@@ -29,8 +29,10 @@ install_requires = [
     "semver>=2.8.1",
     "requests",
     "jsonschema>=3.0.0",
+    "configparser>=5.0.0"
     "certifi>=2019.11.28",
     "texttable"
+
 ]
 
 version = {}

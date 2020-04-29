@@ -1,5 +1,3 @@
-import itertools
-import logging
 import os
 import uuid
 from pathlib import Path
@@ -10,7 +8,6 @@ from dame.utils import check_is_none, create_yaml_from_resource, obtain_id, find
 from dame.utils import create_yaml_from_resource, obtain_id
 from dame.executor import prepare_execution, run_execution
 from dame._utils import log
-from dame.modelcatalogapi import get_setup
 from modelcatalog import ApiException, SampleResource
 
 data_set_property = ["id", "label"]
