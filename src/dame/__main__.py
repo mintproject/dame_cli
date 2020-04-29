@@ -4,23 +4,22 @@ dame.
 
 :license: Apache 2.0
 """
-import logging
 import click
 import semver
-from modelcatalog import OpenApiException, ApiException
+from modelcatalog import ApiException, Configuration
 
 import dame
 from dame import _utils
 from dame.cli_methods import verify_input_parameters, run_method_setup, show_model_configuration_details, \
     print_table_list
+from dame.configuration import configure_credentials, DEFAULT_PROFILE
 from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup
-from dame.utils import obtain_id
 
 try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-from pathlib import Path
+
 
 @click.group()
 @click.option("--verbose", "-v", default=0, count=True)
@@ -35,6 +34,27 @@ def cli(verbose):
 You should consider upgrading via the 'pip install --upgrade dame-cli' command.""",
             fg="yellow",
         )
+
+
+@cli.command(help="Configure credentials")
+@click.option(
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default="default",
+    metavar="<profile-name>",
+)
+@click.option('--server', prompt='Model Catalog API',
+              help='The Model Catalog API', required=True, default=Configuration().host, show_default=True)
+@click.option('--username', prompt='Username',
+              help='Your email.', required=True, default="mint@isi.edu", show_default=True)
+def configure(server, username, profile="default"):
+    try:
+        configure_credentials(server, username, profile)
+    except Exception as e:
+        click.secho(f"Failed", fg="red")
+    click.secho(f"Success", fg="green")
 
 
 @cli.command(help="Show dame-cli version.")
@@ -57,18 +77,26 @@ Run a modelconfiguration or modelconfiguration
     "name",
     type=click.STRING
 )
+@click.option(
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default="default",
+    metavar="<profile-name>",
+)
 @click.option('--interactive/--non-interactive', default=True)
-def run(name, interactive):
+def run(name, interactive, profile):
     try:
-        config = get_model_configuration(name)
+        config = get_model_configuration(name, profile=profile)
     except ApiException as e:
         click.secho("{}".format(e.reason))
         exit(0)
     click.clear()
     if "ModelConfigurationSetup" in config.type:
-        resource = get_setup(name)
+        resource = get_setup(name,profile=profile)
     elif "ModelConfiguration" in config.type:
-        resource = get_model_configuration(name)
+        resource = get_model_configuration(name, profile=profile)
     try:
         show_model_configuration_details(resource)
     except AttributeError as e:
@@ -81,21 +109,42 @@ def run(name, interactive):
         exit(1)
     run_method_setup(resource, interactive)
 
+
 @cli.group()
 def model_configuration():
     """Manages model configurations"""
+
+
 @model_configuration.command(name="list", help="List configurations")
-def _list():
-    items = list_model_configuration(label=None)
+@click.option(
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default=DEFAULT_PROFILE,
+    metavar="<profile-name>",
+)
+def model_configuration_list(profile):
+    items = list_model_configuration(label=None, profile=profile)
     print_table_list(items)
+
+
 @click.argument(
     "name",
     type=click.STRING
 )
 @model_configuration.command(name="show", help="Show model configuration")
-def _show(name):
+@click.option(
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default=DEFAULT_PROFILE,
+    metavar="<profile-name>",
+)
+def model_configuration_show(name, profile):
     try:
-        _setup = get_model_configuration(name)
+        _setup = get_model_configuration(name, profile=profile)
     except ApiException as e:
         click.secho("{}".format(e.reason))
         exit(0)
@@ -104,12 +153,23 @@ def _show(name):
     except AttributeError as e:
         click.secho("This setup is not executable.\n".format(e), fg="red")
 
+
 @cli.group()
 def setup():
     """Manages model configuration setup"""
+
+
 @setup.command(name="list", help="List model configuration setups")
-def _list():
-    items = list_setup(label=None)
+@click.option(
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default=DEFAULT_PROFILE,
+    metavar="<profile-name>",
+)
+def setup_list(profile):
+    items = list_setup(label=None, profile=profile)
     print_table_list(items)
 
 
@@ -118,9 +178,17 @@ def _list():
     type=click.STRING
 )
 @setup.command(name="show", help="Show model configuration setups")
-def _show(name):
+@click.option(
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default=DEFAULT_PROFILE,
+    metavar="<profile-name>",
+)
+def setup_show(name, profile):
     try:
-        _setup = get_setup(name)
+        _setup = get_setup(name, profile=profile)
     except ApiException as e:
         click.secho("{}".format(e.reason))
         exit(0)

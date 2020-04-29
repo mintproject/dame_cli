@@ -1,4 +1,3 @@
-import logging
 import platform
 import subprocess
 import uuid
@@ -27,7 +26,8 @@ def build_input(inputs, _dir):
         if not _input.keys() >= KEYS_REQUIRED_INPUT:
             raise ValueError(f'{_input["id"]} has not a fixedResource')
         url = _input["has_fixed_resource"][0]["value"][0]
-        file_path, file_name = download_data_file(url, _dir)
+        format = _input["has_format"][0]
+        file_path, file_name = download_data_file(url, _dir, format)
         position = _input["position"][0]
         line += " -i{} {}".format(position, file_name)
     return line
