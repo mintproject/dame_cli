@@ -7,7 +7,7 @@ Given a model identifier (e.g., TopoFlow for the Awash region: `topoflow36_2.1.0
 DAME works in Linux, with partial support in MacOS (currently being tested on Windows).  It is installed through a simple pip command.
 
 !!! warning
-    [April, 2020] Singularity is in BETA in MacOS, and we have recently detected [issues](https://github.com/mintproject/dame_cli/issues/50) when executed certain model setups. **We recommend using DAME in Linux**.
+    [April, 2020] Singularity is in BETA in MacOS, and we have recently detected [issues](https://github.com/mintproject/dame_cli/issues/50) when executing certain model setups (in particular, in those images that require Conda). **We recommend using DAME in Linux**.
 
 !!! info
     DAME users should be experienced with container environments (in particular Singularity) and basic Python.
