@@ -59,8 +59,11 @@ def verify_input_parameters(model_configuration, interactive):
         if not hasattr(_input, "has_fixed_resource") and interactive:
             if hasattr(_input, "label") and hasattr(_input, "has_format"):
                 click.secho("To run this model configuration, a {} file (.{} file) is required.".format(_input.label[0], _input.has_format[0]), fg="yellow")
-            else:
+            elif hasattr(_input, "label"):
                 click.secho("To run this model configuration, a {} file is required.".format(_input.label[0]), fg="yellow")
+            else:
+                click.secho("To run this model configuration, a {} file is required.".format(_input.id), fg="yellow")
+
             url = click.prompt('Please enter a url or local path for it')
             while not url_validation(url):
                 url = click.prompt('Please enter a url or local path for it')
