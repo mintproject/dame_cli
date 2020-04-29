@@ -4,7 +4,7 @@ from pathlib import Path
 
 import click
 import texttable as tt
-from dame.utils import check_is_none, create_yaml_from_resource, obtain_id, find_singularity, DOC_LINK
+from dame.utils import check_is_none, create_yaml_from_resource, obtain_id, find_singularity, DOC_LINK, url_validation
 from dame.utils import create_yaml_from_resource, obtain_id
 from dame.executor import prepare_execution, run_execution
 from dame._utils import log
@@ -61,8 +61,9 @@ def verify_input_parameters(model_configuration, interactive):
                 click.secho("To run this model configuration, a {} file (.{} file) is required.".format(_input.label[0], _input.has_format[0]), fg="yellow")
             else:
                 click.secho("To run this model configuration, a {} file is required.".format(_input.label[0]), fg="yellow")
-
-            url = click.prompt('Please enter a url for it', type=click.STRING)
+            url = click.prompt('Please enter a url or local path for it')
+            while not url_validation(url):
+                url = click.prompt('Please enter a url or local path for it')
             s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
                                data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
                                value=[url])

@@ -1,4 +1,4 @@
-import pathlib
+import click
 import requests
 import os
 import tempfile
@@ -6,7 +6,7 @@ from zipfile import ZipFile
 import validators
 import yaml
 import platform
-
+from pathlib import Path
 DOC_LINK = "https://dame-cli.readthedocs.io/en/latest/"
 ignore_dirs = ["__MACOSX"]
 SERVER = "https://dev.mint.isi.edu"
@@ -35,11 +35,18 @@ def check_is_none(item, key):
 
 def create_yaml_from_resource(resource, name, output):
     filename = name + ".yaml"
-    path = pathlib.Path.cwd() / output / filename
+    path = Path.cwd() / output / filename
     with open(path, mode='w+') as fid:
         yaml.dump(resource, fid)
     return path
 
+def url_validation(url):
+    if validators.url(url):
+        return True
+    elif Path.is_file(Path(url).expanduser().resolve()):
+        return True
+    click.secho("URL is not valid or the file doesn't exists.", fg="red")
+    return False
 
 def obtain_id(url):
     if validators.url(url):
