@@ -98,7 +98,7 @@ def run(name, interactive, profile):
     elif "ModelConfiguration" in config.type:
         resource = get_model_configuration(name, profile=profile)
     try:
-        show_model_configuration_details(resource, profile=profile)
+        show_model_configuration_details(resource)
     except AttributeError as e:
         click.secho("Unable to run it: {}".format(str(e)), fg="red")
         exit(1)
@@ -124,7 +124,7 @@ def model_configuration():
     default=DEFAULT_PROFILE,
     metavar="<profile-name>",
 )
-def _list(profile):
+def model_configuration_list(profile):
     items = list_model_configuration(label=None, profile=profile)
     print_table_list(items)
 
@@ -142,14 +142,14 @@ def _list(profile):
     default=DEFAULT_PROFILE,
     metavar="<profile-name>",
 )
-def _show(name, profile):
+def model_configuration_show(name, profile):
     try:
         _setup = get_model_configuration(name, profile=profile)
     except ApiException as e:
         click.secho("{}".format(e.reason))
         exit(0)
     try:
-        show_model_configuration_details(_setup, profile=profile)
+        show_model_configuration_details(_setup)
     except AttributeError as e:
         click.secho("This setup is not executable.\n".format(e), fg="red")
 
@@ -168,7 +168,7 @@ def setup():
     default=DEFAULT_PROFILE,
     metavar="<profile-name>",
 )
-def _list(profile):
+def setup_list(profile):
     items = list_setup(label=None, profile=profile)
     print_table_list(items)
 
@@ -186,7 +186,7 @@ def _list(profile):
     default=DEFAULT_PROFILE,
     metavar="<profile-name>",
 )
-def _show(name, profile):
+def setup_show(name, profile):
     try:
         _setup = get_setup(name, profile=profile)
     except ApiException as e:
