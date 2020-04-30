@@ -1,4 +1,5 @@
 from __future__ import print_function
+
 import modelcatalog
 from modelcatalog import ApiClient
 from modelcatalog.rest import ApiException

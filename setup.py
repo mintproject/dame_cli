@@ -31,7 +31,8 @@ install_requires = [
     "jsonschema>=3.0.0",
     "configparser>=5.0.0"
     "certifi>=2019.11.28",
-    "texttable"
+    "texttable",
+    "docker>=4.2.0"
 
 ]
 
