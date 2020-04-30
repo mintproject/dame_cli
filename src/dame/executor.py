@@ -1,10 +1,8 @@
-import os
 import platform
 import subprocess
 import uuid
 from pathlib import Path
 
-import click
 import docker
 from yaml import load, Loader
 
