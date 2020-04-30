@@ -113,7 +113,7 @@ def run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name, image):
 
     if platform.system() == "Linux":
         return run_singularity(cwd_path, execution_dir, setup_cmd_line, setup_name, image)
-    elif platform.system() == "Darwin":
+    elif platform.system() == "Darwin" or platform.system() == "Windows":
         return run_docker(cwd_path, execution_dir, setup_cmd_line, setup_name, image)
 
 
