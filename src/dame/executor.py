@@ -1,11 +1,14 @@
+import os
 import platform
 import subprocess
 import uuid
 from pathlib import Path
 
+import click
+import docker
 from yaml import load, Loader
 
-from dame.utils import download_data_file, download_extract_zip, obtain_id, convert_object_to_dict
+from dame.utils import download_data_file, download_extract_zip, obtain_id, convert_object_to_dict, find_executor
 from dame._utils import log
 
 KEYS_REQUIRED_PARAMETER = {"has_default_value", "position"}
@@ -62,6 +65,7 @@ def build_parameter(parameters):
 
 
 def build_command_line(resource, _dir):
+    line = './run '
     setup_name = obtain_id(resource.id)
     inputs = resource.has_input
     try:
@@ -73,7 +77,6 @@ def build_command_line(resource, _dir):
     software_image = resource.has_software_image
     if software_image:
         has_software_image = software_image[0].label[0]
-        line = SINGULARITY_CWD_LINE.format(has_software_image)
     else:
         raise ValueError("Software is not available")
     component_dir = download_extract_zip(component_url, _dir, setup_name)
@@ -88,7 +91,7 @@ def build_command_line(resource, _dir):
     if parameters is not None:
         l = build_parameter(parameters)
         line += " {}".format(l)
-    return line, src_path
+    return has_software_image, line, src_path
 
 
 def prepare_execution(setup_path):
@@ -100,14 +103,48 @@ def prepare_execution(setup_path):
     execution_dir_path = Path(execution_dir)
     execution_dir_path.mkdir(parents=True, exist_ok=True)
     try:
-        setup_cmd_line, cwd_path = build_command_line(setup_dict, execution_dir_path)
+        image, setup_cmd_line, cwd_path = build_command_line(setup_dict, execution_dir_path)
     except Exception as e:
         raise e
-    return cwd_path, execution_dir, setup_cmd_line, setup_name
+    return cwd_path, execution_dir, setup_cmd_line, setup_name, image
 
 
-def run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name):
+def run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name, image):
 
+    if platform.system() == "Linux":
+        return run_singularity(cwd_path, execution_dir, setup_cmd_line, setup_name, image)
+    elif platform.system() == "Darwin":
+        return run_docker(cwd_path, execution_dir, setup_cmd_line, setup_name, image)
+
+
+def run_docker(cwd_path, execution_dir, setup_cmd_line, setup_name, image):
+    client = docker.from_env()
+    item = {
+        "cmd": setup_cmd_line.split(' '),
+        "directory": cwd_path,
+        "name": setup_name
+    }
+    _ = subprocess.Popen(["chmod", "+x", "run"], cwd=item["directory"])
+    res = client.containers.run(command=item["cmd"],
+                          image=image,
+                          volumes={str(Path(item["directory"]).absolute()):  {'bind': '/tmp/mint', 'mode': 'rw'}},
+                          working_dir='/tmp/mint',
+                          detach=True,
+                          stream=True
+                       )
+
+    for chunk in res.logs(stream=True):
+        print(chunk)
+
+    exit(0)
+    status = {
+        "exitcode": 0,
+        "name": setup_name
+    }
+    return status
+
+
+def run_singularity(cwd_path, execution_dir, setup_cmd_line, setup_name):
     log_file_path = "{}/output.log".format(execution_dir)
     item = {
         "cmd": setup_cmd_line.split(' '),

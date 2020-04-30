@@ -4,7 +4,7 @@ from pathlib import Path
 
 import click
 import texttable as tt
-from dame.utils import check_is_none, create_yaml_from_resource, obtain_id, find_singularity, DOC_LINK, url_validation
+from dame.utils import check_is_none, create_yaml_from_resource, obtain_id, find_executor, DOC_LINK, url_validation
 from dame.utils import create_yaml_from_resource, obtain_id
 from dame.executor import prepare_execution, run_execution
 from dame._utils import log
@@ -145,16 +145,9 @@ def run_method_setup(setup, interactive):
     Call download_setup(): Download the setup(s) as yaml file
     Call execute_setup(): Read the yaml file and execute
     """
-    if not find_singularity():
-        click.secho("Singurality is not installed.", fg="red")
-        if interactive and click.confirm("Do you want to visit the documentation {}".format(DOC_LINK), default=True):
-            click.launch(DOC_LINK)
-        exit(1)
-
-
     try:
-        cwd_path, execution_dir, setup_cmd_line, setup_name = convert_setup_file(setup)
-        status = execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name, interactive)
+        cwd_path, execution_dir, setup_cmd_line, setup_name, image = convert_setup_file(setup)
+        status = execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name, image, interactive)
         if status["exitcode"] == 0:
             click.secho("[{}] The execution has been successful".format(status["name"]), fg="green")
             click.secho("[{}] Results available at: {} ".format(status["name"], cwd_path), fg="green")
@@ -175,7 +168,7 @@ def convert_setup_file(setup):
     return prepare_execution(file_path)
 
 
-def execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name, interactive):
+def execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name, image, interactive):
     """
     Find the setup files if the path is a directory and execute it
     """
@@ -183,7 +176,7 @@ def execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name, interact
         click.echo("Invocation command \ncd {}\n{}".format(cwd_path, setup_cmd_line))
         if interactive and not click.confirm("Do you want to proceed and submit it for execution?", default=True):
             exit(0)
-        status = run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name)
+        status = run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name, image)
     except Exception as e:
         log.error(e, exc_info=True)
         exit(1)

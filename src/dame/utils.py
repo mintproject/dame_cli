@@ -1,4 +1,5 @@
 import click
+import docker
 import requests
 import os
 import tempfile
@@ -12,11 +13,11 @@ ignore_dirs = ["__MACOSX"]
 SERVER = "https://dev.mint.isi.edu"
 
 
-def find_singularity():
+def find_executor():
     if platform.system() == "Linux":
         SINGULARITY_CWD_LINE = "/usr/bin/singularity"
     elif platform.system() == "Darwin":
-        SINGULARITY_CWD_LINE = "/usr/local/bin/singularity"
+        client = docker.from_env()
 
     if Path(SINGULARITY_CWD_LINE).exists():
         return True
