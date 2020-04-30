@@ -16,11 +16,22 @@ KEYS_REQUIRED_OUTPUT = {"label", "has_format", "position"}
 KEYS_REQUIRED_INPUT = {"has_fixed_resource"}
 
 if platform.system() == "Linux":
-    SINGULARITY_CWD_LINE = "/usr/bin/singularity exec docker://{} ./run"
+    SINGULARITY_CWD_LINE = "/usr/bin/singularity exec docker://{}"
 elif platform.system() == "Darwin":
-    SINGULARITY_CWD_LINE = "/usr/local/bin/singularity exec docker://{} ./run"
+    SINGULARITY_CWD_LINE = "/usr/local/bin/singularity exec docker://{}"
 
 EXECUTION_DIRECTORY = "executions"
+
+DOCKER_ENGINE = "DOCKER"
+SINGULARITY_ENGINE = "SINGULARITY"
+
+
+def get_engine():
+    if platform.system() == "Linux" or platform.system() == "Darwin":
+        return SINGULARITY_ENGINE
+    elif platform.system() == "Darwin" or platform.system() == "Windows":
+        return DOCKER_ENGINE
+
 
 def build_input(inputs, _dir):
     line = ""
@@ -95,6 +106,17 @@ def build_command_line(resource, _dir):
 
 
 def prepare_execution(setup_path):
+    """
+    Create the execution directory and call the method to get the inputs and execution line
+    :param setup_path: the path of the YAML file
+    :type setup_path: Path
+    :return:
+        - src_path: (:py:class:`Path`) - Path component source directory
+        - execution_dir: (:py:class:`Path`) - Path execution directory
+        - setup_cmd_line: (:py:class:`Path`) - The execution line (./run)
+        - setup_name: (:py:class:`Path`) - The name of setup
+        - image: (:py:class:`Path`) - The name of the image
+    """
     _dir = Path("%s/" % EXECUTION_DIRECTORY)
     _dir.mkdir(parents=True, exist_ok=True)
     setup_dict = load(setup_path.open(), Loader=Loader)
@@ -103,18 +125,10 @@ def prepare_execution(setup_path):
     execution_dir_path = Path(execution_dir)
     execution_dir_path.mkdir(parents=True, exist_ok=True)
     try:
-        image, setup_cmd_line, cwd_path = build_command_line(setup_dict, execution_dir_path)
+        image, setup_cmd_line, src_path = build_command_line(setup_dict, execution_dir_path)
     except Exception as e:
         raise e
-    return cwd_path, execution_dir, setup_cmd_line, setup_name, image
-
-
-def run_execution(cwd_path, execution_dir, setup_cmd_line, setup_name, image):
-
-    if platform.system() == "Linux":
-        return run_singularity(cwd_path, execution_dir, setup_cmd_line, setup_name, image)
-    elif platform.system() == "Darwin" or platform.system() == "Windows":
-        return run_docker(cwd_path, execution_dir, setup_cmd_line, setup_name, image)
+    return src_path, execution_dir, setup_cmd_line, setup_name, image
 
 
 def run_docker(cwd_path, execution_dir, setup_cmd_line, setup_name, image):
@@ -126,12 +140,12 @@ def run_docker(cwd_path, execution_dir, setup_cmd_line, setup_name, image):
     }
     _ = subprocess.Popen(["chmod", "+x", "run"], cwd=item["directory"])
     res = client.containers.run(command=item["cmd"],
-                          image=image,
-                          volumes={str(Path(item["directory"]).absolute()):  {'bind': '/tmp/mint', 'mode': 'rw'}},
-                          working_dir='/tmp/mint',
-                          detach=True,
-                          stream=True
-                       )
+                                image=image,
+                                volumes={str(Path(item["directory"]).absolute()): {'bind': '/tmp/mint', 'mode': 'rw'}},
+                                working_dir='/tmp/mint',
+                                detach=True,
+                                stream=True
+                                )
 
     for chunk in res.logs(stream=True):
         print(chunk)
@@ -144,20 +158,25 @@ def run_docker(cwd_path, execution_dir, setup_cmd_line, setup_name, image):
     return status
 
 
-def run_singularity(cwd_path, execution_dir, setup_cmd_line, setup_name):
+def run_singularity(singularity_cmd, execution_dir, component_dir, setup_name):
     log_file_path = "{}/output.log".format(execution_dir)
     item = {
-        "cmd": setup_cmd_line.split(' '),
         "log": open(log_file_path, 'wb'),
-        "directory": cwd_path,
         "name": setup_name
     }
-    log.info(f'Execution {setup_name} running,  check the logs on {log_file_path}')
-    _ = subprocess.Popen(["chmod", "+x", "run"], stdout=item["log"], stderr=item["log"], cwd=item["directory"])
-    proc = subprocess.Popen(item["cmd"], stdout=item["log"], stderr=item["log"], cwd=item["directory"])
-    proc.wait()
-    status = {
-        "exitcode": proc.returncode,
-        "name": item["name"]
-    }
+    with open(log_file_path, 'wb') as log_file:
+        log.info(f'Execution {setup_name} running,  check the logs on {log_file_path}')
+        _ = subprocess.Popen(["chmod", "+x", "run"], stdout=log_file, stderr=log_file, cwd=component_dir)
+        proc = subprocess.Popen(singularity_cmd, stdout=log_file, stderr=log_file, cwd=component_dir)
+        proc.wait()
+        status = {
+            "exitcode": proc.returncode,
+            "name": item["name"]
+        }
     return status
+
+
+def get_singularity_cmd(image, setup_cmd_line):
+    setup_singularity_line = SINGULARITY_CWD_LINE.format(image)
+    setup_cmd_line = "{} {}".format(setup_singularity_line, setup_cmd_line)
+    return setup_cmd_line.split(' ')
