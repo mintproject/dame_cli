@@ -117,7 +117,7 @@ def build_command_line(resource, _dir):
         has_software_image = software_image[0].label[0]
     else:
         raise ValueError("Software is not available")
-    component_dir = download_extract_zip(component_url, _dir, setup_name)
+    component_dir = download_extract_zip(component_url, _dir)
     path = Path(component_dir)
     src_path = path / "src"
     if inputs:
