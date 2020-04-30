@@ -6,8 +6,8 @@ from pathlib import Path
 import docker
 from yaml import load, Loader
 
-from dame.utils import download_data_file, download_extract_zip, obtain_id, convert_object_to_dict, find_executor
 from dame._utils import log
+from dame.utils import download_data_file, download_extract_zip, obtain_id, convert_object_to_dict
 
 SINGULARITY_BIN = Path("/usr/bin/singularity")
 SINGULARITY_LOCAL_BIN = Path("/usr/local/bin/singularity")

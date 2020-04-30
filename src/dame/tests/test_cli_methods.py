@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from dame.cli_methods import verify_input_parameters, print_data_property_table, show_model_configuration_details, \
-    convert_setup_file, print_table_list
+# noinspection PyUnresolvedReferences,PyUnresolvedReferences
+from dame.cli_methods import verify_input_parameters, print_data_property_table, show_model_configuration_details, print_table_list
 from dame.modelcatalogapi import get_setup, list_setup, list_model_configuration, get_model_configuration
 
 from click.testing import CliRunner

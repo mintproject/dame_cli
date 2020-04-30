@@ -1,15 +1,17 @@
-import os, sys, stat
+import os
+import stat
 import uuid
 from pathlib import Path
 
 import click
 import texttable as tt
-from dame.utils import check_is_none, create_yaml_from_resource, obtain_id, find_executor, DOC_LINK, url_validation
-from dame.utils import create_yaml_from_resource, obtain_id
+from modelcatalog import ApiException, SampleResource
+
+from dame._utils import log
 from dame.executor import prepare_execution, get_engine, DOCKER_ENGINE, \
     SINGULARITY_ENGINE, get_singularity_cmd, run_singularity, run_docker, get_docker_cmd
-from dame._utils import log
-from modelcatalog import ApiException, SampleResource
+from dame.utils import create_yaml_from_resource, obtain_id
+from dame.utils import url_validation
 
 SCRIPT_FILENAME = "run"
 
