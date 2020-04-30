@@ -147,7 +147,7 @@ def model_configuration_show(name, profile):
         _setup = get_model_configuration(name, profile=profile)
     except ApiException as e:
         click.secho("{}".format(e.reason))
-        exit(0)
+        exit(1)
     try:
         show_model_configuration_details(_setup)
     except AttributeError as e:
@@ -191,7 +191,7 @@ def setup_show(name, profile):
         _setup = get_setup(name, profile=profile)
     except ApiException as e:
         click.secho("{}".format(e.reason))
-        exit(0)
+        exit(1)
     try:
         show_model_configuration_details(_setup)
     except AttributeError as e:
