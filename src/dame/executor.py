@@ -184,7 +184,7 @@ def run_singularity(singularity_cmd, execution_dir, component_dir, setup_name):
 
 def get_singularity_cmd(image, setup_cmd_line):
     try:
-        setup_singularity_bin = get_singularity().format(image)
+        setup_singularity_bin = get_singularity()
     except FileNotFoundError as e:
         raise e
     setup_singularity_line = "{} exec docker://{}".format(setup_singularity_bin, image)
