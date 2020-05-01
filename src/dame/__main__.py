@@ -4,6 +4,8 @@ dame.
 
 :license: Apache 2.0
 """
+from pathlib import Path
+
 import click
 import semver
 from modelcatalog import ApiException, Configuration
@@ -85,8 +87,19 @@ Run a modelconfiguration or modelconfiguration
     default="default",
     metavar="<profile-name>",
 )
+@click.option(
+    "--data",
+    "-d",
+    type=click.Path(exists=False, dir_okay=True, resolve_path=True),
+    default="data",
+)
 @click.option('--interactive/--non-interactive', default=True)
-def run(name, interactive, profile):
+def run(name, interactive, profile, data):
+    if not Path(data).exists():
+        data = None
+    else:
+        data = Path(data)
+
     try:
         config = get_model_configuration(name, profile=profile)
     except ApiException as e:
@@ -103,7 +116,7 @@ def run(name, interactive, profile):
         click.secho("Unable to run it: {}".format(str(e)), fg="red")
         exit(1)
     try:
-        verify_input_parameters(resource, interactive)
+        verify_input_parameters(resource, interactive, data)
     except ValueError as e:
         click.secho("Unable to run. Please use interactive mode", fg="yellow")
         exit(1)

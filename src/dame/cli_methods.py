@@ -4,11 +4,13 @@ from pathlib import Path
 
 import click
 import texttable as tt
-from dame.utils import check_is_none, create_yaml_from_resource, obtain_id, find_singularity, DOC_LINK, url_validation
-from dame.utils import create_yaml_from_resource, obtain_id
-from dame.executor import prepare_execution, run_execution
-from dame._utils import log
 from modelcatalog import ApiException, SampleResource
+
+from dame._utils import log
+from dame.executor import prepare_execution, run_execution
+from dame.local_file_manager import find_file_directory
+from dame.utils import create_yaml_from_resource, obtain_id
+from dame.utils import find_singularity, DOC_LINK, url_validation
 
 data_set_property = ["id", "label"]
 parameter_set_property = ["id", "label", "has_default_value"]
@@ -54,26 +56,35 @@ def short_value(resource, prop):
         click.echo("- {}: {}".format(getattr(resource, "label")[0], value[0]))
 
 
-def verify_input_parameters(model_configuration, interactive):
+def verify_input_parameters(model_configuration, interactive, data_dir):
     for _input in model_configuration.has_input:
         if not hasattr(_input, "has_fixed_resource") and interactive:
             if hasattr(_input, "label") and hasattr(_input, "has_format"):
-                click.secho("To run this model configuration, a {} file (.{} file) is required.".format(_input.label[0], _input.has_format[0]), fg="yellow")
+                click.secho("To run this model configuration, a {} file (.{} file) is required."
+                            .format(_input.label[0], _input.has_format[0]), fg="yellow")
             elif hasattr(_input, "label"):
-                click.secho("To run this model configuration, a {} file is required.".format(_input.label[0]), fg="yellow")
+                click.secho("To run this model configuration, a {} file is required."
+                            .format(_input.label[0]), fg="yellow")
             else:
-                click.secho("To run this model configuration, a {} file is required.".format(_input.id), fg="yellow")
-            url = click.prompt('Please enter a url or local path for it')
-            url = url.replace(" ", '')
-            while not url_validation(url):
-                url = click.prompt('Please enter a url or local path for it')
+                click.secho("To run this model configuration, a {} file is required."
+                            .format(_input.id), fg="yellow")
+            if data_dir and hasattr(_input, "has_format") and click.confirm(
+                    "Do you want to search the file in the directory {}".format(data_dir), default=True):
+                uri = find_file_directory(data_dir, _input.has_format[0])
+            else:
+                uri = click.prompt('Please enter a url or local path for it')
+                uri = uri.replace(" ", '')
+                while not url_validation(uri):
+                    uri = click.prompt('Please enter a url or local path for it')
+
             s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
-                               data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
-                               value=[url])
+                                   data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
+                                   value=[uri])
             _input.has_fixed_resource = [s.to_dict()]
         elif not hasattr(_input, "has_fixed_resource") and not interactive:
             raise ValueError("Missing information")
-    click.secho("The information needed to run the model is complete, and I can execute the model as follows:", fg="green")
+    click.secho("The information needed to run the model is complete, and I can execute the model as follows:",
+                fg="green")
     return model_configuration
 
 
@@ -97,8 +108,6 @@ def verify_input_parameters(model_configuration, interactive):
 #         parameter["hasFixedValue"] = [value]
 
 
-
-
 def print_data_property_table(resource, property_selected={}):
     resource_dict = resource.to_dict()
     tab = tt.Texttable(max_width=100)
@@ -110,7 +119,7 @@ def print_data_property_table(resource, property_selected={}):
         if property_selected:
             if key not in property_selected:
                 continue
-        tab.add_row([key,value])
+        tab.add_row([key, value])
     print(tab.draw())
 
 
@@ -150,7 +159,6 @@ def run_method_setup(setup, interactive):
         if interactive and click.confirm("Do you want to visit the documentation {}".format(DOC_LINK), default=True):
             click.launch(DOC_LINK)
         exit(1)
-
 
     try:
         cwd_path, execution_dir, setup_cmd_line, setup_name = convert_setup_file(setup)
