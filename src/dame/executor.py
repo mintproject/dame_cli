@@ -5,6 +5,7 @@ import uuid
 from pathlib import Path
 
 import docker
+import validators
 from yaml import load, Loader
 
 from dame._utils import log
@@ -21,10 +22,6 @@ EXECUTION_DIRECTORY = "executions"
 
 DOCKER_ENGINE = "DOCKER"
 SINGULARITY_ENGINE = "SINGULARITY"
-
-
-def is_file_or_url(uri: str) -> bool:
-    return Path(uri).is_file()
 
 
 def get_singularity():
