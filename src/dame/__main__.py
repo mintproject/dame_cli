@@ -120,7 +120,7 @@ def run(name, interactive, profile, data):
     except ValueError as e:
         click.secho("Unable to run. Please use interactive mode", fg="yellow")
         exit(1)
-    run_method_setup(resource, interactive)
+    run_method_setup(resource, interactive, data)
 
 
 @cli.group()

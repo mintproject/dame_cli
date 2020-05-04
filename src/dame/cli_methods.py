@@ -71,11 +71,11 @@ def verify_input_parameters(model_configuration, interactive, data_dir):
             if data_dir and hasattr(_input, "has_format") and click.confirm(
                     "Do you want to search the file in the directory {}".format(data_dir), default=True):
                 uri = find_file_directory(data_dir, _input.has_format[0])
-            else:
-                uri = click.prompt('Please enter a url or local path for it')
+            if uri is None:
+                uri = click.prompt('Please enter a url')
                 uri = uri.replace(" ", '')
                 while not url_validation(uri):
-                    uri = click.prompt('Please enter a url or local path for it')
+                    uri = click.prompt('Please enter a url')
 
             s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
                                    data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
@@ -149,7 +149,7 @@ def print_data_property_table(resource, property_selected={}):
 #     edit_parameter_config_setup(resource=setup)
 
 
-def run_method_setup(setup, interactive):
+def run_method_setup(setup, interactive, data_dir):
     """
     Call download_setup(): Download the setup(s) as yaml file
     Call execute_setup(): Read the yaml file and execute
@@ -161,7 +161,7 @@ def run_method_setup(setup, interactive):
         exit(1)
 
     try:
-        cwd_path, execution_dir, setup_cmd_line, setup_name = convert_setup_file(setup)
+        cwd_path, execution_dir, setup_cmd_line, setup_name = convert_setup_file(setup, data_dir)
         status = execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name, interactive)
         if status["exitcode"] == 0:
             click.secho("[{}] The execution has been successful".format(status["name"]), fg="green")
@@ -173,14 +173,14 @@ def run_method_setup(setup, interactive):
         exit(1)
 
 
-def convert_setup_file(setup):
+def convert_setup_file(setup, data_dir):
     """
     Call download_setup(): Download the setup(s) as yaml file
     Call execute_setup(): Read the yaml file and execute
     """
     name = obtain_id(setup.id)
     file_path = create_yaml_from_resource(resource=setup, name=name, output=Path('.'))
-    return prepare_execution(file_path)
+    return prepare_execution(file_path, data_dir)
 
 
 def execute_setups(cwd_path, execution_dir, setup_cmd_line, setup_name, interactive):

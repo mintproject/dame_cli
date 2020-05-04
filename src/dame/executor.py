@@ -20,8 +20,10 @@ elif platform.system() == "Darwin":
 
 EXECUTION_DIRECTORY = "executions"
 
-def is_file_or_url(uri):
-   return Path(uri).is_file()
+
+def is_file_or_url(uri: str) -> bool:
+    return Path(uri).is_file()
+
 
 def get_file(destination_dir, url, _format):
     """
@@ -38,8 +40,6 @@ def get_file(destination_dir, url, _format):
     else:
         file_path, file_name = download_data_file(url, destination_dir, _format)
     return file_path
-
-
 
 
 def build_input(inputs, destination_dir, data_dir):
@@ -67,7 +67,7 @@ def build_input(inputs, destination_dir, data_dir):
             _format = _input["has_fixed_resource"][0]["value"][0]
         else:
             _format = None
-        file_name = get_file(_input, destination_dir, url, data_dir, _format)
+        file_name = get_file(destination_dir, url,  _format)
         position = _input["position"][0]
         line += " -i{} {}".format(position, file_name)
     return line
@@ -101,7 +101,7 @@ def build_parameter(parameters):
     return line
 
 
-def build_command_line(resource, _dir):
+def build_command_line(resource, _dir, data_dir):
     setup_name = obtain_id(resource.id)
     inputs = resource.has_input
     try:
@@ -120,7 +120,7 @@ def build_command_line(resource, _dir):
     path = Path(component_dir)
     src_path = path / "src"
     if inputs:
-        l = build_input(inputs, src_path, )
+        l = build_input(inputs, src_path, data_dir)
         line += " {}".format(l)
     if outputs:
         l = build_output(outputs)
@@ -131,7 +131,7 @@ def build_command_line(resource, _dir):
     return line, src_path
 
 
-def prepare_execution(setup_path):
+def prepare_execution(setup_path, data_dir):
     _dir = Path("%s/" % EXECUTION_DIRECTORY)
     _dir.mkdir(parents=True, exist_ok=True)
     setup_dict = load(setup_path.open(), Loader=Loader)
@@ -140,7 +140,7 @@ def prepare_execution(setup_path):
     execution_dir_path = Path(execution_dir)
     execution_dir_path.mkdir(parents=True, exist_ok=True)
     try:
-        setup_cmd_line, cwd_path = build_command_line(setup_dict, execution_dir_path)
+        setup_cmd_line, cwd_path = build_command_line(setup_dict, execution_dir_path, data_dir)
     except Exception as e:
         raise e
     return cwd_path, execution_dir, setup_cmd_line, setup_name
