@@ -65,7 +65,7 @@ def get_engine():
 def get_file(destination_dir, url, _format):
     """
     Get the files from a url or the
-    :return:
+    :return: The filename of the file. Must be the filename
     :rtype: Path
     :param _format:
     :type _format:  str
@@ -76,9 +76,9 @@ def get_file(destination_dir, url, _format):
     """
     if validators.url(url):
         file_path, file_name = download_data_file(url, destination_dir, _format)
-        return file_path
+        return file_path.name
     elif Path(url).is_file():
-        return Path(shutil.copy(str(Path(url)), str(destination_dir)))
+        return Path(shutil.copy(str(Path(url)), str(destination_dir))).name
 
 
 def build_input(inputs, destination_dir):
@@ -196,15 +196,32 @@ def prepare_execution(setup_path):
     return src_path, execution_dir, setup_cmd_line, setup_name, image
 
 
+def docker_pull(client, image):
+    client = docker.APIClient()
+    try:
+        result_itr = client.pull(image, stream=True, decode=True)
+    except docker.errors.APIError as ex:
+        raise docker.errors.APIError
+
+    for chunk in result_itr:
+        try:
+            if "progressDetail" in chunk:
+                print("{}: Downloading {}".format(chunk['id'], chunk['progress']))
+        except:
+            pass
+
+
 def run_docker(component_cmd, execution_dir, component_dir, setup_name, image, volumes):
     log_file_path = "{}/output.log".format(execution_dir)
     client = docker.from_env()
+    docker_pull(client, image)
     res = client.containers.run(command=component_cmd,
                                 image=image,
                                 volumes=volumes,
                                 working_dir='/tmp/mint',
                                 detach=True,
-                                stream=True
+                                stream=True,
+                                remove=True
                                 )
     with open(log_file_path, 'wb') as log_file:
         for chunk in res.logs(stream=True):
