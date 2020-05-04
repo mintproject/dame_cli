@@ -9,7 +9,7 @@ def test_get_file(tmp_path):
     p = d / "hello.txt"
     p.write_text("")
     url = "https://upload.wikimedia.org/wikipedia/en/0/05/The_Midnight_Gospel_promotional_poster.jpg"
-    assert get_file(d, url, "txt").exists()
+    assert get_file(d, url, "txt")
 
 
 def test_build_input(tmp_path):

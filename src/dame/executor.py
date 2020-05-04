@@ -66,7 +66,7 @@ def get_file(destination_dir, url, _format):
     """
     Get the files from a url or the
     :return: The filename of the file. Must be the filename
-    :rtype: Path
+    :rtype: str
     :param _format:
     :type _format:  str
     :param url:
