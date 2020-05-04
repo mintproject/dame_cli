@@ -1,18 +1,18 @@
-import click
-import docker
-import requests
 import os
 import tempfile
+from pathlib import Path
 from zipfile import ZipFile
+
+import click
+import requests
 import validators
 import yaml
-import platform
-from pathlib import Path
 
 DOC_LINK = "https://dame-cli.readthedocs.io/en/latest/"
 ignore_dirs = ["__MACOSX"]
 SERVER = "https://dev.mint.isi.edu"
 DATA_DIR = "./data"
+
 
 def convert_object_to_dict(o):
     if isinstance(o, object):
@@ -97,5 +97,3 @@ def download_data_file(url, _dir, format):
                 if chunk:  # filter out keep-alive new chunks
                     f.write(chunk)
     return filepath, filename
-
-

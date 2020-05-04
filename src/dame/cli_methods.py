@@ -62,11 +62,11 @@ def short_value(resource, prop):
 
 def verify_input_parameters(model_configuration, interactive, data_dir):
     for _input in model_configuration.has_input:
+        uri = None
         if not hasattr(_input, "has_fixed_resource") and interactive:
             if hasattr(_input, "label") and hasattr(_input, "has_format"):
-                click.secho("To run this model configuration, a {} file (.{} file) is required.".format(_input.label[0],
-                                                                                                        _input.has_format[
-                                                                                                            0]),
+                click.secho("To run this model configuration,"
+                            "a {} file (.{} file) is required.".format(_input.label[0], _input.has_format[0]),
                             fg="yellow")
             elif hasattr(_input, "label"):
                 click.secho("To run this model configuration, a {} file is required.".format(_input.label[0]),
