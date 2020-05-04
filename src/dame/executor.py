@@ -28,25 +28,27 @@ def is_file_or_url(uri: str) -> bool:
 def get_file(destination_dir, url, _format):
     """
     Get the files from a url or the
+    :return:
+    :rtype: Path
     :param _format:
-    :type _format:
+    :type _format:  str
     :param url:
-    :type url:
+    :type url: str
     :param destination_dir: The destination directory
     :type destination_dir: Path
     """
     if Path(url).is_file():
-        file_path = shutil.copy(str(Path(url)), str(destination_dir))
+        return Path(shutil.copy(str(Path(url)), str(destination_dir)))
     else:
         file_path, file_name = download_data_file(url, destination_dir, _format)
-    return file_path
+        return file_path
 
 
-def build_input(inputs, destination_dir, data_dir):
+def build_input(inputs, destination_dir):
     """
     Download or search the file. Loop the inputs (metadata) of Model Configuration or Model Configuration Setup
-    :param data_dir:
-    :type data_dir:
+    :return:
+    :rtype:
     :param inputs: A dictionary following DataSpecificationFile
     :type inputs: dict
     :param destination_dir: The destination directory
@@ -120,7 +122,7 @@ def build_command_line(resource, _dir, data_dir):
     path = Path(component_dir)
     src_path = path / "src"
     if inputs:
-        l = build_input(inputs, src_path, data_dir)
+        l = build_input(inputs, src_path)
         line += " {}".format(l)
     if outputs:
         l = build_output(outputs)

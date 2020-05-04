@@ -71,21 +71,26 @@ def verify_input_parameters(model_configuration, interactive, data_dir):
             if data_dir and hasattr(_input, "has_format") and click.confirm(
                     "Do you want to search the file in the directory {}".format(data_dir), default=True):
                 uri = find_file_directory(data_dir, _input.has_format[0])
+
             if uri is None:
                 uri = click.prompt('Please enter a url')
                 uri = uri.replace(" ", '')
                 while not url_validation(uri):
                     uri = click.prompt('Please enter a url')
 
-            s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
-                                   data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
-                                   value=[uri])
-            _input.has_fixed_resource = [s.to_dict()]
+            create_sample_resource(_input, uri)
         elif not hasattr(_input, "has_fixed_resource") and not interactive:
             raise ValueError("Missing information")
     click.secho("The information needed to run the model is complete, and I can execute the model as follows:",
                 fg="green")
     return model_configuration
+
+
+def create_sample_resource(_input, uri):
+    s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
+                       data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
+                       value=[uri])
+    _input.has_fixed_resource = [s.to_dict()]
 
 
 # def edit_parameter_config_or_setup(resource, auto=False):

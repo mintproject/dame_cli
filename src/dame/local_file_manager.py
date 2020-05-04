@@ -24,8 +24,8 @@ def find_file_directory(data_dir, _format=None):
             click.secho("Selected from your computer {}".format(files[file_index-1]))
             return str(files[file_index-1])
         elif len(files) == 1:
-            if click.confirm("Found {} - Do you want to use it?".format(files[0]), default=True):
-                return str(files[0])
+            click.secho("Selected from your computer {}".format(files[0]))
+            return str(files[0])
         else:
             click.secho("There is not files with format {} on {}".format(_format, data_dir))
     return None
