@@ -9,19 +9,36 @@ DAME was designed to test and run the different models available for execution i
 
 Type: `dame --help` to show the list of available commands:
 ```bash
-$ dame --help
 Usage: dame [OPTIONS] COMMAND [ARGS]...
 
 Options:
   -v, --verbose
   --help         Show this message and exit.
+
 Commands:
-  browse   Open the Model Catalog in your browser
-  run      Run a model configuration or model configuration setup
-  version  Show DAME version.
+  browse               Open the Model Catalog in your browser
+  configure            Configure credentials
+  model-configuration  Manages model configurations
+  run                  Run a model configuration or model configuration...
+  setup                Manages model configuration setup
+  version              Show dame-cli version.
 ```
 
 ## Browse and search a Model Configuration
+
+You can list [model configurations](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration) availables 
+
+
+```bash
+$ dame model-configuration list
+```
+
+the [model configuration setups](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup)
+
+```bash
+$ dame setup list
+```
+
 
 To explore a list of available models and their metadata, you can go to the website [https://models.mint.isi.edu/](https://models.mint.isi.edu) or type:
 
@@ -29,8 +46,24 @@ To explore a list of available models and their metadata, you can go to the webs
 $ dame browse
 ```
 
-and select the [model configuration](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration) or the [model configuration setup](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup) you would like to run.
+### Show details
 
+
+#### Model Configurations
+
+You can obtain details about a Model Configuration
+
+```bash
+$ dame model-configure show <ID>
+```
+
+#### Model Configuration Setup
+
+Or a Setup
+
+```bash
+$ dame setup show <ID>
+```
 
 ## Run a Model Configuration 
 

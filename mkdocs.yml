@@ -3,6 +3,7 @@ nav:
   - Home: index.md
   - Usage: usage.md
   - Selecting files from local paths: local_data.md
+  - Profiles: profiles.md
 theme: 
   name: material
   logo: 'logo.png'
