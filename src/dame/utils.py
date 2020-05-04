@@ -12,7 +12,7 @@ from pathlib import Path
 DOC_LINK = "https://dame-cli.readthedocs.io/en/latest/"
 ignore_dirs = ["__MACOSX"]
 SERVER = "https://dev.mint.isi.edu"
-
+DATA_DIR = "./data"
 
 def convert_object_to_dict(o):
     if isinstance(o, object):

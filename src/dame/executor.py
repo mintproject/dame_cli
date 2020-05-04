@@ -1,13 +1,15 @@
 import platform
+import shutil
 import subprocess
 import uuid
 from pathlib import Path
 
 import docker
+import validators
 from yaml import load, Loader
 
 from dame._utils import log
-from dame.utils import download_data_file, download_extract_zip, obtain_id, convert_object_to_dict
+from dame.utils import download_extract_zip, obtain_id, convert_object_to_dict, download_data_file
 
 SINGULARITY_BIN = Path("/usr/bin/singularity")
 SINGULARITY_LOCAL_BIN = Path("/usr/local/bin/singularity")
@@ -60,15 +62,51 @@ def get_engine():
             raise e
 
 
-def build_input(inputs, _dir):
+def get_file(destination_dir, url, _format):
+    """
+    Get the files from a url or the
+    :return:
+    :rtype: Path
+    :param _format:
+    :type _format:  str
+    :param url:
+    :type url: str
+    :param destination_dir: The destination directory
+    :type destination_dir: Path
+    """
+    if validators.url(url):
+        file_path, file_name = download_data_file(url, destination_dir, _format)
+        return file_path
+    elif Path(url).is_file():
+        return Path(shutil.copy(str(Path(url)), str(destination_dir)))
+
+
+def build_input(inputs, destination_dir):
+    """
+    Download or search the file. Loop the inputs (metadata) of Model Configuration or Model Configuration Setup
+    :return:
+    :rtype:
+    :param inputs: A dictionary following DataSpecificationFile
+    :type inputs: dict
+    :param destination_dir: The destination directory
+    :type destination_dir: Path
+    :return: The cmd_line related to the input -i1 file1 -i2 file2
+    :param data_dir: The local directory where the files are
+    :type data_dir: Path
+    :rtype: str
+    """
     line = ""
     for _input in inputs:
         _input = convert_object_to_dict(_input)
         if not _input.keys() >= KEYS_REQUIRED_INPUT:
             raise ValueError(f'{_input["id"]} has not a fixedResource')
+
         url = _input["has_fixed_resource"][0]["value"][0]
-        format = _input["has_format"][0]
-        file_path, file_name = download_data_file(url, _dir, format)
+        if "has_format" in _input:
+            _format = _input["has_fixed_resource"][0]["value"][0]
+        else:
+            _format = None
+        file_name = get_file(destination_dir, url, _format)
         position = _input["position"][0]
         line += " -i{} {}".format(position, file_name)
     return line

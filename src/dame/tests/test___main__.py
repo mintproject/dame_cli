@@ -45,5 +45,5 @@ class Test(TestCase):
     def test_configure(self):
         runner = CliRunner()
         result = runner.invoke(configure,
-                               ['--server', 'https://api.models.mint.isi.edu/v1.4.0', '--username', 'mosorio@isi.edu'])
+                               ['--server', 'https://api.models.mint.isi.edu/v1.4.0', '--username', 'mint@isi.edu'])
         assert result.exit_code == 0
