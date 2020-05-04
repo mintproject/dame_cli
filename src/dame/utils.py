@@ -1,4 +1,5 @@
 import click
+import docker
 import requests
 import os
 import tempfile
@@ -7,21 +8,11 @@ import validators
 import yaml
 import platform
 from pathlib import Path
+
 DOC_LINK = "https://dame-cli.readthedocs.io/en/latest/"
 ignore_dirs = ["__MACOSX"]
 SERVER = "https://dev.mint.isi.edu"
 DATA_DIR = "./data"
-
-def find_singularity():
-    if platform.system() == "Linux":
-        SINGULARITY_CWD_LINE = "/usr/bin/singularity"
-    elif platform.system() == "Darwin":
-        SINGULARITY_CWD_LINE = "/usr/local/bin/singularity"
-
-    if Path(SINGULARITY_CWD_LINE).exists():
-        return True
-    return False
-
 
 def convert_object_to_dict(o):
     if isinstance(o, object):
@@ -40,6 +31,7 @@ def create_yaml_from_resource(resource, name, output):
         yaml.dump(resource, fid)
     return path
 
+
 def url_validation(url):
     if validators.url(url):
         return True
@@ -48,18 +40,19 @@ def url_validation(url):
     click.secho("URL is not valid or the file doesn't exists.", fg="red")
     return False
 
+
 def obtain_id(url):
     if validators.url(url):
         return url.split('/')[-1]
     return url
 
 
-def download_extract_zip(url, _dir, setup_name):
+def download_extract_zip(url, _dir):
     temp = tempfile.NamedTemporaryFile(prefix="component_")
     content = download_file(url)
     temp.write(content)
-    with ZipFile(temp.name, 'r') as zip:
-        zip.extractall(_dir)
+    with ZipFile(temp.name, 'r') as zip_file:
+        zip_file.extractall(_dir)
     directories = os.listdir(_dir)
     if isinstance(directories, list):
         try:
@@ -106,13 +99,3 @@ def download_data_file(url, _dir, format):
     return filepath, filename
 
 
-suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
-
-
-def humansize(nbytes):
-    i = 0
-    while nbytes >= 1024 and i < len(suffixes) - 1:
-        nbytes /= 1024.
-        i += 1
-    f = ('%.2f' % nbytes).rstrip('0').rstrip('.')
-    return '%s %s' % (f, suffixes[i])

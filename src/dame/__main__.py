@@ -54,13 +54,13 @@ You should consider upgrading via the 'pip install --upgrade dame-cli' command."
 def configure(server, username, profile="default"):
     try:
         configure_credentials(server, username, profile)
-    except Exception as e:
+    except Exception:
         click.secho(f"Failed", fg="red")
     click.secho(f"Success", fg="green")
 
 
 @cli.command(help="Show dame-cli version.")
-def version(debug=False):
+def version():
     click.echo(f"DAME: v{dame.__version__}")
 
 
@@ -107,7 +107,7 @@ def run(name, interactive, profile, data):
         exit(0)
     click.clear()
     if "ModelConfigurationSetup" in config.type:
-        resource = get_setup(name,profile=profile)
+        resource = get_setup(name, profile=profile)
     elif "ModelConfiguration" in config.type:
         resource = get_model_configuration(name, profile=profile)
     try:
@@ -160,7 +160,7 @@ def model_configuration_show(name, profile):
         _setup = get_model_configuration(name, profile=profile)
     except ApiException as e:
         click.secho("{}".format(e.reason))
-        exit(0)
+        exit(1)
     try:
         show_model_configuration_details(_setup)
     except AttributeError as e:
@@ -204,7 +204,7 @@ def setup_show(name, profile):
         _setup = get_setup(name, profile=profile)
     except ApiException as e:
         click.secho("{}".format(e.reason))
-        exit(0)
+        exit(1)
     try:
         show_model_configuration_details(_setup)
     except AttributeError as e:

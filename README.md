@@ -1,6 +1,6 @@
 # Desktop Application for Model Execution (DAME) [![Build Status](https://travis-ci.com/mintproject/dame_cli.svg?branch=master)](https://travis-ci.com/mintproject/dame_cli)
 
-## Requeriments
+## Requirements
 
 ### Singularity 
 
@@ -28,4 +28,6 @@ To install the execution application, open a terminal and run:
 ```bash
 pip install dame-cli
 ```
+
+## Documentation
 Full documentation of the CLI, including usage examples, can be found at: https://dame-cli.readthedocs.io/en/latest/

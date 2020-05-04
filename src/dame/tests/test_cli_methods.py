@@ -1,18 +1,19 @@
 from unittest import TestCase
 
-from dame.cli_methods import verify_input_parameters, print_data_property_table, show_model_configuration_details, \
-    convert_setup_file, print_table_list
-from dame.modelcatalogapi import get_setup, list_setup, list_model_configuration, get_model_configuration
-
 from click.testing import CliRunner
 
+# noinspection PyUnresolvedReferences,PyUnresolvedReferences
+from dame.cli_methods import verify_input_parameters, print_data_property_table, show_model_configuration_details, \
+    print_table_list
+from dame.modelcatalogapi import get_setup, list_setup, list_model_configuration, get_model_configuration
 from dame.utils import obtain_id
 
 SETUP_PARTIAL_INFO = "dsi_1.0_cfg"
+CONFIG_PARTIAL_INFO = "hand_v2"
 SETUP_FULL_INFO = "cycles-0.10.2-alpha-collection-oromia-single-point"
 
-setups = [get_setup(obtain_id(setup.id)) for setup in list_setup()]
-model_configurations = [get_model_configuration(obtain_id(setup.id)) for setup in list_model_configuration()]
+setups = [get_setup(obtain_id(SETUP_PARTIAL_INFO)), get_setup(SETUP_FULL_INFO)]
+model_configurations = [get_model_configuration(CONFIG_PARTIAL_INFO)]
 
 
 class Test(TestCase):
@@ -46,3 +47,9 @@ class Test(TestCase):
         print_table_list(setups)
         print_table_list(model_configurations)
 
+    # def test_verify_input_parameters(self):
+    #     runner = CliRunner()
+    #
+    #     result = runner.invoke(verify_input_parameters(get_setup(SETUP_PARTIAL_INFO), True), "http://google.com")
+    #     assert result.exit_code == 0
+    #     self.fail()

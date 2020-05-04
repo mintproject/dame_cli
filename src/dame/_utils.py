@@ -1,20 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging.config
 import requests
-import importlib
+
 log = logging.getLogger()
 
-def load_module(module_name):
-    try:
-        return importlib.import_module(module_name)
-    except ModuleNotFoundError:
-        log.error("Model <%s> not found" % module_name)
-        raise
 
 def init_logger():
     LOGLEVEL = logging.DEBUG
     logging.config.dictConfig({
-        'version': 1    ,
+        'version': 1,
         'disable_existing_loggers': False,
         'formatters': {
             'default': {
@@ -51,6 +45,7 @@ def init_logger():
         },
     })
     logger = logging.getLogger(__package__)
+
 
 def get_latest_version():
     return requests.get("https://pypi.org/pypi/dame-cli/json").json()["info"]["version"]

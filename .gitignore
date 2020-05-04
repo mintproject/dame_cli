@@ -1,3 +1,6 @@
+Scripts*
+pyvenv.*
+
 data/
 src/dame/tests/mydir/
 *.yaml

@@ -6,16 +6,18 @@ from dame.utils import check_is_none
 import certifi
 
 http = urllib3.PoolManager(
-    cert_reqs='CERT_REQUIRED', # Force certificate check.
+    cert_reqs='CERT_REQUIRED',  # Force certificate check.
     ca_certs=certifi.where(),  # Path to the Certifi bundle.
 )
 chunk_size = 65536
+
 
 def check_size(url):
     r = http.request('GET', url, preload_content=False)
     content_bytes = r.headers.get("Content-Length")
     r.release_conn()
     return content_bytes
+
 
 def parse_inputs(model, thread):
     inputs = []
@@ -28,6 +30,7 @@ def parse_inputs(model, thread):
         inputs.append(input)
     return inputs
 
+
 def parse_outputs(model, thread, results):
     outputs = []
     for output in thread.models[model]['output_files']:
@@ -36,6 +39,7 @@ def parse_outputs(model, thread, results):
             output["download_url"] = results[0][name]
             outputs.append(output)
     return outputs
+
 
 def get_json(url):
     r = http.request('GET', url)
