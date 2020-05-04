@@ -48,9 +48,10 @@ def obtain_id(url):
 
 
 def download_extract_zip(url, _dir):
-    temp = tempfile.NamedTemporaryFile(mode="wb", prefix="component_")
+    temp = tempfile.NamedTemporaryFile(mode="wb", prefix="component_", delete=False)
     content = download_file(url)
     temp.write(content)
+    temp.close()
     with ZipFile(temp.name, 'r') as zip_file:
         zip_file.extractall(_dir)
     directories = os.listdir(_dir)
