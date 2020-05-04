@@ -10,6 +10,7 @@ from modelcatalog import ApiException, SampleResource
 from dame._utils import log
 from dame.executor import prepare_execution, get_engine, DOCKER_ENGINE, \
     SINGULARITY_ENGINE, get_singularity_cmd, run_singularity, run_docker, get_docker_cmd
+from dame.local_file_manager import find_file_directory
 from dame.utils import create_yaml_from_resource, obtain_id
 from dame.utils import url_validation
 
@@ -59,7 +60,7 @@ def short_value(resource, prop):
         click.echo("- {}: {}".format(getattr(resource, "label")[0], value[0]))
 
 
-def verify_input_parameters(model_configuration, interactive):
+def verify_input_parameters(model_configuration, interactive, data_dir):
     for _input in model_configuration.has_input:
         if not hasattr(_input, "has_fixed_resource") and interactive:
             if hasattr(_input, "label") and hasattr(_input, "has_format"):
@@ -71,20 +72,31 @@ def verify_input_parameters(model_configuration, interactive):
                 click.secho("To run this model configuration, a {} file is required.".format(_input.label[0]),
                             fg="yellow")
             else:
-                click.secho("To run this model configuration, a {} file is required.".format(_input.id), fg="yellow")
-            url = click.prompt('Please enter a url or local path for it')
-            url = url.replace(" ", '')
-            while not url_validation(url):
-                url = click.prompt('Please enter a url or local path for it')
-            s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
-                               data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
-                               value=[url])
-            _input.has_fixed_resource = [s.to_dict()]
+                click.secho("To run this model configuration, a {} file is required."
+                            .format(_input.id), fg="yellow")
+            if data_dir and hasattr(_input, "has_format") and click.confirm(
+                    "Do you want to search the file in the directory {}".format(data_dir), default=True):
+                uri = find_file_directory(data_dir, _input.has_format[0])
+
+            if uri is None:
+                uri = click.prompt('Please enter a url')
+                uri = uri.replace(" ", '')
+                while not url_validation(uri):
+                    uri = click.prompt('Please enter a url')
+
+            create_sample_resource(_input, uri)
         elif not hasattr(_input, "has_fixed_resource") and not interactive:
             raise ValueError("Missing information")
     click.secho("The information needed to run the model is complete, and I can execute the model as follows:",
                 fg="green")
     return model_configuration
+
+
+def create_sample_resource(_input, uri):
+    s = SampleResource(id="https://w3id.org/okn/i/mint/".format(str(uuid.uuid4())),
+                       data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
+                       value=[uri])
+    _input.has_fixed_resource = [s.to_dict()]
 
 
 # def edit_parameter_config_or_setup(resource, auto=False):
@@ -122,7 +134,7 @@ def print_data_property_table(resource, property_selected={}):
     print(tab.draw())
 
 
-def run_method_setup(setup, interactive):
+def run_method_setup(setup, interactive, data_dir):
     """
     Call download_setup(): Download the setup(s) as yaml file
     Call execute_setup(): Read the yaml file and execute
