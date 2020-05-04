@@ -74,11 +74,11 @@ def get_file(destination_dir, url, _format):
     :param destination_dir: The destination directory
     :type destination_dir: Path
     """
-    if Path(url).is_file():
-        return Path(shutil.copy(str(Path(url)), str(destination_dir)))
-    else:
+    if validators.url(url):
         file_path, file_name = download_data_file(url, destination_dir, _format)
         return file_path
+    elif Path(url).is_file():
+        return Path(shutil.copy(str(Path(url)), str(destination_dir)))
 
 
 def build_input(inputs, destination_dir):
