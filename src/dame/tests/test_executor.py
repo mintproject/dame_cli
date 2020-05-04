@@ -1,9 +1,4 @@
-import json
-from pathlib import Path
-
 import pytest
-
-from dame.cli_methods import create_sample_resource
 from dame.executor import is_file_or_url, get_file, build_input
 from dame.modelcatalogapi import get_setup
 
