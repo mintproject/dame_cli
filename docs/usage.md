@@ -26,44 +26,108 @@ Commands:
 
 ## Browse and search a Model Configuration
 
-You can list [model configurations](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration) availables 
+You can list available [model configurations](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration) with the following command 
 
 
 ```bash
 $ dame model-configuration list
 ```
+which will show a table such as the one below:
 
-the [model configuration setups](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup)
+```bash
++--------------------------------+---------------------------------------------+
+|               Id               |                 Description                 |
++================================+=============================================+
+| cycles-0.10.2-alpha-collection | Cycles configuration (version 0.10.2) for   |
+|                                | grouped weather and soil files and exposing |
+|                                | additional parameters such as weeds         |
+|                                | fraction and fertilizer rate                |
++--------------------------------+---------------------------------------------+
+| economic-v7                    | Aggregate crop supply response model        |
+|                                | (version 7). Based on the Agricultural      |
+|                                | Sample Survey reports (AgSS), from          |
+|                                | 2009-2018 (http://surveys.worldbank.org/lsm |
+|                                | s/programs/integrated-surveys-agriculture-  |
+|                                | ISA/ethiopia)                               |
+|                                | The price index still comes from the World  |
+|                                | Food Programme report.                      |
+...
+(rest of the table ommitted for simplicity)
+```
+
+To list ready to use [model configuration setups](https://mintproject.readthedocs.io/en/latest/modelcatalog/#model-configuration-setup), just type: 
 
 ```bash
 $ dame setup list
 ```
+and you will be shown a table with all the setups available:
+```bash
++---------------------------------------+--------------------------------------+
+|                  Id                   |             Description              |
++=======================================+======================================+
+| topoflow_cfg_simple_Muger             | A basic configuration of the         |
+|                                       | TopoFlow model calibrated for the    |
+|                                       | Muger region in Ethiopia with a      |
+|                                       | default precipitation file for 2008  |
++---------------------------------------+--------------------------------------+
+| topoflow_cfg_simple_Shebelle          | A basic configuration of the         |
+|                                       | TopoFlow model calibrated for the    |
+|                                       | Shebelle region in Ethiopia with a   |
+|                                       | default precipitation file for 2008  |
++---------------------------------------+--------------------------------------+
+...
+(rest of the table ommitted for simplicity)
+```
 
-
-To explore a list of available models and their metadata, you can go to the website [https://models.mint.isi.edu/](https://models.mint.isi.edu) or type:
+If you prefer to explore a list of available models and their metadata, you can go to the website [https://models.mint.isi.edu/](https://models.mint.isi.edu) or type:
 
 ```bash
 $ dame browse
 ```
 
-### Show details
+### Show details of a model configuration or setup
 
 
 #### Model Configurations
 
-You can obtain details about a Model Configuration
+You can show the executable details of a Model Configuration with the following command
 
 ```bash
 $ dame model-configure show <ID>
 ```
+For example: 
+
+```bash
+dame model-configuration show cycles-0.10.2-alpha-collection
+
+Information about the model configuration
+Inputs
+- cycles_crops: No information
+- cycles_weather_soil: No information
+Parameters
+- weed_fraction: 0.05
+- use_forcing: FALSE
+- end_planting_day: 149
+- end_year: 2017
+- start_year: 2000
+- crop_name: Maize
+- start_planting_day: 100
+- fertilizer_rate: 0
+Docker Image
+- Name: mintproject/cycles:0.10.2-alpha - https://hub.docker.com/r/mintproject/cycles
+Component Location
+- Link: https://github.com/mintproject/MINT-WorkflowDomain/raw/master/WINGSWorkflowComponents/cycles-0.10.2-alpha-collection/cycles-0.10.2-alpha-collection.zip
+```
+In this case, there are inputs with `no information` which indicate that will have to be provided on execution.
 
 #### Model Configuration Setup
 
-Or a Setup
+Similarly, for a setup just type:
 
 ```bash
 $ dame setup show <ID>
 ```
+To see the executable details. 
 
 ## Run a Model Configuration 
 
