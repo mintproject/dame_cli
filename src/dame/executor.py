@@ -97,18 +97,19 @@ def build_input(inputs, destination_dir):
     """
     line = ""
     for _input in inputs:
+        print(_input)
         _input = convert_object_to_dict(_input)
-        if not _input.keys() >= KEYS_REQUIRED_INPUT:
+        if not _input.keys() >= KEYS_REQUIRED_INPUT or _input['has_fixed_resource'] is None:
             raise ValueError(f'{_input["id"]} has not a fixedResource')
-
-        url = _input["has_fixed_resource"][0]["value"][0]
-        if "has_format" in _input:
-            _format = _input["has_fixed_resource"][0]["value"][0]
         else:
-            _format = None
-        file_name = get_file(destination_dir, url, _format)
-        position = _input["position"][0]
-        line += " -i{} {}".format(position, file_name)
+            url = _input["has_fixed_resource"][0]["value"][0]
+            if "has_format" in _input:
+                _format = _input["has_fixed_resource"][0]["value"][0]
+            else:
+                _format = None
+            file_name = get_file(destination_dir, url, _format)
+            position = _input["position"][0]
+            line += " -i{} {}".format(position, file_name)
     return line
 
 

@@ -25,7 +25,7 @@ def show_model_configuration_details(model_configuration):
     if model_configuration and hasattr(model_configuration, "has_input"):
         click.echo(click.style("Inputs", bold=True))
         for _input in model_configuration.has_input:
-            if hasattr(_input, "has_fixed_resource") and hasattr(_input.has_fixed_resource[0], "value"):
+            if hasattr(_input, "has_fixed_resource") and _input.has_fixed_resource and hasattr(_input.has_fixed_resource[0], "value"):
                 click.echo("- {}: {}".format(_input.label[0], _input.has_fixed_resource[0].value[0]))
             else:
                 label = getattr(_input, "label") if hasattr(_input, "label") else getattr(_input, "id")
@@ -63,7 +63,7 @@ def short_value(resource, prop):
 def verify_input_parameters(model_configuration, interactive, data_dir):
     for _input in model_configuration.has_input:
         uri = None
-        if not hasattr(_input, "has_fixed_resource") and interactive:
+        if (not hasattr(_input, "has_fixed_resource") or _input.has_fixed_resource is None) and interactive:
             if hasattr(_input, "label") and hasattr(_input, "has_format"):
                 click.secho("To run this model configuration,"
                             "a {} file (.{} file) is required.".format(_input.label[0], _input.has_format[0]),
