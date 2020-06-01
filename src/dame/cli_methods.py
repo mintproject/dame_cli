@@ -216,6 +216,6 @@ def print_table_list(items):
     tab.header(headings)
     for item in items:
         _id = obtain_id(item.id)
-        _description = "".join(item.description) if hasattr(item, "description") else "No information"
+        _description = "".join(item.description) if hasattr(item, "description") and getattr(item, "description") else "No information"
         tab.add_row([_id, _description])
     print(tab.draw())
