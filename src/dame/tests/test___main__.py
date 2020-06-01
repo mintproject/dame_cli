@@ -44,9 +44,9 @@ class Test(TestCase):
 
     def test_model_configuration_show(self):
         runner = CliRunner()
-        result = runner.invoke(model_configuration_show, "pihm_flooding", ["--profile", "testing"])
+        result = runner.invoke(model_configuration_show, ["pihm_flooding", "--profile", "testing"])
         assert result.exit_code == 0
         runner = CliRunner()
-        result = runner.invoke(model_configuration_show, "not_found", ["--profile", "testing"])
+        result = runner.invoke(model_configuration_show, ["not_found", "--profile", "testing"])
         assert result.exit_code == 1
 
