@@ -1,0 +1,60 @@
+#!/bin/bash
+set -xe
+
+checkExitCode() {
+if [ $? -ne 0 ]; then
+    echo "Error"
+    exit 1;
+fi
+}
+
+BASEDIR=`dirname $0`
+
+. $BASEDIR/io.sh 1 1 3 "$@"
+
+set -x
+
+replace_file() {
+    arg_key=$1
+    file=$2
+    arg_value=$3
+
+    line_time=$(grep -n "^${arg_key}" ${file} | cut -d : -f 1)
+    sed "${line_time}d" -i ${file}
+    sed -e "${line_time}i${arg_key} | ${arg_value} | ${4} | ${5}" -i ${file}
+}
+
+CURDIR=`pwd`
+pitremove -z $INPUTS1 -fel demfel.tif
+dinfflowdir -fel demfel.tif -ang demang.tif -slp demslp.tif
+d8flowdir -fel demfel.tif -p demp.tif -sd8 demsd8.tif
+aread8 -p demp.tif -ad8 demad8.tif -nc
+areadinf -ang demang.tif -sca demsca.tif -nc
+
+## Skeleton
+slopearea -slp demslp.tif -sca demsca.tif -sa demsa.tif
+d8flowpathextremeup -p demp.tif -sa demsa.tif -ssa demssa.tif -nc
+/opt/conda/bin/python3 hand-thresh.py --resolution demfel.tif --output demthresh.txt
+#threshold -ssa demssa.tif -src demsrc.tif -thresh $(cat demthresh.txt)
+threshold -ssa demssa.tif -src demsrc.tif -thresh $PARAMS1
+
+streamnet -fel demfel.tif -p demp.tif -ad8 demad8.tif -src demsrc.tif -ord demord.tif -tree demtree.dat -coord demcoord.dat -net demnet.shp -w demw.tif -sw
+
+connectdown -p demp.tif -ad8 demad8.tif -w demw.tif -o outlets.shp -od movedoutlets.shp
+
+/opt/conda/bin/python3 hand-heads.py --network demnet.shp --output dangles.shp
+/opt/conda/bin/python3 hand-weights.py --shapefile dangles.shp --template demfel.tif --output demwg.tif
+aread8 -p demp.tif -ad8 demssa.tif -o outlets.shp -wg demwg.tif -nc
+
+/opt/conda/bin/python3 hand-threshmin.py --resolution demfel.tif --output demthreshmin.txt
+/opt/conda/bin/python3 hand-threshmax.py --accumulation demssa.tif --output demthreshmax.txt
+dropanalysis -ad8 demad8.tif -p demp.tif -fel demfel.tif -ssa demssa.tif -o outlets.shp -drp demdrp.txt -par $(cat demthreshmin.txt) $(cat demthreshmax.txt) 10 0
+threshold -ssa demssa.tif -src demsrc.tif -thresh $(tail -n 1 demdrp.txt | awk '{print $NF}')
+
+dinfdistdown -ang demang.tif -fel demfel.tif -src demsrc.tif -wg demwg.tif -dd output.tif -m ave v -nc
+
+/opt/conda/bin/python3 hand-vis.py --dd output.tif --binmethod "lin" --shapefile output.shp --geojson output.json
+
+mv output.tif $OUTPUTS1
+mv output.shp $OUTPUTS2
+mv output.json $OUTPUTS3
