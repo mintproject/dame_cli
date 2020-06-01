@@ -11,15 +11,16 @@ from dame.utils import obtain_id
 SETUP_PARTIAL_INFO = "dsi_1.0_cfg"
 CONFIG_PARTIAL_INFO = "hand_v2"
 SETUP_FULL_INFO = "cycles-0.10.2-alpha-collection-oromia-single-point"
+testing = "testing"
 
-setups = [get_setup(obtain_id(SETUP_PARTIAL_INFO)), get_setup(SETUP_FULL_INFO)]
-model_configurations = [get_model_configuration(CONFIG_PARTIAL_INFO)]
+setups = [get_setup(obtain_id(SETUP_PARTIAL_INFO), profile=testing), get_setup(SETUP_FULL_INFO, profile=testing)]
+model_configurations = [get_model_configuration(CONFIG_PARTIAL_INFO, profile=testing)]
 
 
 class Test(TestCase):
     def test_verify_input_parameters(self):
         runner = CliRunner()
-        partial_setup = get_setup(SETUP_FULL_INFO)
+        partial_setup = get_setup(SETUP_FULL_INFO, profile=testing)
         assert verify_input_parameters(partial_setup, False, None) == partial_setup
 
     def test_print_data_property_table(self):
@@ -29,8 +30,8 @@ class Test(TestCase):
             print_data_property_table(model_configuration)
 
     def test_show_model_configuration_details(self):
-        full = get_setup(SETUP_FULL_INFO)
-        partial = get_setup(SETUP_PARTIAL_INFO)
+        full = get_setup(SETUP_FULL_INFO, profile=testing)
+        partial = get_setup(SETUP_PARTIAL_INFO, profile=testing)
         for setup in setups:
             try:
                 show_model_configuration_details(setup)

@@ -25,11 +25,11 @@ class Test(TestCase):
 
     def test_setup_show(self):
         runner = CliRunner()
-        result = runner.invoke(setup_show, "topoflow_cfg_simple_Shebelle")
+        result = runner.invoke(setup_show, ["topoflow_cfg_simple_Shebelle", "--profile", "testing"])
         assert result.exit_code == 0
 
         runner = CliRunner()
-        result = runner.invoke(setup_show, "not_found")
+        result = runner.invoke(setup_show, ["not_found",  "--profile", "testing"])
         assert result.exit_code == 1
 
     def test_setup_list(self):
