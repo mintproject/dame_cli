@@ -22,7 +22,7 @@ parameter_set_property = ["id", "label", "has_default_value"]
 
 def show_model_configuration_details(model_configuration):
     click.echo(click.style("Information about the model configuration", bold=True))
-    if model_configuration and hasattr(model_configuration, "has_input"):
+    if model_configuration and hasattr(model_configuration, "has_input") and getattr(model_configuration, "has_input"):
         click.echo(click.style("Inputs", bold=True))
         for _input in model_configuration.has_input:
             if hasattr(_input, "has_fixed_resource") and _input.has_fixed_resource and hasattr(_input.has_fixed_resource[0], "value"):
@@ -30,11 +30,11 @@ def show_model_configuration_details(model_configuration):
             else:
                 label = getattr(_input, "label") if hasattr(_input, "label") else getattr(_input, "id")
                 click.echo("- {}: {}".format(label[0], "No information"))
-    if model_configuration and hasattr(model_configuration, "has_parameter"):
+    if model_configuration and hasattr(model_configuration, "has_parameter") and getattr(model_configuration, "has_parameter"):
         click.echo(click.style("Parameters", bold=True))
         for _parameter in model_configuration.has_parameter:
             short_value(_parameter, "has_default_value")
-    if hasattr(model_configuration, "has_software_image"):
+    if hasattr(model_configuration, "has_software_image") and getattr(model_configuration, "has_software_image"):
         try:
             click.echo(click.style("Docker Image", bold=True))
             image = getattr(model_configuration, "has_software_image")[0].label[0]
@@ -43,7 +43,7 @@ def show_model_configuration_details(model_configuration):
             raise AttributeError("No information available about the Docker Image.")
     else:
         raise AttributeError("No information available about the Docker Image.")
-    if hasattr(model_configuration, "has_component_location"):
+    if hasattr(model_configuration, "has_component_location") and getattr(model_configuration, "has_component_location"):
         try:
             click.echo(click.style("Component Location", bold=True))
             image = getattr(model_configuration, "has_component_location")[0]
