@@ -23,7 +23,7 @@ def list_data_transformation():
     items = []
     for i in list(p.glob('*.yml')):
         spec = yaml.load(i.open(), Loader=Loader)
-        items.append({"id": i.stem, "description": "{}\nAvailable datasets:\n{}".format(spec["description"], spec["dataset"])})
+        items.append({"id": i.stem, "description": "{}".format(spec["adapters"]["tf_climate"]["comment"])})
     print_table_list_data(items)
 
 def show_data_transformation(name):
@@ -69,6 +69,6 @@ def run_data_transformation_docker(name: str, config_path: Path, input_dir: Path
                                 remove=True,
                                 )
     click.echo("Running transformation")
-    # for chunk in res.logs(stream=True):
-    #     print(chunk)
+    for chunk in res.logs(stream=True):
+        print(chunk)
     click.secho("The outputs are available: {}".format(output_dir), fg="green")

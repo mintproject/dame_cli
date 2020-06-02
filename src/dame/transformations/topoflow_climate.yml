@@ -1,9 +1,7 @@
 version: "1"
-description: "Data transformation to generate TopoFlow-ready precipitation files (RTS) from Global Precipitation Measurement (GPM) data sources"
-dataset: https://data-catalog.mint.isi.edu/datasets/ea0e86f3-9470-4e7e-a581-df85b4a7075d
 adapters:
   tf_climate:
-    comment: My topoflow climate write adapter
+    comment: "Data transformation to generate TopoFlow-ready precipitation files (RTS) from Global Precipitation Measurement (GPM) data sources  https://data-catalog.mint.isi.edu/datasets/ea0e86f3-9470-4e7e-a581-df85b4a7075d"
     adapter: funcs.Topoflow4ClimateWriteFunc
     inputs:
       input_dir: "/tmp/inputs/"
