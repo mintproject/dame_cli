@@ -16,6 +16,7 @@ from dame.cli_methods import verify_input_parameters, run_method_setup, show_mod
     print_table_list
 from dame.configuration import configure_credentials, DEFAULT_PROFILE
 from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup
+from dame.transformations import list_data_transformation, show_data_transformation, run_data_transformation
 
 try:
     from yaml import CLoader as Loader
@@ -209,3 +210,60 @@ def setup_show(name, profile):
         show_model_configuration_details(_setup)
     except AttributeError as e:
         click.secho("This setup is not executable.\n".format(e), fg="red")
+
+
+@setup.command(name="list", help="List model configuration setups")
+@click.option(
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default=DEFAULT_PROFILE,
+    metavar="<profile-name>",
+)
+def setup_list(profile):
+    items = list_setup(label=None, profile=profile)
+    print_table_list(items)
+
+
+
+@cli.group()
+def transformation():
+    """Manages Data transformation"""
+
+
+@transformation.command(name="list", help="List transformations")
+def transformation_list():
+    items = list_data_transformation()
+
+
+# @transformation.command(name="show", help="Show transformation")
+# @click.argument(
+#     "name",
+#     type=click.STRING
+# )
+# def transformation_show(name):
+#     items = show_data_transformation(name)
+
+@transformation.command(name="run")
+@click.argument(
+    "id",
+    type=click.STRING
+)
+@click.option(
+    "--input_dir",
+    "-i",
+    type=click.Path(exists=False, dir_okay=True, resolve_path=True),
+    required=True
+)
+def transformation_run(id, input_dir):
+    """
+    You must pass the argument ID (ID of the transformation)
+
+    And the directory using the option -i/--input_dir
+
+    For example:
+
+    dame transformation run topoflow_climate -i data/
+    """
+    run_data_transformation(id, Path(input_dir))

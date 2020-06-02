@@ -1,0 +1,15 @@
+version: "1"
+description: "Data transformation to generate TopoFlow-ready precipitation files (RTS) from Global Precipitation Measurement (GPM) data sources"
+dataset: https://data-catalog.mint.isi.edu/datasets/ea0e86f3-9470-4e7e-a581-df85b4a7075d
+adapters:
+  tf_climate:
+    comment: My topoflow climate write adapter
+    adapter: funcs.Topoflow4ClimateWriteFunc
+    inputs:
+      input_dir: "/tmp/inputs/"
+      temp_dir: "/tmp/temp"
+      output_file: "/tmp/outputs/climate_all.zip"
+      var_name: precipitation
+      DEM_bounds: "23.995416666666, 6.532916666667, 28.020416666666, 9.566250000000"
+      DEM_xres_arcsecs: "30"
+      DEM_yres_arcsecs: "30"

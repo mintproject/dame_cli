@@ -219,3 +219,13 @@ def print_table_list(items):
         _description = "".join(item.description) if hasattr(item, "description") and getattr(item, "description") else "No information"
         tab.add_row([_id, _description])
     print(tab.draw())
+
+def print_table_list_data(items):
+    headings = ['Id', 'Description']
+    tab = tt.Texttable(max_width=90)
+    tab.header(headings)
+    for item in items:
+        _id = item["id"]
+        _description = "".join(item["description"]) if "description" in item and item["description"] else "No information"
+        tab.add_row([_id, _description])
+    print(tab.draw())
