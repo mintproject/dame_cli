@@ -66,7 +66,7 @@ def verify_input_parameters(model_configuration, interactive, data_dir):
         if (not hasattr(_input, "has_fixed_resource") or _input.has_fixed_resource is None) and interactive:
             if hasattr(_input, "label") and hasattr(_input, "has_format"):
                 click.secho("To run this model configuration,"
-                            "a {} file (.{} file) is required.".format(_input.label[0], _input.has_format[0]),
+                            "a {} file (.{} file) is required.".format(_input.label[0], _input.has_format[0].replace(".", "")),
                             fg="yellow")
             elif hasattr(_input, "label"):
                 click.secho("To run this model configuration, a {} file is required.".format(_input.label[0]),
@@ -76,7 +76,7 @@ def verify_input_parameters(model_configuration, interactive, data_dir):
                             .format(_input.id), fg="yellow")
             if data_dir and hasattr(_input, "has_format") and click.confirm(
                     "Do you want to search the file in the directory {}".format(data_dir), default=True):
-                uri = find_file_directory(data_dir, _input.has_format[0])
+                uri = find_file_directory(data_dir, _input.has_format[0].replace(".", ""))
 
             if uri is None:
                 uri = click.prompt('Please enter a url')
