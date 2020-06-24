@@ -13,7 +13,7 @@ from modelcatalog import ApiException, Configuration
 import dame
 from dame import _utils
 from dame.cli_methods import verify_input_parameters, run_method_setup, show_model_configuration_details, \
-    print_table_list
+    print_table_list, edit_parameters
 from dame.configuration import configure_credentials, DEFAULT_PROFILE
 from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup
 from dame.transformations import list_data_transformation, show_data_transformation, run_data_transformation
@@ -52,7 +52,7 @@ You should consider upgrading via the 'pip install --upgrade dame-cli' command."
               help='The Model Catalog API', required=True, default=Configuration().host, show_default=True)
 @click.option('--username', prompt='Username',
               help='Your email.', required=True, default="mint@isi.edu", show_default=True)
-def configure(server, username, profile="default"):
+def credentials(server, username, profile="default"):
     try:
         configure_credentials(server, username, profile)
     except Exception:
@@ -118,6 +118,12 @@ def run(name, interactive, profile, data):
         exit(1)
     try:
         verify_input_parameters(resource, interactive, data)
+    except ValueError as e:
+        click.secho("Unable to run. Please use interactive mode", fg="yellow")
+        exit(1)
+    try:
+        if interactive and click.confirm("Do you want to edit the parameters?"):
+            edit_parameters(resource, interactive)
     except ValueError as e:
         click.secho("Unable to run. Please use interactive mode", fg="yellow")
         exit(1)

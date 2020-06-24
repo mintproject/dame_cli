@@ -25,12 +25,14 @@ def show_model_configuration_details(model_configuration):
     if model_configuration and hasattr(model_configuration, "has_input") and getattr(model_configuration, "has_input"):
         click.echo(click.style("Inputs", bold=True))
         for _input in model_configuration.has_input:
-            if hasattr(_input, "has_fixed_resource") and _input.has_fixed_resource and hasattr(_input.has_fixed_resource[0], "value"):
+            if hasattr(_input, "has_fixed_resource") and _input.has_fixed_resource and hasattr(
+                    _input.has_fixed_resource[0], "value"):
                 click.echo("- {}: {}".format(_input.label[0], _input.has_fixed_resource[0].value[0]))
             else:
                 label = getattr(_input, "label") if hasattr(_input, "label") else getattr(_input, "id")
                 click.echo("- {}: {}".format(label[0], "No information"))
-    if model_configuration and hasattr(model_configuration, "has_parameter") and getattr(model_configuration, "has_parameter"):
+    if model_configuration and hasattr(model_configuration, "has_parameter") and getattr(model_configuration,
+                                                                                         "has_parameter"):
         click.echo(click.style("Parameters", bold=True))
         for _parameter in model_configuration.has_parameter:
             short_value(_parameter, "has_default_value")
@@ -43,7 +45,8 @@ def show_model_configuration_details(model_configuration):
             raise AttributeError("No information available about the Docker Image.")
     else:
         raise AttributeError("No information available about the Docker Image.")
-    if hasattr(model_configuration, "has_component_location") and getattr(model_configuration, "has_component_location"):
+    if hasattr(model_configuration, "has_component_location") and getattr(model_configuration,
+                                                                          "has_component_location"):
         try:
             click.echo(click.style("Component Location", bold=True))
             image = getattr(model_configuration, "has_component_location")[0]
@@ -58,6 +61,16 @@ def short_value(resource, prop):
     if hasattr(resource, prop):
         value = getattr(resource, prop)
         click.echo("- {}: {}".format(getattr(resource, "label")[0], value[0]))
+        return value[0]
+
+
+def edit_parameters(model_configuration, interactive):
+    if interactive:
+        for index, _parameter in enumerate(model_configuration.has_parameter):
+            value = short_value(_parameter, "has_default_value")
+            new_value = click.prompt("Enter the new value", default=value)
+            model_configuration.has_parameter[index].has_default_value = [new_value]
+    return model_configuration
 
 
 def verify_input_parameters(model_configuration, interactive, data_dir):
@@ -66,7 +79,8 @@ def verify_input_parameters(model_configuration, interactive, data_dir):
         if (not hasattr(_input, "has_fixed_resource") or _input.has_fixed_resource is None) and interactive:
             if hasattr(_input, "label") and hasattr(_input, "has_format"):
                 click.secho("To run this model configuration,"
-                            "a {} file (.{} file) is required.".format(_input.label[0], _input.has_format[0].replace(".", "")),
+                            "a {} file (.{} file) is required.".format(_input.label[0],
+                                                                       _input.has_format[0].replace(".", "")),
                             fg="yellow")
             elif hasattr(_input, "label"):
                 click.secho("To run this model configuration, a {} file is required.".format(_input.label[0]),
@@ -97,26 +111,6 @@ def create_sample_resource(_input, uri):
                        data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
                        value=[uri])
     _input.has_fixed_resource = [s.to_dict()]
-
-
-# def edit_parameter_config_or_setup(resource, auto=False):
-#     """not used"""
-#     for parameter in resource.has_parameter:
-#         logging.info("Checking {}".format(parameter))
-#         logging.info("Checking {}".format(check_is_none(parameter, 'id')))
-#         _id = obtain_id(check_is_none(parameter, 'id'))
-#         default_value = check_is_none(parameter, 'has_default_value')
-#         print_data_property_table(parameter)
-#         if not default_value:
-#             value = click.prompt('Enter the value for the parameter.')
-#         else:
-#             default_value = default_value[0]
-#             if auto:
-#                 value = default_value
-#                 click.echo("Using the default valuer {}".format(default_value))
-#             else:
-#                 value = click.prompt('Enter the value for the parameter:', default=default_value)
-#         parameter["hasFixedValue"] = [value]
 
 
 def print_data_property_table(resource, property_selected={}):
@@ -216,9 +210,11 @@ def print_table_list(items):
     tab.header(headings)
     for item in items:
         _id = obtain_id(item.id)
-        _description = "".join(item.description) if hasattr(item, "description") and getattr(item, "description") else "No information"
+        _description = "".join(item.description) if hasattr(item, "description") and getattr(item,
+                                                                                             "description") else "No information"
         tab.add_row([_id, _description])
     print(tab.draw())
+
 
 def print_table_list_data(items):
     headings = ['Id', 'Description']
@@ -226,6 +222,7 @@ def print_table_list_data(items):
     tab.header(headings)
     for item in items:
         _id = item["id"]
-        _description = "".join(item["description"]) if "description" in item and item["description"] else "No information"
+        _description = "".join(item["description"]) if "description" in item and item[
+            "description"] else "No information"
         tab.add_row([_id, _description])
     print(tab.draw())
