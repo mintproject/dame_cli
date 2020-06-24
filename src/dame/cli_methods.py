@@ -65,13 +65,12 @@ def short_value(resource, prop):
 
 
 def edit_parameters(model_configuration, interactive):
-    if not interactive:
-        return model_configuration
-    for index, _parameter in enumerate(model_configuration.has_parameter):
-        value = short_value(_parameter, "has_default_value")
-        new_value = click.prompt("Enter the new value", default=value)
-        model_configuration.has_parameter[index].has_default_value = [new_value]
-    click.confirm(model_configuration)
+    if interactive:
+        for index, _parameter in enumerate(model_configuration.has_parameter):
+            value = short_value(_parameter, "has_default_value")
+            new_value = click.prompt("Enter the new value", default=value)
+            model_configuration.has_parameter[index].has_default_value = [new_value]
+    return model_configuration
 
 
 def verify_input_parameters(model_configuration, interactive, data_dir):
@@ -112,26 +111,6 @@ def create_sample_resource(_input, uri):
                        data_catalog_identifier="FFF-3s5c112e-c7ae-4cda-ba23-2e4f2286a18o",
                        value=[uri])
     _input.has_fixed_resource = [s.to_dict()]
-
-
-# def edit_parameter_config_or_setup(resource, auto=False):
-#     """not used"""
-#     for parameter in resource.has_parameter:
-#         logging.info("Checking {}".format(parameter))
-#         logging.info("Checking {}".format(check_is_none(parameter, 'id')))
-#         _id = obtain_id(check_is_none(parameter, 'id'))
-#         default_value = check_is_none(parameter, 'has_default_value')
-#         print_data_property_table(parameter)
-#         if not default_value:
-#             value = click.prompt('Enter the value for the parameter.')
-#         else:
-#             default_value = default_value[0]
-#             if auto:
-#                 value = default_value
-#                 click.echo("Using the default valuer {}".format(default_value))
-#             else:
-#                 value = click.prompt('Enter the value for the parameter:', default=default_value)
-#         parameter["hasFixedValue"] = [value]
 
 
 def print_data_property_table(resource, property_selected={}):

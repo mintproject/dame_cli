@@ -52,7 +52,7 @@ You should consider upgrading via the 'pip install --upgrade dame-cli' command."
               help='The Model Catalog API', required=True, default=Configuration().host, show_default=True)
 @click.option('--username', prompt='Username',
               help='Your email.', required=True, default="mint@isi.edu", show_default=True)
-def configure(server, username, profile="default"):
+def credentials(server, username, profile="default"):
     try:
         configure_credentials(server, username, profile)
     except Exception:
