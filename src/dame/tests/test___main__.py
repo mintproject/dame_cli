@@ -15,6 +15,11 @@ def test_configure():
                             "testing"])
     assert result.exit_code == 0
 
+def test_configure():
+    runner = CliRunner()
+    result = runner.invoke(setup_show, ["topoflow_cfg_simple_Shebelle", "--profile", "not_found"])
+
+    assert result.exit_code == 1
 
 def test_version():
     runner = CliRunner()
