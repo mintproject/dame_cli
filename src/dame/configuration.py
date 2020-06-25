@@ -14,9 +14,11 @@ def get_credentials(profile):
         os.getenv("MINT_CREDENTIALS_FILE", __DEFAULT_MINT_API_CREDENTIALS_FILE__)
     ).expanduser()
     credentials = configparser.ConfigParser()
-    if credentials_file.exists():
+    if credentials_file.exists() and profile in credentials:
         credentials.read(credentials_file)
         return credentials[profile]
+    elif credentials is None:
+        return None
     elif credentials is not None and profile not in credentials and profile != ("%s" % DEFAULT_PROFILE):
         click.secho("WARNING: The profile doesn't exists. To configure it, run:\ndame configure -p {}".format(profile),
                     fg="yellow")
