@@ -137,7 +137,11 @@ def build_parameter(parameters):
         else:
             value = _parameter["has_default_value"][0]
         position = _parameter["position"][0]
-        line += " -p{} {}".format(position, value)
+        if 'has_data_type' not in  _parameter or _parameter["has_data_type"] is None or "string" in _parameter["has_data_type"]:
+            line += " -p{} \"{}\"".format(position, value)
+        else:
+            line += " -p{} {}".format(position, value)
+
     return line
 
 
@@ -221,6 +225,7 @@ def run_docker(component_cmd, execution_dir, component_dir, setup_name, image, v
                                 volumes=volumes,
                                 working_dir='/tmp/mint',
                                 detach=True,
+                                entrypoint="/bin/bash",
                                 stream=True,
                                 remove=True
                                 )
