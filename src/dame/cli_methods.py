@@ -58,7 +58,7 @@ def show_model_configuration_details(model_configuration):
 
 
 def short_value(resource, prop):
-    if hasattr(resource, prop):
+    if hasattr(resource, prop) and getattr(resource, prop) is not None:
         value = getattr(resource, prop)
         click.echo("- {}: {}".format(getattr(resource, "label")[0], value[0]))
         return value[0]
@@ -74,6 +74,8 @@ def edit_parameters(model_configuration, interactive):
 
 
 def verify_input_parameters(model_configuration, interactive, data_dir):
+    if model_configuration.has_input is None:
+        return []
     for _input in model_configuration.has_input:
         uri = None
         if (not hasattr(_input, "has_fixed_resource") or _input.has_fixed_resource is None) and interactive:
@@ -210,8 +212,9 @@ def print_table_list(items):
     tab.header(headings)
     for item in items:
         _id = obtain_id(item.id)
+        _label =  "".join(item.label) if hasattr(item, "label") and getattr(item, "label") else "No information"
         _description = "".join(item.description) if hasattr(item, "description") and getattr(item,
-                                                                                             "description") else "No information"
+                                                                                             "description") else _label
         tab.add_row([_id, _description])
     print(tab.draw())
 

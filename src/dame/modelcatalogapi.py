@@ -1,6 +1,8 @@
 from __future__ import print_function
 
+import click
 import modelcatalog
+import semver
 from modelcatalog import ApiClient
 from modelcatalog.rest import ApiException
 
@@ -14,7 +16,18 @@ def api_configuration(profile):
     if credentials is None:
         return ApiClient(), USERNAME
     configuration = modelcatalog.Configuration()
-    configuration.host = credentials["server"]
+    package_version = configuration.host.split('/')[-1].replace("v", '')
+    configuration_version = credentials["server"].split('/')[-1].replace("v", '')
+    if package_version > configuration_version:
+        click.secho(
+            f"""WARNING: Your credentials are using Model Catalog version {configuration_version},
+            but the version {package_version} is available.
+            You should consider upgrading via the 'dame configure -p {profile}'""",
+            fg="yellow",
+        )
+        click.secho("DAME is going to use the newest version",  fg="yellow")
+    else:
+        configuration.host = credentials["server"]
     return ApiClient(configuration=configuration), credentials["username"]
 
 
@@ -27,6 +40,14 @@ def list_model_configuration(label=None, profile=DEFAULT_PROFILE):
     except ApiException as e:
         raise e
 
+def get_data_transformation(profile=DEFAULT_PROFILE):
+    api, username = api_configuration(profile)
+    api_instance = modelcatalog.DataTransformationApi(api)
+    try:
+        api_response = api_instance.datatransformations_get(username=username)
+        return api_response
+    except ApiException as e:
+        raise e
 
 def get_model_configuration(_id, profile=DEFAULT_PROFILE):
     api, username = api_configuration(profile)

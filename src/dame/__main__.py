@@ -4,6 +4,7 @@ dame.
 
 :license: Apache 2.0
 """
+import logging
 from pathlib import Path
 
 import click
@@ -15,7 +16,8 @@ from dame import _utils
 from dame.cli_methods import verify_input_parameters, run_method_setup, show_model_configuration_details, \
     print_table_list, edit_parameters
 from dame.configuration import configure_credentials, DEFAULT_PROFILE
-from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup
+from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup, \
+    get_data_transformation
 from dame.transformations import list_data_transformation, show_data_transformation, run_data_transformation
 
 try:
@@ -23,6 +25,7 @@ try:
 except ImportError:
     from yaml import Loader
 
+logging.basicConfig(level=logging.WARNING)
 
 @click.group()
 @click.option("--verbose", "-v", default=0, count=True)
@@ -109,7 +112,7 @@ def run(name, interactive, profile, data):
     click.clear()
     if "ModelConfigurationSetup" in config.type:
         resource = get_setup(name, profile=profile)
-    elif "ModelConfiguration" in config.type:
+    elif "ModelConfiguration" in config.type or "DataTransformation":
         resource = get_model_configuration(name, profile=profile)
     try:
         show_model_configuration_details(resource)
@@ -239,8 +242,17 @@ def transformation():
 
 
 @transformation.command(name="list", help="List transformations")
-def transformation_list():
-    items = list_data_transformation()
+@click.option(
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default="default",
+    metavar="<profile-name>",
+)
+def transformation_list(profile):
+    items = get_data_transformation(profile=profile)
+    print_table_list(items)
 
 
 # @transformation.command(name="show", help="Show transformation")
@@ -253,16 +265,18 @@ def transformation_list():
 
 @transformation.command(name="run")
 @click.argument(
-    "id",
+    "data_transformation_id",
     type=click.STRING
 )
 @click.option(
-    "--input_dir",
-    "-i",
-    type=click.Path(exists=False, dir_okay=True, resolve_path=True),
-    required=True
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default="default",
+    metavar="<profile-name>",
 )
-def transformation_run(id, input_dir):
+def transformation_run(data_transformation_id, profile):
     """
     You must pass the argument ID (ID of the transformation)
 
@@ -272,4 +286,8 @@ def transformation_run(id, input_dir):
 
     dame transformation run topoflow_climate -i data/
     """
-    run_data_transformation(id, Path(input_dir))
+    resource = get_model_configuration(data_transformation_id, profile=profile)
+    try:
+        show_model_configuration_details(resource)
+    except AttributeError as e:
+        click.secho("This setup is not executable.\n".format(e), fg="red")
