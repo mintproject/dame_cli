@@ -22,4 +22,5 @@ def test_build_input(tmp_path):
 
 
 def test_get_singularity():
-    get_singularity()
+    with pytest.raises(FileNotFoundError) as e_info:
+        get_singularity()
