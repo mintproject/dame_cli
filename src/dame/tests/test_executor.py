@@ -1,6 +1,7 @@
 import pytest
-from dame.executor import get_file, build_input
+from dame.executor import get_file, build_input, get_singularity
 from dame.modelcatalogapi import get_setup
+
 testing = "testing"
 
 
@@ -18,3 +19,7 @@ def test_build_input(tmp_path):
     setup = get_setup("hand_v2_raster", profile=testing)
     with pytest.raises(ValueError, match=r".* has not a fixedResource"):
         build_input(setup.has_input, d)
+
+
+def test_get_singularity():
+    get_singularity()
