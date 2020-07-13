@@ -10,7 +10,7 @@ from yaml import load, Loader
 
 from dame._utils import log
 from dame.utils import download_extract_zip, obtain_id, convert_object_to_dict, download_data_file
-
+import logging
 SINGULARITY_BIN = Path("/usr/bin/singularity")
 SINGULARITY_LOCAL_BIN = Path("/usr/local/bin/singularity")
 
@@ -30,14 +30,15 @@ def get_singularity():
             return SINGULARITY_BIN
         elif SINGULARITY_LOCAL_BIN.exists():
             return SINGULARITY_LOCAL_BIN
-    except FileNotFoundError:
+    except:
         raise FileNotFoundError
-
+    raise FileNotFoundError
 
 def get_engine():
     if platform.system() == 'Linux':
         try:
-            get_singularity()
+            singularity_path = get_singularity()
+            logging.debug(f"singularity detected {singularity_path}")
             return SINGULARITY_ENGINE
         except FileNotFoundError:
             try:
@@ -223,9 +224,9 @@ def run_docker(component_cmd, execution_dir, component_dir, setup_name, image, v
     res = client.containers.run(command=component_cmd,
                                 image=image,
                                 volumes=volumes,
+                                entrypoint='/bin/bash',
                                 working_dir='/tmp/mint',
                                 detach=True,
-                                entrypoint="/bin/bash",
                                 stream=True,
                                 remove=True
                                 )

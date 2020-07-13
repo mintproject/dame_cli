@@ -73,11 +73,6 @@ def browse():
     click.launch('https://models.mint.isi.edu')
 
 
-"""
-Run a modelconfiguration or modelconfiguration
-"""
-
-
 @cli.command(help="Run a model configuration or model configuration setup")
 @click.argument(
     "name",
@@ -88,8 +83,8 @@ Run a modelconfiguration or modelconfiguration
     "-p",
     envvar="MINT_PROFILE",
     type=str,
-    default="default",
     metavar="<profile-name>",
+    default="default",
 )
 @click.option(
     "--data",
@@ -131,6 +126,11 @@ def run(name, interactive, profile, data):
         click.secho("Unable to run. Please use interactive mode", fg="yellow")
         exit(1)
     run_method_setup(resource, interactive, data)
+
+
+"""
+Run a modelconfiguration or modelconfiguration
+"""
 
 
 @cli.group()

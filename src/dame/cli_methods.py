@@ -160,6 +160,7 @@ def execute_setups(component_src_dir, execution_dir, setup_cmd_line, setup_name,
     """
     try:
         engine = get_engine()
+        click.secho(f"Engine: {engine}", fg="blue")
     except FileNotFoundError:
         click.secho("Singularity is not installed", fg="red")
         exit(1)
