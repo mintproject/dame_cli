@@ -18,7 +18,6 @@ from dame.cli_methods import verify_input_parameters, run_method_setup, show_mod
 from dame.configuration import configure_credentials, DEFAULT_PROFILE
 from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup, \
     get_data_transformation
-from dame.transformations import list_data_transformation, show_data_transformation, run_data_transformation
 
 try:
     from yaml import CLoader as Loader
@@ -26,6 +25,7 @@ except ImportError:
     from yaml import Loader
 
 logging.basicConfig(level=logging.WARNING)
+
 
 @click.group()
 @click.option("--verbose", "-v", default=0, count=True)
@@ -235,7 +235,6 @@ def setup_list(profile):
     print_table_list(items)
 
 
-
 @cli.group()
 def transformation():
     """Manages Data transformation"""
@@ -280,6 +279,7 @@ def transformation_show(model_configuration_name, profile):
         resource = get_model_configuration(model_configuration_name, profile=profile)
     show_model_configuration_details_dt(resource)
 
+
 @transformation.command(name="run")
 @click.argument(
     "data_transformation_id",
@@ -304,7 +304,10 @@ def transformation_run(data_transformation_id, profile):
     dame transformation run topoflow_climate -i data/
     """
     resource = get_model_configuration(data_transformation_id, profile=profile)
+    interactive = True
+    data = Path('.')
     try:
         show_model_configuration_details(resource)
     except AttributeError as e:
         click.secho("This setup is not executable.\n".format(e), fg="red")
+    run_method_setup(resource, interactive, data)
