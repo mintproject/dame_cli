@@ -14,7 +14,7 @@ from modelcatalog import ApiException, Configuration
 import dame
 from dame import _utils
 from dame.cli_methods import verify_input_parameters, run_method_setup, show_model_configuration_details, \
-    print_table_list, edit_parameters
+    print_table_list, edit_parameters, show_model_configuration_details_dt
 from dame.configuration import configure_credentials, DEFAULT_PROFILE
 from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup, \
     get_data_transformation
@@ -255,13 +255,30 @@ def transformation_list(profile):
     print_table_list(items)
 
 
-# @transformation.command(name="show", help="Show transformation")
-# @click.argument(
-#     "name",
-#     type=click.STRING
-# )
-# def transformation_show(name):
-#     items = show_data_transformation(name)
+@transformation.command(name="find", help="Find transformation by model configuration")
+@click.argument(
+    "model_configuration_name",
+    type=click.STRING
+)
+@click.option(
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default="default",
+    metavar="<profile-name>",
+)
+def transformation_show(model_configuration_name, profile):
+    try:
+        config = get_model_configuration(model_configuration_name, profile=profile)
+    except ApiException as e:
+        click.secho("{}".format(e.reason))
+        exit(0)
+    if "ModelConfigurationSetup" in config.type:
+        resource = get_setup(model_configuration_name, profile=profile)
+    elif "ModelConfiguration" in config.type or "DataTransformation":
+        resource = get_model_configuration(model_configuration_name, profile=profile)
+    show_model_configuration_details_dt(resource)
 
 @transformation.command(name="run")
 @click.argument(

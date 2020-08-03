@@ -19,6 +19,25 @@ SCRIPT_FILENAME = "run"
 data_set_property = ["id", "label"]
 parameter_set_property = ["id", "label", "has_default_value"]
 
+def show_model_configuration_details_dt(model_configuration):
+    click.echo(click.style("Information about the model configuration", bold=True))
+    if model_configuration and hasattr(model_configuration, "has_input") and getattr(model_configuration, "has_input"):
+        click.echo(click.style("Inputs", bold=True))
+        for _input in model_configuration.has_input:
+            if hasattr(_input, "has_fixed_resource") and _input.has_fixed_resource and hasattr(
+                    _input.has_fixed_resource[0], "value"):
+                click.echo("- {}: {}".format(_input.label[0], _input.has_fixed_resource[0].value[0]))
+            else:
+                if hasattr(_input, "has_data_transformation"):
+                    dts = _input.has_data_transformation
+                    if dts:
+                        for dt in dts:
+                            label = getattr(dt, "label") if hasattr(dt, "label") else getattr(dt, "id")
+                            click.echo(f"- {_input.label[0]}: {label[0]}")
+                    else:
+                        label = getattr(_input, "label") if hasattr(_input, "label") else getattr(_input, "id")
+                        click.echo("- {}: {}".format(label[0], "No transformation"))
+
 
 def show_model_configuration_details(model_configuration):
     click.echo(click.style("Information about the model configuration", bold=True))
