@@ -232,7 +232,7 @@ def run_docker(component_cmd, execution_dir, component_dir, setup_name, image, v
                                 )
     with open(log_file_path, 'wb') as log_file:
         for chunk in res.logs(stream=True):
-            print(chunk)
+            print(chunk.decode('utf-8'))
             log_file.write(chunk)
 
 

@@ -26,7 +26,7 @@ def init_logger():
         'loggers': {
             # default for all undefined Python modules
             '': {
-                'level': 'DEBUG',
+                'level': 'WARNING',
                 'handlers': ['console'],
             },
             # Our application code

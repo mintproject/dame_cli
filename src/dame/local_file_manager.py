@@ -12,7 +12,6 @@ def find_file_directory(data_dir, _format=None):
     :type _format:
     """
     if _format is not None:
-        _format = _format.replace(".", "")
         files = [f for f in data_dir.glob("*{}".format(_format))]
         if len(files) > 1:
             print_choices([f.resolve().expanduser() for f in files])
@@ -27,7 +26,7 @@ def find_file_directory(data_dir, _format=None):
             click.secho("Selected from your computer {}".format(files[0]))
             return str(files[0])
         else:
-            click.secho("There is not files with format {} on {}".format(_format, data_dir))
+            click.secho("There is not files with format {} in the directory {}".format(_format, data_dir))
     return None
 
 def print_choices(choices):

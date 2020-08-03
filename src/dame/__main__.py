@@ -17,14 +17,12 @@ from dame.cli_methods import verify_input_parameters, run_method_setup, show_mod
     print_table_list, edit_parameters, show_model_configuration_details_dt
 from dame.configuration import configure_credentials, DEFAULT_PROFILE
 from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup, \
-    get_data_transformation
+    get_data_transformation, get_transformation_dataset
 
 try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-
-logging.basicConfig(level=logging.WARNING)
 
 
 @click.group()
@@ -90,11 +88,10 @@ def browse():
     "--data",
     "-d",
     type=click.Path(exists=False, dir_okay=True, resolve_path=True),
-    default="data",
 )
 @click.option('--interactive/--non-interactive', default=True)
 def run(name, interactive, profile, data):
-    if not Path(data).exists():
+    if not data or not Path(data).exists():
         data = None
     else:
         data = Path(data)
@@ -114,8 +111,10 @@ def run(name, interactive, profile, data):
     except AttributeError as e:
         click.secho("Unable to run it: {}".format(str(e)), fg="red")
         exit(1)
+
+
     try:
-        verify_input_parameters(resource, interactive, data)
+        verify_input_parameters(resource, interactive, data, profile)
     except ValueError as e:
         click.secho("Unable to run. Please use interactive mode", fg="yellow")
         exit(1)
@@ -249,35 +248,17 @@ def transformation():
     default="default",
     metavar="<profile-name>",
 )
-def transformation_list(profile):
-    items = get_data_transformation(profile=profile)
-    print_table_list(items)
-
-
-@transformation.command(name="find", help="Find transformation by model configuration")
 @click.argument(
-    "model_configuration_name",
-    type=click.STRING
+    "dataset_id",
+    type=click.STRING,
+    required=False
 )
-@click.option(
-    "--profile",
-    "-p",
-    envvar="MINT_PROFILE",
-    type=str,
-    default="default",
-    metavar="<profile-name>",
-)
-def transformation_show(model_configuration_name, profile):
-    try:
-        config = get_model_configuration(model_configuration_name, profile=profile)
-    except ApiException as e:
-        click.secho("{}".format(e.reason))
-        exit(0)
-    if "ModelConfigurationSetup" in config.type:
-        resource = get_setup(model_configuration_name, profile=profile)
-    elif "ModelConfiguration" in config.type or "DataTransformation":
-        resource = get_model_configuration(model_configuration_name, profile=profile)
-    show_model_configuration_details_dt(resource)
+def transformation_list(dataset_id, profile):
+    if dataset_id:
+        items =  get_transformation_dataset(dataset_id, profile=profile)
+    else:
+        items = get_data_transformation(profile=profile)
+    print_table_list(items)
 
 
 @transformation.command(name="run")

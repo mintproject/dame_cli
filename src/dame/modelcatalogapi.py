@@ -2,7 +2,6 @@ from __future__ import print_function
 
 import click
 import modelcatalog
-import semver
 from modelcatalog import ApiClient
 from modelcatalog.rest import ApiException
 
@@ -25,7 +24,7 @@ def api_configuration(profile):
             You should consider upgrading via the 'dame configure -p {profile}'""",
             fg="yellow",
         )
-        click.secho("DAME is going to use the newest version",  fg="yellow")
+        click.secho("DAME is going to use the newest version", fg="yellow")
     else:
         configuration.host = credentials["server"]
     return ApiClient(configuration=configuration), credentials["username"]
@@ -40,6 +39,7 @@ def list_model_configuration(label=None, profile=DEFAULT_PROFILE):
     except ApiException as e:
         raise e
 
+
 def get_data_transformation(profile=DEFAULT_PROFILE):
     api, username = api_configuration(profile)
     api_instance = modelcatalog.DataTransformationApi(api)
@@ -48,6 +48,7 @@ def get_data_transformation(profile=DEFAULT_PROFILE):
         return api_response
     except ApiException as e:
         raise e
+
 
 def get_model_configuration(_id, profile=DEFAULT_PROFILE):
     api, username = api_configuration(profile)
@@ -79,3 +80,31 @@ def list_setup(label=None, profile=DEFAULT_PROFILE):
         return api_response
     except ApiException as e:
         raise e
+
+
+def get_transformation_dataset(data_specification_id, profile=DEFAULT_PROFILE):
+    # Create an instance of the API class
+
+    items = []
+
+    api, username = api_configuration(profile)
+    api_instance = modelcatalog.DataTransformationApi(api)
+    custom_query_name = 'custom_datatransformations'  # str | Name of the custom query (optional) (default to 'custom_datatransformations')
+
+    try:
+        # Gets a list of data transformations related a dataset
+        api_response = api_instance.\
+                                    custom_dataspecifications_id_datatransformations_get(
+                                        data_specification_id,
+                                        custom_query_name=custom_query_name,
+                                        username=username)
+
+        for i in api_response:
+            if i.id:
+                items.append(i)
+
+
+        return items
+    except ApiException as e:
+        raise e
+
