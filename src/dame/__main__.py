@@ -255,7 +255,7 @@ def transformation():
 )
 def transformation_list(dataset_id, profile):
     if dataset_id:
-        items =  get_transformation_dataset(dataset_id, profile=profile)
+        items = get_transformation_dataset(dataset_id, profile=profile)
     else:
         items = get_data_transformation(profile=profile)
     print_table_list(items)
@@ -278,11 +278,9 @@ def transformation_run(data_transformation_id, profile):
     """
     You must pass the argument ID (ID of the transformation)
 
-    And the directory using the option -i/--input_dir
-
     For example:
 
-    dame transformation run topoflow_climate -i data/
+    dame transformation run topoflow_climate
     """
     resource = get_model_configuration(data_transformation_id, profile=profile)
     interactive = True

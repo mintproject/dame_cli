@@ -26,22 +26,24 @@ $ dame transformation list
 You can run the transformation using DAME.
 
 ```bash
-$ dame  run --help  
-Usage: dame run [OPTIONS] NAME
+$ dame transformation run --help
+Usage: dame transformation run [OPTIONS] DATA_TRANSFORMATION_ID
 
-  Run a model configuration, data tranformation or model configuration setup
+  You must pass the argument ID (ID of the transformation)
+
+  For example:
+
+  dame transformation run topoflow_climate
 
 Options:
   -p, --profile <profile-name>
-  -d, --data PATH
-  --interactive / --non-interactive
-  --help                          Show this message and exit.
+  --help                        Show this message and exit.
 ```
 
 In the following example, DAME is executing the Topoflow DT
 
 ```bash
-$ dame run 045c9eb2-a20b-4095-af95-30bb00d944fe
+$ dame transformation run 045c9eb2-a20b-4095-af95-30bb00d944fe
 Information about the model configuration
 Parameters
 - DEM_xres_arcsecs: 30
@@ -60,6 +62,10 @@ Do you want to edit the parameters? [y/N]:
 ```
 
 In this example, the Data Transformation is going to read the parameters and download the required files. The user can edit the parameters to use the transformation in a different region (bounding box) and period (start_date, end_date)
+
+!!! info
+    The parameter `data_set_id` is the identifier in the DataCatalog. Please [here](https://data-catalog.mint.isi.edu/datasets/5babae3f-c468-4e01-862e-8b201468e3b5) for more information.
+
 
 If the execution has ended correctly, DAME is going to print the path where the files are.
 
