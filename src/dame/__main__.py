@@ -239,7 +239,7 @@ def transformation():
     """Manages Data transformation"""
 
 
-@transformation.command(name="list", help="List transformations")
+@transformation.command(name="list")
 @click.option(
     "--profile",
     "-p",
@@ -254,6 +254,15 @@ def transformation():
     required=False
 )
 def transformation_list(dataset_id, profile):
+    """
+    List the transformations available. For example:
+
+    $ dame transformation list
+
+    You can see the transformation available for a DataSetSpecification using
+
+    $ dame transformation list topoflow36_2.1.0_rainRates
+    """
     if dataset_id:
         items = get_transformation_dataset(dataset_id, profile=profile)
     else:
