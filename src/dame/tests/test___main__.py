@@ -2,7 +2,7 @@ from click.testing import CliRunner
 
 import dame
 from dame.__main__ import version, setup_show, setup_list, model_configuration_list, model_configuration_show, \
-    credentials
+    credentials, transformation_list, transformation_run
 
 SETUP_FULL_INFO = "cycles-0.10.2-alpha-collection-oromia-single-point"
 USERNAME = "mint@isi.edu"
@@ -51,8 +51,21 @@ def test_model_configuration_list():
 
 def test_model_configuration_show():
     runner = CliRunner()
-    result = runner.invoke(model_configuration_show, ["pihm_flooding", "--profile", "testing"])
+    result = runner.invoke(model_configuration_show, ["045c9eb2-a20b-4095-af95-30bb00d944fe", "--profile", "testing"])
     assert result.exit_code == 0
     runner = CliRunner()
     result = runner.invoke(model_configuration_show, ["not_found", "--profile", "testing"])
+    assert result.exit_code == 1
+
+def test_transformation_list():
+    runner = CliRunner()
+    result = runner.invoke(transformation_list, ["--profile", "testing"])
+    assert result.exit_code == 0
+
+def test_transformation_run():
+    runner = CliRunner()
+    result = runner.invoke(transformation_run, ["045c9eb2-a20b-4095-af95-30bb00d944fe", "--profile", "testing"])
+    assert result.exit_code == 0
+    runner = CliRunner()
+    result = runner.invoke(transformation_run, ["not_found", "--profile", "testing"])
     assert result.exit_code == 1
