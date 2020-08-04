@@ -14,18 +14,16 @@ from modelcatalog import ApiException, Configuration
 import dame
 from dame import _utils
 from dame.cli_methods import verify_input_parameters, run_method_setup, show_model_configuration_details, \
-    print_table_list, edit_parameters
+    print_table_list, edit_parameters, show_model_configuration_details_dt
 from dame.configuration import configure_credentials, DEFAULT_PROFILE
 from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup, \
-    get_data_transformation
-from dame.transformations import list_data_transformation, show_data_transformation, run_data_transformation
+    get_data_transformation, get_transformation_dataset
 
 try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
 
-logging.basicConfig(level=logging.WARNING)
 
 @click.group()
 @click.option("--verbose", "-v", default=0, count=True)
@@ -90,11 +88,10 @@ def browse():
     "--data",
     "-d",
     type=click.Path(exists=False, dir_okay=True, resolve_path=True),
-    default="data",
 )
 @click.option('--interactive/--non-interactive', default=True)
 def run(name, interactive, profile, data):
-    if not Path(data).exists():
+    if not data or not Path(data).exists():
         data = None
     else:
         data = Path(data)
@@ -114,8 +111,10 @@ def run(name, interactive, profile, data):
     except AttributeError as e:
         click.secho("Unable to run it: {}".format(str(e)), fg="red")
         exit(1)
+
+
     try:
-        verify_input_parameters(resource, interactive, data)
+        verify_input_parameters(resource, interactive, data, profile)
     except ValueError as e:
         click.secho("Unable to run. Please use interactive mode", fg="yellow")
         exit(1)
@@ -235,13 +234,12 @@ def setup_list(profile):
     print_table_list(items)
 
 
-
 @cli.group()
 def transformation():
     """Manages Data transformation"""
 
 
-@transformation.command(name="list", help="List transformations")
+@transformation.command(name="list")
 @click.option(
     "--profile",
     "-p",
@@ -250,18 +248,27 @@ def transformation():
     default="default",
     metavar="<profile-name>",
 )
-def transformation_list(profile):
-    items = get_data_transformation(profile=profile)
+@click.argument(
+    "dataset_id",
+    type=click.STRING,
+    required=False
+)
+def transformation_list(dataset_id, profile):
+    """
+    List the transformations available. For example:
+
+    $ dame transformation list
+
+    You can see the transformation available for a DataSetSpecification using
+
+    $ dame transformation list topoflow36_2.1.0_rainRates
+    """
+    if dataset_id:
+        items = get_transformation_dataset(dataset_id, profile=profile)
+    else:
+        items = get_data_transformation(profile=profile)
     print_table_list(items)
 
-
-# @transformation.command(name="show", help="Show transformation")
-# @click.argument(
-#     "name",
-#     type=click.STRING
-# )
-# def transformation_show(name):
-#     items = show_data_transformation(name)
 
 @transformation.command(name="run")
 @click.argument(
@@ -280,14 +287,15 @@ def transformation_run(data_transformation_id, profile):
     """
     You must pass the argument ID (ID of the transformation)
 
-    And the directory using the option -i/--input_dir
-
     For example:
 
-    dame transformation run topoflow_climate -i data/
+    dame transformation run topoflow_climate
     """
     resource = get_model_configuration(data_transformation_id, profile=profile)
+    interactive = True
+    data = Path('.')
     try:
         show_model_configuration_details(resource)
     except AttributeError as e:
         click.secho("This setup is not executable.\n".format(e), fg="red")
+    run_method_setup(resource, interactive, data)

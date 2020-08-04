@@ -1,4 +1,5 @@
 import os
+import re
 import stat
 import uuid
 from pathlib import Path
@@ -11,6 +12,7 @@ from dame._utils import log
 from dame.executor import prepare_execution, get_engine, DOCKER_ENGINE, \
     SINGULARITY_ENGINE, get_singularity_cmd, run_singularity, run_docker, get_docker_cmd
 from dame.local_file_manager import find_file_directory
+from dame.modelcatalogapi import get_transformation_dataset
 from dame.utils import create_yaml_from_resource, obtain_id
 from dame.utils import url_validation
 
@@ -18,6 +20,26 @@ SCRIPT_FILENAME = "run"
 
 data_set_property = ["id", "label"]
 parameter_set_property = ["id", "label", "has_default_value"]
+
+
+def show_model_configuration_details_dt(model_configuration):
+    click.echo(click.style("Information about the model configuration", bold=True))
+    if model_configuration and hasattr(model_configuration, "has_input") and getattr(model_configuration, "has_input"):
+        click.echo(click.style("Inputs", bold=True))
+        for _input in model_configuration.has_input:
+            if hasattr(_input, "has_fixed_resource") and _input.has_fixed_resource and hasattr(
+                    _input.has_fixed_resource[0], "value"):
+                click.echo("- {}: {}".format(_input.label[0], _input.has_fixed_resource[0].value[0]))
+            else:
+                if hasattr(_input, "has_data_transformation"):
+                    dts = _input.has_data_transformation
+                    if dts:
+                        for dt in dts:
+                            label = getattr(dt, "label") if hasattr(dt, "label") else getattr(dt, "id")
+                            click.echo(f"- {_input.label[0]}: {label[0]}")
+                    else:
+                        label = getattr(_input, "label") if hasattr(_input, "label") else getattr(_input, "id")
+                        click.echo("- {}: {}".format(label[0], "No transformation"))
 
 
 def show_model_configuration_details(model_configuration):
@@ -73,16 +95,27 @@ def edit_parameters(model_configuration, interactive):
     return model_configuration
 
 
-def verify_input_parameters(model_configuration, interactive, data_dir):
+def print_disabled_data_option(data_dir):
+    if not data_dir:
+        click.secho("Search local files disabled. "
+                    "You can enable it using  option -d or --data\n"
+                    "$ dame run id -d example_directory", fg="blue")
+
+
+def verify_input_parameters(model_configuration, interactive, data_dir, profile=None):
+    profile_cmd = f"-p {profile}" if profile else ""
     if model_configuration.has_input is None:
         return []
+    print_disabled_data_option(data_dir)
     for _input in model_configuration.has_input:
         uri = None
         if (not hasattr(_input, "has_fixed_resource") or _input.has_fixed_resource is None) and interactive:
             if hasattr(_input, "label") and hasattr(_input, "has_format"):
+                extension = _input.has_format[0]
+                extension = re.sub(r'^\.', '', extension)
                 click.secho("To run this model configuration,"
                             "a {} file (.{} file) is required.".format(_input.label[0],
-                                                                       _input.has_format[0].replace(".", "")),
+                                                                       extension),
                             fg="yellow")
             elif hasattr(_input, "label"):
                 click.secho("To run this model configuration, a {} file is required.".format(_input.label[0]),
@@ -90,9 +123,16 @@ def verify_input_parameters(model_configuration, interactive, data_dir):
             else:
                 click.secho("To run this model configuration, a {} file is required."
                             .format(_input.id), fg="yellow")
-            if data_dir and hasattr(_input, "has_format") and click.confirm(
-                    "Do you want to search the file in the directory {}".format(data_dir), default=True):
-                uri = find_file_directory(data_dir, _input.has_format[0].replace(".", ""))
+            if data_dir and hasattr(_input, "has_format"):
+                click.secho("Searching local files in the {}\n"
+                            "You can change the target directory using the option -d or --data")
+
+                uri = find_file_directory(data_dir, extension)
+
+            dataset_transformations = get_transformation_dataset(obtain_id(_input.id), profile=profile)
+            if profile and dataset_transformations:
+                click.secho("There are transformations available for this input. To use them, please exit and type", fg="blue")
+                click.secho(f"$ dame transformation list {obtain_id(_input.id)}  {profile_cmd}", fg="blue")
 
             if uri is None:
                 uri = click.prompt('Please enter a url')
@@ -213,7 +253,7 @@ def print_table_list(items):
     tab.header(headings)
     for item in items:
         _id = obtain_id(item.id)
-        _label =  "".join(item.label) if hasattr(item, "label") and getattr(item, "label") else "No information"
+        _label = "".join(item.label) if hasattr(item, "label") and getattr(item, "label") else "No information"
         _description = "".join(item.description) if hasattr(item, "description") and getattr(item,
                                                                                              "description") else _label
         tab.add_row([_id, _description])
