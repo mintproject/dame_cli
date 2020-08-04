@@ -14,7 +14,7 @@ To configure your profile, you must use the command `configure` and the option `
 By running the following command and pressing enter (leaving the default values), DAME willbe configured by default:
 
 ```bash
-$ dame configure -p default
+$ dame credentials -p default
 Model Catalog API [https://api.models.mint.isi.edu/v1.4.0]:
 Username [mint@isi.edu]:
 Success
@@ -23,7 +23,7 @@ Success
 To define the profile `personal`, you should type: 
 
 ```bash
-$ dame configure -p personal
+$ dame credentials -p personal
 Model Catalog API [https://api.models.mint.isi.edu/v1.4.0]:
 Username [mint@isi.edu]: mosorio@isi.edu
 Success
