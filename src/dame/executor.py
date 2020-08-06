@@ -98,7 +98,6 @@ def build_input(inputs, destination_dir):
     """
     line = ""
     for _input in inputs:
-        print(_input)
         _input = convert_object_to_dict(_input)
         if not _input.keys() >= KEYS_REQUIRED_INPUT or _input['has_fixed_resource'] is None:
             raise ValueError(f'{_input["id"]} has not a fixedResource')
