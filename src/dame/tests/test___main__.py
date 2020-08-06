@@ -62,10 +62,3 @@ def test_transformation_list():
     result = runner.invoke(transformation_list, ["--profile", "testing"])
     assert result.exit_code == 0
 
-def test_transformation_run():
-    runner = CliRunner()
-    result = runner.invoke(transformation_run, ["045c9eb2-a20b-4095-af95-30bb00d944fe", "--profile", "testing"])
-    assert result.exit_code == 0
-    runner = CliRunner()
-    result = runner.invoke(transformation_run, ["not_found", "--profile", "testing"])
-    assert result.exit_code == 1
