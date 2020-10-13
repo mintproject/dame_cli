@@ -10,7 +10,7 @@ from modelcatalog import ApiException, SampleResource
 
 from dame._utils import log
 from dame.executor import prepare_execution, get_engine, DOCKER_ENGINE, \
-    SINGULARITY_ENGINE, get_singularity_cmd, run_singularity, run_docker, get_docker_cmd
+    run_docker, get_docker_cmd
 from dame.local_file_manager import find_file_directory
 from dame.modelcatalogapi import get_transformation_dataset
 from dame.utils import create_yaml_from_resource, obtain_id
@@ -201,9 +201,6 @@ def execute_setups(component_src_dir, execution_dir, setup_cmd_line, setup_name,
     try:
         engine = get_engine()
         click.secho(f"Engine: {engine}", fg="blue")
-    except FileNotFoundError:
-        click.secho("Singularity is not installed", fg="red")
-        exit(1)
     except Exception as e:
         click.secho("Docker is not running or installed".format(e), fg="red")
         exit(1)
@@ -215,15 +212,6 @@ def execute_setups(component_src_dir, execution_dir, setup_cmd_line, setup_name,
             docker_cmd_pretty = get_docker_cmd(image, setup_cmd_line, mint_volumes)
             show_execution_info(component_src_dir, interactive, docker_cmd_pretty)
             run_docker(setup_cmd_line, execution_dir, component_src_dir, setup_name, image, mint_volumes)
-        except Exception as e:
-            raise e
-
-    elif engine == SINGULARITY_ENGINE:
-        try:
-            singularity_cmd = get_singularity_cmd(image, setup_cmd_line)
-            singularity_cmd_pretty = " ".join(singularity_cmd)
-            show_execution_info(component_src_dir, interactive, singularity_cmd_pretty)
-            run_singularity(singularity_cmd, execution_dir, component_src_dir, setup_name)
         except Exception as e:
             raise e
 

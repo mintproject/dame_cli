@@ -171,7 +171,7 @@ The information needed to run the model is complete, and I can execute the model
 
 Invocation commands
 cd executions/hand_v2_raster_706c74de-835b-11ea-9d3d-f8f21e3c1558/hand_v2_mint_component/src
-/usr/bin/singularity exec docker://mintproject/hand:v2.1.0 ./run  -i1 Awash-border_DEM_buffer.tif  -o1 distance-down.tif -o3 shape.shp -o4 geojson.json -o2 distance-down-raster.tif  -p1 500
+docker run mintproject/hand:v2.1.0 ./run  -i1 Awash-border_DEM_buffer.tif  -o1 distance-down.tif -o3 shape.shp -o4 geojson.json -o2 distance-down-raster.tif  -p1 500
 Do you want to proceed and submit it for execution? [Y/n]:Y
 ```
 When confirmed, DAME will display where to find the execution logs and execution results:
@@ -218,7 +218,7 @@ The information of the setup is complete
 
 Invocation Commands:
 cd executions/cycles-0.10.2-alpha-collection-oromia-single-point_4139f83c-835e-11ea-a111-f8f21e3c1558/cycles-0.10.2-alpha-collection/src
-/usr/bin/singularity exec docker://mintproject/cycles:0.10.2-alpha ./run  -i1 Arsi_Amigna_7.884865046N_40.19527054E.zip
+docker run mintproject/cycles:0.10.2-alpha ./run  -i1 Arsi_Amigna_7.884865046N_40.19527054E.zip
 -i2 crops.crop  -o1 cycles_soilProfile.dat -o9 cycles_outputs.txt -o3 cycles_crop.dat -o5 cycles_season.dat -o2 cycles_som.dat -o8 cycles_water.dat -o4 cycles_nitrogen.dat -o7 cycles_weatherOutput.dat -o6 cycles_summary.dat  -p4 100 -p2 2017 -p6 0 -p3 Maize -p5 149 -p8 FALSE -p7 0.05 -p1 2000
 Do you want to proceed and submit it for execution? [Y/n]:
 ```

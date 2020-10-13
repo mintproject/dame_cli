@@ -1,18 +1,10 @@
-import platform
 import shutil
-import subprocess
 import uuid
 from pathlib import Path
-
 import docker
 import validators
 from yaml import load, Loader
-
-from dame._utils import log
 from dame.utils import download_extract_zip, obtain_id, convert_object_to_dict, download_data_file
-import logging
-SINGULARITY_BIN = Path("/usr/bin/singularity")
-SINGULARITY_LOCAL_BIN = Path("/usr/local/bin/singularity")
 
 KEYS_REQUIRED_PARAMETER = {"has_default_value", "position"}
 KEYS_REQUIRED_OUTPUT = {"label", "has_format", "position"}
@@ -21,46 +13,15 @@ KEYS_REQUIRED_INPUT = {"has_fixed_resource"}
 EXECUTION_DIRECTORY = "executions"
 
 DOCKER_ENGINE = "DOCKER"
-SINGULARITY_ENGINE = "SINGULARITY"
 
-
-def get_singularity():
-    try:
-        if SINGULARITY_BIN.exists():
-            return SINGULARITY_BIN
-        elif SINGULARITY_LOCAL_BIN.exists():
-            return SINGULARITY_LOCAL_BIN
-    except:
-        raise FileNotFoundError
-    raise FileNotFoundError
 
 def get_engine():
-    if platform.system() == 'Linux':
-        try:
-            singularity_path = get_singularity()
-            logging.debug(f"singularity detected {singularity_path}")
-            return SINGULARITY_ENGINE
-        except FileNotFoundError:
-            try:
-                client = docker.from_env()
-                client.info()
-                return DOCKER_ENGINE
-            except Exception as e:
-                raise e
-    elif platform.system() == "Darwin":
-        try:
-            client = docker.from_env()
-            client.info()
-            return DOCKER_ENGINE
-        except Exception as e:
-            raise e
-    elif platform.system() == "Windows":
-        try:
-            client = docker.from_env()
-            client.info()
-            return DOCKER_ENGINE
-        except Exception as e:
-            raise e
+    try:
+        client = docker.from_env()
+        client.info()
+        return DOCKER_ENGINE
+    except Exception as e:
+        raise e
 
 
 def get_file(destination_dir, url, _format):
@@ -234,23 +195,6 @@ def run_docker(component_cmd, execution_dir, component_dir, setup_name, image, v
             print(chunk.decode('utf-8'))
             log_file.write(chunk)
 
-
-def run_singularity(singularity_cmd, execution_dir, component_dir, setup_name):
-    log_file_path = "{}/output.log".format(execution_dir)
-    with open(log_file_path, 'wb') as log_file:
-        log.info(f'Execution {setup_name} running,  check the logs on {log_file_path}')
-        proc = subprocess.Popen(singularity_cmd, stdout=log_file, stderr=log_file, cwd=component_dir)
-        proc.wait()
-
-
-def get_singularity_cmd(image, setup_cmd_line):
-    try:
-        setup_singularity_bin = get_singularity()
-    except FileNotFoundError as e:
-        raise e
-    setup_singularity_line = "{} exec docker://{}".format(setup_singularity_bin, image)
-    setup_cmd_line = "{} {}".format(setup_singularity_line, setup_cmd_line)
-    return setup_cmd_line.split(' ')
 
 
 def get_docker_cmd(image, setup_cmd_line, mint_volumes):

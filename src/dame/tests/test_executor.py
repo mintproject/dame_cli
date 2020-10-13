@@ -1,5 +1,5 @@
 import pytest
-from dame.executor import get_file, build_input, get_singularity
+from dame.executor import get_file, build_input
 from dame.modelcatalogapi import get_setup
 
 testing = "testing"
@@ -21,6 +21,3 @@ def test_build_input(tmp_path):
         build_input(setup.has_input, d)
 
 
-def test_get_singularity():
-    with pytest.raises(FileNotFoundError) as e_info:
-        get_singularity()
