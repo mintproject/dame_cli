@@ -12,23 +12,10 @@ DAME works in Linux, MacOS and Windows.  It is installed through a simple pip c
 
 ## Requirements
 
-DAME can work in two main configurations, which have different requirements: 
-
-### Singularity Configuration [Linux- RECOMMENDED]:
-
-1. Singularity
-2. Python >= 3.6
-
-### Docker Configuration (BETA) [MacOS, Windows, Linux]:
+### Docker Configuration [MacOS, Windows, Linux]:
 
 1. Docker
 2. Python >= 3.6
-
-### Singularity 
-
-DAME uses Singularity to manage and run the containers of software components. To install Singularity, please follow the steps below:
-
-- [Installation on Linux](https://sylabs.io/guides/3.5/admin-guide/installation.html#)
 
 
 ### Docker 
