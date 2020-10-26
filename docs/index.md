@@ -41,7 +41,9 @@ You did it!
 
 ## Issues, Troubleshooting and Feature Requests
 
-If you experience any issues when using DAME, or if you would like us to support additional exciting features, please open an issue on our [GitHub repository](https://github.com/mintproject/dame_cli/issues).
+Known issues with DAME are listed [here](https://github.com/mintproject/dame_cli/issues).
+
+If you experience any issues when using DAME, or if you would like us to support additional exciting features, please open an issue on our [GitHub repository](https://github.com/mintproject/dame_cli/issues). 
 
 ## Code Releases and Next Updates
 
