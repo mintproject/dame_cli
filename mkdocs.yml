@@ -3,6 +3,7 @@ nav:
   - Home: index.md
   - Usage: usage.md
   - Selecting local files for execution: local_data.md
+  - Changing default parameters: parameters.md
   - Using Data Transformations: transformation.md
   - Configuring user profiles: profiles.md
 theme: 
