@@ -1,7 +1,7 @@
 
 DAME can obtain model metadata from different APIs and user profiles. By default, DAME uses:
 
-- API:https://api.models.mint.isi.edu/v1.4.0
+- API:https://api.models.mint.isi.edu/v1.5.0
 - user: mint@isi.edu
 
 ## Configure your profile
@@ -15,7 +15,7 @@ By running the following command and pressing enter (leaving the default values)
 
 ```bash
 $ dame credentials -p default
-Model Catalog API [https://api.models.mint.isi.edu/v1.4.0]:
+Model Catalog API [https://api.models.mint.isi.edu/v1.5.0]:
 Username [mint@isi.edu]:
 Success
 ```
@@ -24,7 +24,7 @@ To define the profile `personal`, you should type:
 
 ```bash
 $ dame credentials -p personal
-Model Catalog API [https://api.models.mint.isi.edu/v1.4.0]:
+Model Catalog API [https://api.models.mint.isi.edu/v1.5.0]:
 Username [mint@isi.edu]: mosorio@isi.edu
 Success
 ```
