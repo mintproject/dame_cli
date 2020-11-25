@@ -86,6 +86,8 @@ def get_transformation_dataset(data_specification_id, profile=DEFAULT_PROFILE):
     # Create an instance of the API class
 
     items = []
+    return items;
+    #FIXME: I do no find this query on the server.
 
     api, username = api_configuration(profile)
     api_instance = modelcatalog.DataTransformationApi(api)
