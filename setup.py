@@ -33,7 +33,6 @@ install_requires = [
     "certifi>=2019.11.28",
     "texttable",
     "docker>=4.2.0"
-
 ]
 
 version = {}
