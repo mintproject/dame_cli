@@ -174,7 +174,7 @@ def model_configuration_show(name, profile):
         show_model_configuration_details(_setup)
     except AttributeError as e:
         click.secho("This setup is not executable.\n".format(e), fg="red")
-
+        exit(1)
 
 @cli.group()
 def setup():
