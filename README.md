@@ -1,5 +1,5 @@
 # Desktop Application for Model Execution (DAME) 
-[![Build Status](https://travis-ci.com/mintproject/dame_cli.svg?branch=master)](https://travis-ci.com/mintproject/dame_cli) [![codecov](https://codecov.io/gh/mintproject/dame_cli/branch/master/graph/badge.svg)](https://codecov.io/gh/mintproject/dame_cli)
+[![Upload Python Package](https://github.com/mintproject/dame_cli/actions/workflows/python-publish.yml/badge.svg)](https://github.com/mintproject/dame_cli/actions/workflows/python-publish.yml) [![codecov](https://codecov.io/gh/mintproject/dame_cli/branch/master/graph/badge.svg)](https://codecov.io/gh/mintproject/dame_cli)
 
 The Desktop Application for Model Execution (DAME) is an application for executing environmental models in any local environment or server through a command line interface.
 
