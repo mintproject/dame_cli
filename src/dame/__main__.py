@@ -15,9 +15,10 @@ import dame
 from dame import _utils
 from dame.cli_methods import verify_input_parameters, run_method_setup, show_model_configuration_details, \
     print_table_list, edit_parameters, show_model_configuration_details_dt
-from dame.configuration import configure_credentials, DEFAULT_PROFILE
+from dame.configuration import configure_credentials, get_credentials, DEFAULT_PROFILE
 from dame.modelcatalogapi import get_setup, get_model_configuration, list_model_configuration, list_setup, \
     get_data_transformation, get_transformation_dataset
+from urllib.parse import urlparse
 
 try:
     from yaml import CLoader as Loader
@@ -67,8 +68,31 @@ def version():
 
 
 @cli.command(help="Open the Model Catalog in your browser")
-def browse():
-    click.launch('https://models.mint.isi.edu')
+@click.option(
+    "--profile",
+    "-p",
+    envvar="MINT_PROFILE",
+    type=str,
+    default="default",
+    metavar="<profile-name>",
+)
+def browse(profile):
+    credentials = get_credentials(profile)
+    server = ''
+    if "server" in credentials:
+        click.secho(f"""Looking User Interface {credentials['server']}""")
+        server = credentials['server']
+    else:
+        click.secho("Unable to find the model catalog", fg="red")
+    domain = urlparse(server).netloc
+    mapping = {
+        "api.models.mint.isi.edu": "https://models.mint.isi.edu",
+        "api.models.wildfire.mint.isi.edu" : "https://wildfire.models.mint.isi.edu"
+    }
+    if not domain or domain not in mapping:
+        click.secho("Unable to find the model catalog", fg="red")
+
+    click.launch(mapping[domain])
 
 
 @cli.command(help="Run a model configuration or model configuration setup")
