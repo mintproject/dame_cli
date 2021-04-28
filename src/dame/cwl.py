@@ -3,8 +3,8 @@ from dame.utils import download_file
 import tempfile
 from yaml import load, Loader, dump
 from pathlib import Path
-from cwltool.main import run as cwltool_run
 import click
+
 def run(setup: dict, file_path: Path):
     component_url = setup.has_component_location[0]
     values_file = create_values_file(setup, file_path)
