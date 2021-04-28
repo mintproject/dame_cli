@@ -23,17 +23,17 @@ install_requires = [
     "click==7.1.2",
     "decorator==4.4.2",
     "networkx==2.5.1",
-    "cwltool==3.1.20210426140515",
     "modelcatalog-api==7.1.0",
     "texttable==1.6.3",
     "validators==0.18.1",
     "PyYAML==5.3.1",
     "semver==2.10.2",
-    "requests==2.24.0",
+    "requests>=2.24.0",
     "jsonschema==3.2.0",
     "configparser==5.0.1",
     "certifi==2020.6.20",
     "docker==4.3.1",
+    "urllib3==1.21.1"
 ]
 
 version = {}

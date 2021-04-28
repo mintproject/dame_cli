@@ -3,6 +3,7 @@ from dame.utils import download_file
 import tempfile
 from yaml import load, Loader, dump
 from pathlib import Path
+import click
 
 def run(setup: dict, file_path: Path):
     component_url = setup.has_component_location[0]
@@ -10,8 +11,14 @@ def run(setup: dict, file_path: Path):
     spec_file = file_path / "spec.yaml"
     with open(spec_file, 'wb+') as f:
         f.write(download_file(component_url))
-        
+    click.secho(f"""
+Run your components using a CWL implementations.
 
+For example:
+
+$ cwltool {spec_file} {values_file}
+
+""")
 def create_values_file(resource: dict, file_path: Path):
     try:
         inputs = resource.has_input if resource.has_input else []
@@ -46,7 +53,7 @@ def build_input(inputs, parameters):
         else:
             url = _input["has_fixed_resource"][0]["value"][0]
             label = _input["label"][0]
-            spec[label] = {"type": "File", "path": url}
+            spec[label] = {"class": "File", "path": url}
 
 
     for _parameter in parameters:
