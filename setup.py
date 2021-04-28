@@ -29,7 +29,7 @@ install_requires = [
     "semver==2.10.2",
     "requests==2.24.0",
     "jsonschema==3.2.0",
-    "configparser==5.0.1"
+    "configparser==5.0.1",
     "certifi==2020.6.20",
     "docker==4.3.1",
 ]
