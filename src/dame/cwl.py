@@ -66,5 +66,4 @@ def build_input(inputs, parameters):
             value = _parameter["has_default_value"][0]
         label = _parameter["label"][0]
         spec[label] = value
-    print(spec)
     return spec

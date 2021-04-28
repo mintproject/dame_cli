@@ -180,7 +180,6 @@ def run_method_setup(setup, interactive, data_dir):
         name = obtain_id(setup.id)
         file_path = create_yaml_from_resource(resource=setup, name=name, output=Path('.'))
         if check_if_cwl_compatible(setup):
-            print("runn using cwl")
             run_cwl(setup, file_path.parent)
             exit(0)
             
