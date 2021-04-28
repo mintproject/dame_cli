@@ -21,6 +21,7 @@ def read(fname):
 
 install_requires = [
     "Click>=7.0",
+    "cwltool==3.1.20210426140515"
     "modelcatalog-api==7.1.0",
     "texttable>=1.6.2",
     "validators>=0.14.1",
@@ -32,7 +33,6 @@ install_requires = [
     "certifi>=2019.11.28",
     "texttable",
     "docker>=4.2.0",
-    "cwltool"
 ]
 
 version = {}
