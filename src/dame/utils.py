@@ -80,6 +80,7 @@ def download_file(url):
     return r.content
 
 
+
 def validate_suffix(suffix):
     return suffix if suffix.startswith('.') else ".{}".format(suffix)
 

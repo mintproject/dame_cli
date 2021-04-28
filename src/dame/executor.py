@@ -105,6 +105,13 @@ def build_parameter(parameters):
 
     return line
 
+def check_if_cwl_compatible(resource):
+    component_url = resource.has_component_location[0]
+    if Path(component_url).suffix == ".cwl":
+        return True
+    return False
+    
+
 
 def build_command_line(resource, _dir):
     line = './run '
@@ -155,6 +162,9 @@ def prepare_execution(setup_path):
     execution_dir = "{}/{}_{}".format(_dir, setup_name, uuid.uuid1())
     execution_dir_path = Path(execution_dir)
     execution_dir_path.mkdir(parents=True, exist_ok=True)
+    
+
+
     try:
         image, setup_cmd_line, src_path = build_command_line(setup_dict, execution_dir_path)
     except Exception as e:
