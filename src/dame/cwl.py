@@ -12,7 +12,7 @@ def run(setup: dict, file_path: Path):
     with open(spec_file, 'wb+') as f:
         f.write(download_file(component_url))
     click.secho(f"""
-Run your components using a CWL implementations.
+Run your components using a CWL implementation.
 
 For example:
 
