@@ -26,14 +26,14 @@ install_requires = [
     "modelcatalog-api==7.1.0",
     "texttable==1.6.3",
     "validators==0.18.1",
-    "PyYAML==5.3.1",
+    "PyYAML==5.4",
     "semver==2.10.2",
     "requests>=2.24.0",
     "jsonschema==3.2.0",
     "configparser==5.0.1",
     "certifi==2020.6.20",
     "docker==4.3.1",
-    "urllib3==1.21.1"
+    "urllib3==1.24.2"
 ]
 
 version = {}
