@@ -21,6 +21,7 @@ def read(fname):
 
 install_requires = [
     "click==7.1.2",
+    "decorator==4.4.2"
     "cwltool==3.1.20210426140515",
     "modelcatalog-api==7.1.0",
     "texttable==1.6.3",
