@@ -20,19 +20,18 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname), encoding='utf-8').read()
 
 install_requires = [
-    "Click>=7.0",
-    "cwltool==3.1.20210426140515"
+    "click>=7.1.2",
+    "cwltool==3.1.20210426140515",
     "modelcatalog-api==7.1.0",
-    "texttable>=1.6.2",
-    "validators>=0.14.1",
-    "PyYAML>=5.1.2",
-    "semver>=2.8.1",
-    "requests",
-    "jsonschema>=3.0.0",
-    "configparser>=5.0.0"
-    "certifi>=2019.11.28",
-    "texttable",
-    "docker>=4.2.0",
+    "texttable>=1.6.3",
+    "validators>=0.18.1",
+    "PyYAML>=5.3.1",
+    "semver>=2.10.2",
+    "requests>=2.24.0",
+    "jsonschema>=3.2.0",
+    "configparser>=5.0.1"
+    "certifi>=2020.6.20",
+    "docker>=4.3.1",
 ]
 
 version = {}
