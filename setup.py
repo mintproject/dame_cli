@@ -31,7 +31,8 @@ install_requires = [
     "configparser>=5.0.0"
     "certifi>=2019.11.28",
     "texttable",
-    "docker>=4.2.0"
+    "docker>=4.2.0",
+    "cwltool"
 ]
 
 version = {}
