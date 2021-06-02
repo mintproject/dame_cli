@@ -33,7 +33,7 @@ install_requires = [
     "configparser==5.0.1",
     "certifi==2020.6.20",
     "docker==4.3.1",
-    "urllib3==1.24.2"
+    "urllib3==1.26.5"
 ]
 
 version = {}
