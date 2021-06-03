@@ -23,7 +23,7 @@ install_requires = [
     "click==7.1.2",
     "decorator==4.4.2",
     "networkx==2.5.1",
-    "modelcatalog-api==7.1.0",
+    "modelcatalog-api==8.0.0",
     "texttable==1.6.3",
     "validators==0.18.1",
     "PyYAML==5.4",
