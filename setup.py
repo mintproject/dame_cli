@@ -31,7 +31,7 @@ install_requires = [
     "requests>=2.24.0",
     "jsonschema==3.2.0",
     "configparser==5.0.1",
-    "certifi==2020.6.20",
+    "certifi==2022.12.7",
     "docker==4.3.1",
     "urllib3==1.24.2"
 ]
